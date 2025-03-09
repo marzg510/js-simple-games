@@ -1,6 +1,6 @@
 # js-simple-games
 
-Simple Games for My Privae Lerning by JS
+Simple Games for My Private Learning by JS
 
 ## Ball
 
