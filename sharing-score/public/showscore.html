@@ -9,7 +9,7 @@
     <h1>スコアランキング</h1>
     <input type="text" id="playerName" placeholder="名前を入力">
     <input type="number" id="playerScore" placeholder="スコアを入力">
-    <button onclick="saveScore()">スコアを送信</button>
+    <button id="buttonSaveScore()">スコアを送信</button>
     
     <h2>ランキング</h2>
     <ul id="scoreList"></ul>
@@ -34,7 +34,7 @@
         const db = getDatabase(firebase);
 
         // スコアを保存
-        window.saveScore = () => {
+        function saveScore() {
             const name = document.getElementById("playerName").value;
             const score = document.getElementById("playerScore").value;
             if (name && score) {
@@ -44,6 +44,7 @@
 							});
             }
         }
+				document.getElementById("buttonSaveScore").addEventListener("click", saveScore);
 
         // スコアランキングを取得
 				console.log("ref",ref(db, "scores"));
