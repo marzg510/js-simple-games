@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スコアランキング</title>
+</head>
+<body>
+    <h1>スコアランキング</h1>
+    <input type="text" id="playerName" placeholder="名前を入力">
+    <input type="number" id="playerScore" placeholder="スコアを入力">
+    <button onclick="saveScore()">スコアを送信</button>
+    
+    <h2>ランキング</h2>
+    <ul id="scoreList"></ul>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js"></script>
+
+    <script>
+        // Firebase 設定（自分のプロジェクトの情報を入力）
+        const firebaseConfig = {
+            // apiKey: "YOUR_API_KEY",
+            // authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            // databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            // projectId: "YOUR_PROJECT_ID",
+            // storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            // messagingSenderId: "YOUR_SENDER_ID",
+            // appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyDOFYIn_PQSDHRgdjaSIk3uSK50UeYFyIk",
+            authDomain: "my-web-game-f7504.firebaseapp.com",
+            projectId: "my-web-game-f7504",
+            storageBucket: "my-web-game-f7504.firebasestorage.app",
+            messagingSenderId: "855871162021",
+            appId: "1:855871162021:web:29fadb3c0d20ca4f7a2f4c",
+            // measurementId: "G-4DE3QC8LZ1"
+        };
+
+        // Firebase 初期化
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // スコアを保存
+        function saveScore() {
+            const name = document.getElementById("playerName").value;
+            const score = document.getElementById("playerScore").value;
+            if (name && score) {
+                database.ref("scores").push({
+                    name: name,
+                    score: parseInt(score)
+                });
+            }
+        }
+
+        // スコアランキングを取得
+        database.ref("scores").orderByChild("score").limitToLast(10).on("value", (snapshot) => {
+            const scoreList = document.getElementById("scoreList");
+            scoreList.innerHTML = "";
+            const scores = [];
+            snapshot.forEach((childSnapshot) => {
+                scores.push(childSnapshot.val());
+            });
+            scores.reverse().forEach((data) => {
+                const li = document.createElement("li");
+                li.textContent = `${data.name}: ${data.score}`;
+                scoreList.appendChild(li);
+            });
+        });
+    </script>
+</body>
+</html>
