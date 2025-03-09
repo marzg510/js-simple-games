@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+    <title id="title">Canvas Circle</title>
+		<script>
+			function init() {
+				let canvas = document.getElementById("canvas");
+				let ctx = canvas.getContext("2d");
+        // 円を描く
+        ctx.beginPath();
+        ctx.arc(150, 150, 50, 0, Math.PI * 2); // 中心(150,150)、半径50、0度から360度まで
+        ctx.fillStyle = "blue"; // 塗りつぶしの色
+        ctx.fill(); // 円を塗りつぶす
+        ctx.stroke(); // 円の輪郭を描く
+			}
+		</script>
+	</head>
+	<body onload="init()">
+		<canvas id="canvas" width="700" height="400"></canvas>
+	</body>
+</html>
