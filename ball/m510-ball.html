@@ -8,7 +8,13 @@
 			let x = 150;	// 初期位置のx座標
 			let y = 150;	// 初期位置のy座標
 			let dy = 2;		// y座標の変化量
+			let dscore = 1;		// スコアの変化量
 			let pressed = false; // スペースキーが押されているかどうか
+			// const scoreTable = [
+			// 	{ min: 0, max: 499, dy: 2, dscore: 1 },
+			// 	{ min: 500, max: 999, dy: 4, dscore: 2 },
+			// 	{ min: 1000, max: Infinity, dy: 8, dscore: 4 },
+			// ];
 			function init() {
 				let canvas = document.getElementById("canvas");
 				let ctx = canvas.getContext("2d");
@@ -22,12 +28,20 @@
 					ctx.fillStyle = "orange"; // 塗りつぶしの色
 					ctx.fill(); // 円を塗りつぶす
 					ctx.stroke(); // 円の輪郭を描く
+					// スコアに応じたスピードとスコアの変化量を設定
+					if (score >= 0 && score < 500) {
+						dy = 4;
+						dscore = 2;
+					} else if (score >= 500 && score < 1000) {
+						dy = 8;
+						dscore = 4;
+					}
 					if (pressed) {
 						y -= dy; // y座標をdy分だけ移動
 					} else {
 						y += dy; // y座標をdy分だけ移動
 					}
-					score += 1
+					score += dscore; // スコアをdscore分だけ増やす
 					scoreElement.textContent = "Score: " + score; // スコアを表示
 					requestAnimationFrame(draw); // 次のフレームを描画
 				}
