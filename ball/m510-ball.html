@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+    <title id="title">M510 Ball</title>
+		<script>
+			let score = 0;	// スコア
+			let x = 150;	// 初期位置のx座標
+			let y = 150;	// 初期位置のy座標
+			let dy = 2;		// y座標の変化量
+			let pressed = false; // スペースキーが押されているかどうか
+			function init() {
+				let canvas = document.getElementById("canvas");
+				let ctx = canvas.getContext("2d");
+				let scoreElement = document.getElementById("score");	// スコア表示用の要素
+
+				function draw() {
+					ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面をクリア
+					// 円を描く
+					ctx.beginPath();
+					ctx.arc(x, y, 20, 0, Math.PI * 2); // 中心(x,y)、半径50、0度から360度まで
+					ctx.fillStyle = "orange"; // 塗りつぶしの色
+					ctx.fill(); // 円を塗りつぶす
+					ctx.stroke(); // 円の輪郭を描く
+					if (pressed) {
+						y -= dy; // y座標をdy分だけ移動
+					} else {
+						y += dy; // y座標をdy分だけ移動
+					}
+					score += 1
+					scoreElement.textContent = "Score: " + score; // スコアを表示
+					requestAnimationFrame(draw); // 次のフレームを描画
+				}
+				// キーボードのイベントリスナーを設定
+				document.addEventListener("keydown", function(e) {
+					if (e.key === " ") {
+						pressed = true;	// スペースキーが押されたらtrueにする
+					}
+				});
+				document.addEventListener("keyup", function(e) {
+					if (e.key === " ") {
+						pressed = false;	// スペースキーが離されたらfalseにする
+					}
+				});
+				draw();	// 描画を開始
+			}
+		</script>
+	</head>
+	<body onload="init()">
+		<canvas id="canvas" width="700" height="400"></canvas>
+		<div id="score">Score: 0</div> <!-- スコア表示用の要素 -->
+	</body>
+</html>
