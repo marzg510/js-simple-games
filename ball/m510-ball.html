@@ -10,6 +10,7 @@
 			let dy = 2;		// y座標の変化量
 			let dscore = 1;		// スコアの変化量
 			let pressed = false; // スペースキーが押されているかどうか
+			let gameOver = false; // ゲームオーバーかどうか
 			// const scoreTable = [
 			// 	{ min: 0, max: 499, dy: 2, dscore: 1 },
 			// 	{ min: 500, max: 999, dy: 4, dscore: 2 },
@@ -19,8 +20,11 @@
 				let canvas = document.getElementById("canvas");
 				let ctx = canvas.getContext("2d");
 				let scoreElement = document.getElementById("score");	// スコア表示用の要素
+				let gameOverElement = document.getElementById("game-over"); // ゲームオーバー表示用の要素
 
 				function draw() {
+					if (gameOver) return;	// ゲームオーバーの場合は描画しない
+
 					ctx.clearRect(0, 0, canvas.width, canvas.height); // 画面をクリア
 					// 円を描く
 					ctx.beginPath();
@@ -40,6 +44,12 @@
 						y -= dy; // y座標をdy分だけ移動
 					} else {
 						y += dy; // y座標をdy分だけ移動
+					}
+					// ボールが画面外に出たらゲームオーバー
+					if (y < 0 || y > canvas.height) {
+						gameOver = true;
+						gameOverElement.textContent = "Game Over!"; // ゲームオーバーのメッセージを表示
+						return;
 					}
 					score += dscore; // スコアをdscore分だけ増やす
 					scoreElement.textContent = "Score: " + score; // スコアを表示
@@ -63,5 +73,6 @@
 	<body onload="init()">
 		<canvas id="canvas" width="700" height="400"></canvas>
 		<div id="score">Score: 0</div> <!-- スコア表示用の要素 -->
+		<div id="game-over"></div> <!-- ゲームオーバー表示用の要素 -->
 	</body>
 </html>
