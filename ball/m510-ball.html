@@ -12,11 +12,15 @@
 			let pressed = false; // スペースキーが押されているかどうか
 			let gameOver = false; // ゲームオーバーかどうか
 			let gameStarted = false; // ゲームが開始されたかどうか
-			// const scoreTable = [
-			// 	{ min: 0, max: 499, dy: 2, dscore: 1 },
-			// 	{ min: 500, max: 999, dy: 4, dscore: 2 },
-			// 	{ min: 1000, max: Infinity, dy: 8, dscore: 4 },
-			// ];
+			const scoreTable = [
+				{ min: 0, max: 299, dy: 4, dscore: 2 },
+				{ min: 300, max: 699, dy: 6, dscore: 3 },
+				{ min: 700, max: 1299, dy: 8, dscore: 4 },
+				{ min: 1300, max: 1499, dy: 12, dscore: 6 },
+				{ min: 1500, max: 1999, dy: 16, dscore: 8 },
+				{ min: 2000, max: 2999, dy: 20, dscore: 10 },
+				{ min: 3000, max: Infinity, dy: 40, dscore: 20 },
+			];
 			function init() {
 				let canvas = document.getElementById("canvas");
 				let ctx = canvas.getContext("2d");
@@ -35,13 +39,12 @@
 					ctx.fill(); // 円を塗りつぶす
 					ctx.stroke(); // 円の輪郭を描く
 					// スコアに応じたスピードとスコアの変化量を設定
-					if (score >= 0 && score < 500) {
-						dy = 4;
-						dscore = 2;
-					} else if (score >= 500 && score < 1000) {
-						dy = 8;
-						dscore = 4;
-					}
+					scoreTable.forEach(entry => {
+						if (score >= entry.min && score <= entry.max) {
+							dy = entry.dy;
+							dscore = entry.dscore;
+						}
+					})
 					if (pressed) {
 						y -= dy; // y座標をdy分だけ移動
 					} else {
@@ -51,7 +54,7 @@
 					if (y < 0 || y > canvas.height) {
 						gameOver = true;
 						gameOverElement.textContent = "Game Over!"; // ゲームオーバーのメッセージを表示
-						setTimeout(showTitleScreen, 2000); // 3秒後にタイトル画面を表示
+						setTimeout(showTitleScreen, 2000); // 2秒後にタイトル画面を表示
 						return;
 					}
 					score += dscore; // スコアをdscore分だけ増やす
@@ -66,23 +69,24 @@
 
 				// ゲームを開始
 				function startGame(e) {
-						if (e.key === " ") {
-								gameStarted = true;
-								titleElement.style.display = "none";
-								document.removeEventListener("keydown", startGame);
-								resetGame();	// ゲームをリセット
-								draw(); // 描画を開始
-						}
+					if (e.key === " ") {
+						gameOverElement.textContent = ""; // ゲームオーバーのメッセージを消す
+						gameStarted = true;
+						titleElement.style.display = "none";
+						document.removeEventListener("keydown", startGame);
+						resetGame();	// ゲームをリセット
+						draw(); // 描画を開始
+					}
 				}
 				// ゲームの状態をリセット
 				function resetGame() {
-						score = 0;
-						x = 150;
-						y = 150;
-						dy = 2;
-						dscore = 1;
-						pressed = false;
-						gameOver = false;
+					score = 0;
+					x = 150;
+					y = 150;
+					dy = 2;
+					dscore = 1;
+					pressed = false;
+					gameOver = false;
 				}
 				// キーボードのイベントリスナーを設定
 				document.addEventListener("keydown", function(e) {
