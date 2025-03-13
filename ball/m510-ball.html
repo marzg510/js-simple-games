@@ -11,6 +11,7 @@
 			let dscore = 1;		// スコアの変化量
 			let pressed = false; // スペースキーが押されているかどうか
 			let gameOver = false; // ゲームオーバーかどうか
+			let gameStarted = false; // ゲームが開始されたかどうか
 			// const scoreTable = [
 			// 	{ min: 0, max: 499, dy: 2, dscore: 1 },
 			// 	{ min: 500, max: 999, dy: 4, dscore: 2 },
@@ -21,6 +22,7 @@
 				let ctx = canvas.getContext("2d");
 				let scoreElement = document.getElementById("score");	// スコア表示用の要素
 				let gameOverElement = document.getElementById("game-over"); // ゲームオーバー表示用の要素
+				let titleElement = document.getElementById("title-screen"); // タイトル画面用の要素
 
 				function draw() {
 					if (gameOver) return;	// ゲームオーバーの場合は描画しない
@@ -49,11 +51,38 @@
 					if (y < 0 || y > canvas.height) {
 						gameOver = true;
 						gameOverElement.textContent = "Game Over!"; // ゲームオーバーのメッセージを表示
+						setTimeout(showTitleScreen, 2000); // 3秒後にタイトル画面を表示
 						return;
 					}
 					score += dscore; // スコアをdscore分だけ増やす
 					scoreElement.textContent = "Score: " + score; // スコアを表示
 					requestAnimationFrame(draw); // 次のフレームを描画
+				}
+				// タイトル画面を表示
+				function showTitleScreen() {
+					titleElement.style.display = "block";
+					document.addEventListener("keydown", startGame);
+				}
+
+				// ゲームを開始
+				function startGame(e) {
+						if (e.key === " ") {
+								gameStarted = true;
+								titleElement.style.display = "none";
+								document.removeEventListener("keydown", startGame);
+								resetGame();	// ゲームをリセット
+								draw(); // 描画を開始
+						}
+				}
+				// ゲームの状態をリセット
+				function resetGame() {
+						score = 0;
+						x = 150;
+						y = 150;
+						dy = 2;
+						dscore = 1;
+						pressed = false;
+						gameOver = false;
 				}
 				// キーボードのイベントリスナーを設定
 				document.addEventListener("keydown", function(e) {
@@ -66,13 +95,34 @@
 						pressed = false;	// スペースキーが離されたらfalseにする
 					}
 				});
-				draw();	// 描画を開始
+				showTitleScreen(); // タイトル画面を表示
 			}
 		</script>
+		<style>
+			#title-screen {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 700px;
+				height: 400px;
+				background-color: rgba(255, 255, 255, 0.7);
+				color: red;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				font-size: 24px;
+				z-index: 10;
+			}
+		</style>
 	</head>
 	<body onload="init()">
 		<canvas id="canvas" width="700" height="400"></canvas>
 		<div id="score">Score: 0</div> <!-- スコア表示用の要素 -->
 		<div id="game-over"></div> <!-- ゲームオーバー表示用の要素 -->
+		<div id="title-screen">
+			<div>M510 Ball</div>
+			<div>PUSH SPACE KEY TO START</div>
+		</div> <!-- タイトル画面用の要素 -->
 	</body>
 </html>
