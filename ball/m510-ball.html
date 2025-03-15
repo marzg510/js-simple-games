@@ -51,15 +51,25 @@
 			let pressed = false; // スペースキーが押されているかどうか
 			let gameOver = false; // ゲームオーバーかどうか
 			let gameStarted = false; // ゲームが開始されたかどうか
-			const scoreTable = [
-				{ min: 0, max: 299, dy: 4, dscore: 2 },
-				{ min: 300, max: 699, dy: 6, dscore: 3 },
-				{ min: 700, max: 1299, dy: 8, dscore: 4 },
-				{ min: 1300, max: 1499, dy: 12, dscore: 6 },
-				{ min: 1500, max: 1999, dy: 16, dscore: 8 },
-				{ min: 2000, max: 2999, dy: 20, dscore: 10 },
-				{ min: 3000, max: Infinity, dy: 40, dscore: 20 },
-			];
+			const difficultyLevels = {
+				0: { dy: 4, dscore: 2 },
+				300: { dy: 6, dscore: 3 },
+				700: { dy: 8, dscore: 4 },
+				1300: { dy: 12, dscore: 6 },
+				1500: { dy: 16, dscore: 8 },
+				2000: { dy: 20, dscore: 10 },
+				3000: { dy: 40, dscore: 20 },
+			};
+			function getSpeedAndScore(score) {
+				let keys = Object.keys(difficultyLevels);
+				for (let i = keys.length - 1; i >= 0; i--) {
+					if (score >= keys[i]) {
+						return difficultyLevels[keys[i]];
+					}
+				}
+				return { dy: 2, dscore: 1 }; // デフォルト値
+			}
+
 			async function init() {
 				let canvas = document.getElementById("canvas");
 				let ctx = canvas.getContext("2d");
@@ -79,13 +89,10 @@
 					ctx.fillStyle = "orange"; // 塗りつぶしの色
 					ctx.fill(); // 円を塗りつぶす
 					ctx.stroke(); // 円の輪郭を描く
+
 					// スコアに応じたスピードとスコアの変化量を設定
-					scoreTable.forEach(entry => {
-						if (score >= entry.min && score <= entry.max) {
-							dy = entry.dy;
-							dscore = entry.dscore;
-						}
-					})
+					let { dy, dscore } = getSpeedAndScore(score);
+
 					if (pressed) {
 						y -= dy; // y座標をdy分だけ移動
 					} else {
