@@ -61,7 +61,7 @@
 				3000: { dy: 40, dscore: 20 },
 			};
 			function getSpeedAndScore(score) {
-				let keys = Object.keys(difficultyLevels).map(Number).sort((a, b) => a - b);
+				let keys = Object.keys(difficultyLevels);
 				for (let i = keys.length - 1; i >= 0; i--) {
 					if (score >= keys[i]) {
 						return difficultyLevels[keys[i]];
