@@ -51,6 +51,7 @@
 			let pressed = false; // スペースキーが押されているかどうか
 			let gameOver = false; // ゲームオーバーかどうか
 			let gameStarted = false; // ゲームが開始されたかどうか
+			let highScore = 0;
 			const difficultyLevels = {
 				0: { dy: 4, dscore: 2 },
 				300: { dy: 6, dscore: 3 },
@@ -77,7 +78,6 @@
 				let gameOverElement = document.getElementById("game-over"); // ゲームオーバー表示用の要素
 				let titleElement = document.getElementById("title-screen"); // タイトル画面用の要素
 				let hiScoreElement = document.getElementById("hi-score"); // タイトル画面用の要素
-				let highScore = await getHighScore();
 
 				function draw() {
 					if (gameOver) return;	// ゲームオーバーの場合は描画しない
@@ -100,10 +100,7 @@
 					}
 					// ボールが画面外に出たらゲームオーバー
 					if (y < 0 || y > canvas.height) {
-						gameOver = true;
-						gameOverElement.textContent = "Game Over!"; // ゲームオーバーのメッセージを表示
-						if (score > highScore) saveHighScore(score); // ハイスコアを保存
-						setTimeout(showTitleScreen, 2000); // 2秒後にタイトル画面を表示
+						handleGameOver();
 						return;
 					}
 					score += dscore; // スコアをdscore分だけ増やす
@@ -115,7 +112,7 @@
 					titleElement.style.display = "block";
 					document.addEventListener("keydown", startGame);
 					// ハイスコアを取得して表示
-					let highScore = await getHighScore();
+					highScore = await getHighScore();
 					hiScoreElement.textContent = highScore;
 				}
 
@@ -151,6 +148,12 @@
 						pressed = false;	// スペースキーが離されたらfalseにする
 					}
 				});
+				async function handleGameOver() {
+					gameOver = true;
+					gameOverElement.textContent = "Game Over!"; // ゲームオーバーのメッセージを表示
+					if (score > highScore) saveHighScore(score); // ハイスコアを保存
+					setTimeout(showTitleScreen, 2000); // 2秒後にタイトル画面を表示
+				}
 				showTitleScreen(); // タイトル画面を表示
 			}
 		</script>
