@@ -97,7 +97,7 @@
 
 			// タイトル画面を表示
 			async function showTitleScreen() {
-				titleElement.style.display = "block";
+				titleElement.style.display = "flex";
 				document.addEventListener("keydown", startGame);
 				// ハイスコアを取得して表示
 				highScore = await getHighScore();
