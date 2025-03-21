@@ -1,0 +1,54 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #121212; /* ダークモードの背景色 */
+    color: #e0e0e0; /* 明るいテキストカラー */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+h1 {
+    font-size: 3rem;
+    color: #00e5ff; /* ネオンブルー */
+    text-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff, 0 0 30px #00e5ff;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #b0bec5; /* サブテキストカラー */
+    margin-bottom: 30px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li {
+    display: inline-block;
+}
+
+nav ul li a {
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: #00e5ff; /* ネオンブルー */
+    padding: 10px 20px;
+    border: 2px solid #00e5ff;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px #00e5ff;
+}
+
+nav ul li a:hover {
+    background-color: #00e5ff;
+    color: #121212; /* 背景色と同じ色に変更 */
+    box-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff, 0 0 30px #00e5ff;
+    transform: scale(1.1);
+}
