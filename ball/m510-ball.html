@@ -51,7 +51,7 @@
 			let pressed = false; // スペースキーが押されているかどうか
 			let gameOver = false; // ゲームオーバーかどうか
 			let gameStarted = false; // ゲームが開始されたかどうか
-			let highScore = 0;
+			let hiScore = 0;
 
 			const difficultyLevels = {
 				0: { dy: 4, dscore: 2 },
@@ -100,8 +100,8 @@
 				titleElement.style.display = "flex";
 				document.addEventListener("keydown", startGame);
 				// ハイスコアを取得して表示
-				highScore = await getHighScore();
-				hiScoreElement.textContent = highScore;
+				hiScore = await getHighScore();
+				hiScoreElement.textContent = hiScore;
 			}
 
 			// ゲームを開始
@@ -130,7 +130,7 @@
 				console.log("handleGameOver");
 				gameOver = true;
 				gameOverElement.textContent = "Game Over!"; // ゲームオーバーのメッセージを表示
-				if (score > highScore) saveHighScore(score); // ハイスコアを保存
+				if (score > hiScore) saveHighScore(score); // ハイスコアを保存
 				setTimeout(showTitleScreen, 2000); // 2秒後にタイトル画面を表示
 			}
 			// ゲームのメインループ
