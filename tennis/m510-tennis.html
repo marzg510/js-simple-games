@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>M510 Tennis</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body onload="init()">
+    <canvas id="canvas" width="700" height="400"></canvas>
+    <script>
+        // グローバル変数として宣言
+        let canvas;
+        let ctx;
+
+        class Game {
+            constructor(canvasWidth, canvasHeight) {
+                this.canvasWidth = canvasWidth;
+                this.canvasHeight = canvasHeight;
+                this.ball = {
+                    x: canvasWidth / 2,
+                    y: canvasHeight / 2,
+                    radius: 10,
+                    dx: 2,
+                    dy: 2,
+                };
+                this.wallWidth = 10;
+            }
+
+            update() {
+                const ball = this.ball;
+
+                // ボールの位置を更新
+                ball.x += ball.dx;
+                ball.y += ball.dy;
+
+                // 壁との衝突判定
+                if (ball.x - ball.radius - this.wallWidth <= 0 || ball.x + ball.radius + this.wallWidth >= this.canvasWidth) {
+                    ball.dx = -ball.dx;
+                }
+                if (ball.y - ball.radius - this.wallWidth <= 0 || ball.y + ball.radius + this.wallWidth >= this.canvasHeight) {
+                    ball.dy = -ball.dy;
+                }
+            }
+
+            getState() {
+                return {
+                    ball: this.ball,
+                    wallWidth: this.wallWidth,
+                };
+            }
+        }
+
+        function render(ctx, state) {
+            const { ball, wallWidth } = state;
+
+            // キャンバスをクリア
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+            // 壁を描画
+            ctx.fillStyle = "gray";
+            ctx.fillRect(0, 0, ctx.canvas.width, wallWidth); // 上の壁
+            ctx.fillRect(0, ctx.canvas.height - wallWidth, ctx.canvas.width, wallWidth); // 下の壁
+            ctx.fillRect(0, 0, wallWidth, ctx.canvas.height); // 左の壁
+            ctx.fillRect(ctx.canvas.width - wallWidth, 0, wallWidth, ctx.canvas.height); // 右の壁
+
+            // ボールを描画
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = "orange";
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        function gameLoop(game) {
+            // ゲームロジックを更新
+            game.update();
+
+            // ゲームの状態を取得
+            const state = game.getState();
+
+            // レンダリング
+            render(ctx, state);
+
+            // 次のフレームをリクエスト
+            requestAnimationFrame(() => gameLoop(game));
+        }
+
+        function init() {
+            // canvasとctxを初期化
+            canvas = document.getElementById("canvas");
+            ctx = canvas.getContext("2d");
+
+            // ゲームロジックを管理するインスタンスを作成
+            const game = new Game(canvas.width, canvas.height);
+
+            // ゲームループを開始
+            gameLoop(game);
+        }
+    </script>
+</body>
+</html>
