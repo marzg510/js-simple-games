@@ -18,6 +18,10 @@
 <body onload="init()">
     <canvas id="canvas" width="700" height="400"></canvas>
     <script>
+        // グローバル変数として宣言
+        let canvas;
+        let ctx;
+
         class Game {
             constructor(canvasWidth, canvasHeight) {
                 this.canvasWidth = canvasWidth;
@@ -40,10 +44,10 @@
                 ball.y += ball.dy;
 
                 // 壁との衝突判定
-                if (ball.x - ball.radius <= 0 || ball.x + ball.radius >= this.canvasWidth) {
+                if (ball.x - ball.radius - this.wallWidth <= 0 || ball.x + ball.radius + this.wallWidth >= this.canvasWidth) {
                     ball.dx = -ball.dx;
                 }
-                if (ball.y - ball.radius <= 0 || ball.y + ball.radius >= this.canvasHeight) {
+                if (ball.y - ball.radius - this.wallWidth <= 0 || ball.y + ball.radius + this.wallWidth >= this.canvasHeight) {
                     ball.dy = -ball.dy;
                 }
             }
@@ -77,18 +81,30 @@
             ctx.stroke();
         }
 
-        function gameLoop(game, ctx) {
+        function gameLoop(game) {
+            // ゲームロジックを更新
             game.update();
+
+            // ゲームの状態を取得
             const state = game.getState();
+
+            // レンダリング
             render(ctx, state);
-            requestAnimationFrame(() => gameLoop(game, ctx));
+
+            // 次のフレームをリクエスト
+            requestAnimationFrame(() => gameLoop(game));
         }
 
         function init() {
-            const canvas = document.getElementById("canvas");
-            const ctx = canvas.getContext("2d");
+            // canvasとctxを初期化
+            canvas = document.getElementById("canvas");
+            ctx = canvas.getContext("2d");
+
+            // ゲームロジックを管理するインスタンスを作成
             const game = new Game(canvas.width, canvas.height);
-            gameLoop(game, ctx);
+
+            // ゲームループを開始
+            gameLoop(game);
         }
     </script>
 </body>
