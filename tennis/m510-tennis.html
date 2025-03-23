@@ -117,10 +117,6 @@
 
             // ゲームロジックを管理するインスタンスを作成
             const game = new Game(canvas.width, canvas.height);
-            console.log("game",game);
-            console.log("racket",game.getState().racket);
-            // ctx.fillStyle = "red";
-            // ctx.fillRect(game.racket.x, game.racket.y, game.racket.x + game.racket.width, game.racket.y + game.racket.height);
 
             // ゲームループを開始
             gameLoop(game);
