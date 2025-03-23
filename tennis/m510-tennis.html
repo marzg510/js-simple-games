@@ -34,6 +34,14 @@
                     dy: 2,
                 };
                 this.wallWidth = 10;
+                this.racket = {
+                    x: canvasWidth / 2,
+                    y: canvasHeight * 0.90,
+                    width: 100,
+                    height: 10,
+                    dx: 2,
+                    dy: 2,
+                };
             }
 
             update() {
@@ -56,12 +64,13 @@
                 return {
                     ball: this.ball,
                     wallWidth: this.wallWidth,
+                    racket: this.racket,
                 };
             }
         }
 
         function render(ctx, state) {
-            const { ball, wallWidth } = state;
+            const { ball, wallWidth, racket } = state;
 
             // キャンバスをクリア
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -73,12 +82,18 @@
             ctx.fillRect(0, 0, wallWidth, ctx.canvas.height); // 左の壁
             ctx.fillRect(ctx.canvas.width - wallWidth, 0, wallWidth, ctx.canvas.height); // 右の壁
 
+            // ラケットを描画
+            ctx.fillStyle = "blue";
+            ctx.fillRect(racket.x, racket.y, racket.width, racket.height);
+            // ctx.fillRect(350, 380, 30, 10);
+
             // ボールを描画
             ctx.beginPath();
             ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
             ctx.fillStyle = "orange";
             ctx.fill();
             ctx.stroke();
+
         }
 
         function gameLoop(game) {
