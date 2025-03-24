@@ -27,25 +27,27 @@
                 this.canvasWidth = canvasWidth;
                 this.canvasHeight = canvasHeight;
                 this.ball = {
-                    x: canvasWidth / 2,
-                    y: canvasHeight / 2,
-                    radius: 10,
-                    dx: 2,
-                    dy: 2,
+                    x: canvasWidth / 2,     // ボールのx座標
+                    y: canvasHeight / 2,    // ボールのy座標
+                    radius: 10,             // ボールの半径
+                    dx: 2,                  // ボールのx方向の速度
+                    dy: 2,                  // ボールのy方向の速度
                 };
                 this.wallWidth = 10;
                 this.racket = {
-                    x: canvasWidth / 2,
-                    y: canvasHeight * 0.90,
-                    width: 100,
-                    height: 10,
-                    dx: 2,
-                    dy: 2,
+                    x: canvasWidth / 2,     // ラケットのx座標
+                    y: canvasHeight * 0.90, // ラケットのy座標
+                    width: 100,             // ラケットの幅
+                    height: 10,             // ラケットの高さ
+                    dx: 2,                  // ラケットの速度
+                    movingLeft: false,      // ラケットが左に移動中かどうか
+                    movingRight: false,     // ラケットが右に移動中かどうか
                 };
             }
 
             update() {
                 const ball = this.ball;
+                const racket = this.racket;
 
                 // ボールの位置を更新
                 ball.x += ball.dx;
@@ -57,6 +59,14 @@
                 }
                 if (ball.y - ball.radius - this.wallWidth <= 0 || ball.y + ball.radius + this.wallWidth >= this.canvasHeight) {
                     ball.dy = -ball.dy;
+                }
+
+                // ラケットの移動を更新
+                if (this.racket.movingLeft && this.racket.x > this.wallWidth) {
+                    this.racket.x -= this.racket.dx;
+                }
+                if (this.racket.movingRight && this.racket.x + this.racket.width < this.canvasWidth - this.wallWidth) {
+                    this.racket.x += this.racket.dx;
                 }
             }
 
@@ -117,6 +127,25 @@
 
             // ゲームロジックを管理するインスタンスを作成
             const game = new Game(canvas.width, canvas.height);
+
+            // キーボードイベントを設定
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "ArrowLeft") {
+                    game.racket.movingLeft = true;
+                }
+                if (e.key === "ArrowRight") {
+                    game.racket.movingRight = true;
+                }
+            });
+
+            document.addEventListener("keyup", (e) => {
+                if (e.key === "ArrowLeft") {
+                    game.racket.movingLeft = false;
+                }
+                if (e.key === "ArrowRight") {
+                    game.racket.movingRight = false;
+                }
+            });
 
             // ゲームループを開始
             gameLoop(game);
