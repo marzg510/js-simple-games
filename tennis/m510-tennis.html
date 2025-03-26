@@ -44,6 +44,7 @@
                     movingRight: false,     // ラケットが右に移動中かどうか
                 };
                 this.isGameOver = false;    // ゲームオーバーかどうか
+                this.score = 0;             // スコア
             }
 
             update() {
@@ -69,6 +70,7 @@
                     ball.x <= racket.x + racket.width   // ボールがラケットの右端より左
                 ) {
                     ball.dy = -ball.dy; // ボールの垂直方向の速度を反転
+                    this.score += 1;    // スコアを加算
                 }
                 // 画面外に出たか判定
                 if (ball.y - ball.radius >= this.canvasHeight) {
@@ -89,6 +91,7 @@
                     ball: this.ball,
                     wallWidth: this.wallWidth,
                     racket: this.racket,
+                    score: this.score,
                 };
             }
         }
@@ -116,6 +119,11 @@
             ctx.fill();
             ctx.stroke();
 
+            // スコアを描画
+            ctx.fillStyle = "black";
+            ctx.font = "24px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText(`Score: ${state.score}`, ctx.canvas.width / 2, 30);
         }
         function renderGameOver(ctx) {
             ctx.font = "40px Arial";
