@@ -102,14 +102,12 @@
             // 壁を描画
             ctx.fillStyle = "gray";
             ctx.fillRect(0, 0, ctx.canvas.width, wallWidth); // 上の壁
-            // ctx.fillRect(0, ctx.canvas.height - wallWidth, ctx.canvas.width, wallWidth); // 下の壁
             ctx.fillRect(0, 0, wallWidth, ctx.canvas.height); // 左の壁
             ctx.fillRect(ctx.canvas.width - wallWidth, 0, wallWidth, ctx.canvas.height); // 右の壁
 
             // ラケットを描画
             ctx.fillStyle = "blue";
             ctx.fillRect(racket.x, racket.y, racket.width, racket.height);
-            // ctx.fillRect(350, 380, 30, 10);
 
             // ボールを描画
             ctx.beginPath();
@@ -120,8 +118,6 @@
 
         }
         function renderGameOver(ctx) {
-            // ctx.fillStyle = "black";
-            // ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
             ctx.font = "40px Arial";
             ctx.fillStyle = "red";
             ctx.fillText("GAME OVER", 200, 200);
