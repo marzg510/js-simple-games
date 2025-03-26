@@ -44,6 +44,7 @@
                     movingRight: false,     // ラケットが右に移動中かどうか
                 };
                 this.isGameOver = false;    // ゲームオーバーかどうか
+                this.score = 0;             // スコア
             }
 
             update() {
@@ -70,7 +71,8 @@
                     ball.x >= racket.x &&
                     ball.x <= racket.x + racket.width
                 ) {
-                    ball.dy = -ball.dy;
+                    ball.dy = -ball.dy; // ボールの垂直方向の速度を反転
+                    this.score += 1;    // スコアを加算
                 }
 
                 // ボールが下端からはみ出た場合
@@ -86,15 +88,6 @@
                     racket.x += racket.dx;
                 }
             }
-
-            getState() {
-                return {
-                    ball: this.ball,
-                    wallWidth: this.wallWidth,
-                    racket: this.racket,
-                };
-            }
-
             reset() {
                 this.ball.x = this.canvasWidth / 2;
                 this.ball.y = this.canvasHeight / 2;
@@ -102,6 +95,15 @@
                 this.ball.dy = 2;
                 this.racket.x = this.canvasWidth / 2 - this.racket.width / 2;
                 this.isGameOver = false;
+            }
+
+            getState() {
+                return {
+                    ball: this.ball,
+                    wallWidth: this.wallWidth,
+                    racket: this.racket,
+                    score: this.score,
+                };
             }
         }
 
@@ -127,8 +129,13 @@
             ctx.fillStyle = "orange";
             ctx.fill();
             ctx.stroke();
-        }
 
+            // スコアを描画
+            ctx.fillStyle = "black";
+            ctx.font = "24px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText(`Score: ${state.score}`, ctx.canvas.width / 2, 30);
+        }
         function renderTitleScreen(ctx) {
             ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -155,17 +162,23 @@
                 return;
             }
 
+            if (game.isTitleScreen) {
+                render(ctx, game.getState());
+                renderTitleScreen(ctx);
+                return;
+            }
+
             if (game.isGameOver) {
-                renderGameOver(ctx);
+                renderGameOver(ctx);    // ゲームオーバー画面を表示
                 setTimeout(() => {
                     game.isGameOver = false;
                     game.isTitleScreen = true;
                     game.reset();
                     gameLoop(game);
                 }, 3000);
-                return;
+                return;                 // ゲームループを終了
             }
-
+            // ゲームロジックを更新
             game.update();
             render(ctx, game.getState());
             requestAnimationFrame(() => gameLoop(game));
@@ -180,13 +193,13 @@
             const game = new Game(canvas.width, canvas.height);
             game.isTitleScreen = true;
 
+            // キーボードイベントを設定
             document.addEventListener("keydown", () => {
                 if (game.isTitleScreen) {
                     game.isTitleScreen = false;
                     gameLoop(game);
                 }
             });
-
             document.addEventListener("keydown", (e) => {
                 if (e.key === "ArrowLeft") {
                     game.racket.movingLeft = true;
