@@ -47,6 +47,8 @@
             }
 
             update() {
+                if (this.isTitleScreen || this.isGameOver) return;
+
                 const ball = this.ball;
                 const racket = this.racket;
 
@@ -64,15 +66,16 @@
 
                 // ラケットとの衝突判定
                 if (
-                    ball.y + ball.radius >= racket.y && // ボールがラケットの高さに達した
-                    ball.x >= racket.x &&               // ボールがラケットの左端より右
-                    ball.x <= racket.x + racket.width   // ボールがラケットの右端より左
+                    ball.y + ball.radius >= racket.y &&
+                    ball.x >= racket.x &&
+                    ball.x <= racket.x + racket.width
                 ) {
-                    ball.dy = -ball.dy; // ボールの垂直方向の速度を反転
+                    ball.dy = -ball.dy;
                 }
-                // 画面外に出たか判定
-                if (ball.y - ball.radius >= this.canvasHeight) {
-                    this.isGameOver = true; // ゲームオーバー
+
+                // ボールが下端からはみ出た場合
+                if (ball.y - ball.radius > this.canvasHeight) {
+                    this.isGameOver = true;
                 }
 
                 // ラケットの移動を更新
@@ -90,6 +93,15 @@
                     wallWidth: this.wallWidth,
                     racket: this.racket,
                 };
+            }
+
+            reset() {
+                this.ball.x = this.canvasWidth / 2;
+                this.ball.y = this.canvasHeight / 2;
+                this.ball.dx = 2;
+                this.ball.dy = 2;
+                this.racket.x = this.canvasWidth / 2 - this.racket.width / 2;
+                this.isGameOver = false;
             }
         }
 
@@ -115,8 +127,21 @@
             ctx.fillStyle = "orange";
             ctx.fill();
             ctx.stroke();
-
         }
+
+        function renderTitleScreen(ctx) {
+            ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+            ctx.fillStyle = "red";
+            ctx.font = "48px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("M510 Tennis", ctx.canvas.width / 2, ctx.canvas.height / 2 - 50);
+
+            ctx.font = "24px Arial";
+            ctx.fillText("HIT ANY KEY TO START", ctx.canvas.width / 2, ctx.canvas.height / 2 + 20);
+        }
+
         function renderGameOver(ctx) {
             ctx.font = "40px Arial";
             ctx.fillStyle = "red";
@@ -124,20 +149,25 @@
         }
 
         function gameLoop(game) {
-            if (game.isGameOver) {
-                renderGameOver(ctx);    // ゲームオーバー画面を表示
-                return;                 // ゲームループを終了
+            if (game.isTitleScreen) {
+                render(ctx, game.getState());
+                renderTitleScreen(ctx);
+                return;
             }
-            // ゲームロジックを更新
+
+            if (game.isGameOver) {
+                renderGameOver(ctx);
+                setTimeout(() => {
+                    game.isGameOver = false;
+                    game.isTitleScreen = true;
+                    game.reset();
+                    gameLoop(game);
+                }, 3000);
+                return;
+            }
+
             game.update();
-
-            // ゲームの状態を取得
-            const state = game.getState();
-
-            // レンダリング
-            render(ctx, state);
-
-            // 次のフレームをリクエスト
+            render(ctx, game.getState());
             requestAnimationFrame(() => gameLoop(game));
         }
 
@@ -148,8 +178,15 @@
 
             // ゲームロジックを管理するインスタンスを作成
             const game = new Game(canvas.width, canvas.height);
+            game.isTitleScreen = true;
 
-            // キーボードイベントを設定
+            document.addEventListener("keydown", () => {
+                if (game.isTitleScreen) {
+                    game.isTitleScreen = false;
+                    gameLoop(game);
+                }
+            });
+
             document.addEventListener("keydown", (e) => {
                 if (e.key === "ArrowLeft") {
                     game.racket.movingLeft = true;
