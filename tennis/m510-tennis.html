@@ -14,6 +14,50 @@
             background-color: #fff;
         }
     </style>
+    <script type="module">
+        // ハイスコア登録モジュール
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+
+        // Firebase 設定（自分のプロジェクトの情報を入力）
+        const firebaseConfig = {
+                apiKey: "AIzaSyDOFYIn_PQSDHRgdjaSIk3uSK50UeYFyIk",
+                authDomain: "my-web-game-f7504.firebaseapp.com",
+                databaseURL: "https://my-web-game-f7504-default-rtdb.asia-southeast1.firebasedatabase.app/",
+                projectId: "my-web-game-f7504",
+                storageBucket: "my-web-game-f7504.firebasestorage.app",
+                messagingSenderId: "855871162021",
+                appId: "1:855871162021:web:29fadb3c0d20ca4f7a2f4c",
+        };
+
+        // Firebase 初期化
+        const firebase = initializeApp(firebaseConfig);
+        const db = getDatabase(firebase);
+
+        function saveHiScore(score) {
+            set(ref(db, 'tennis'), {
+                hiScore: score
+            });
+        }
+        window.saveHiScore = saveHiScore;
+
+        // ハイスコアを取得
+        async function getHiScore() {
+            const hiScoreRef = ref(db, "tennis/hiScore");
+            try {
+                const snapshot = await get(hiScoreRef);
+                if (snapshot.exists()) {
+                    return snapshot.val() || 0; // 取得した値がundefinedの場合は0を返す
+                } else {
+                    return 0;
+                }
+            } catch (error) {
+                console.error("Error fetching hiScore:", error);
+                return 0;
+            }
+        }
+        window.getHiScore = getHiScore;
+</script>
 </head>
 <body onload="init()">
     <canvas id="canvas" width="700" height="400"></canvas>
@@ -45,6 +89,8 @@
                 };
                 this.isGameOver = false;    // ゲームオーバーかどうか
                 this.score = 0;             // スコア
+                this.hiScore = 0;         // ハイスコアを初期化
+                this.isNewHiScore = false; // 新しいハイスコアかどうか
             }
 
             update() {
@@ -103,6 +149,7 @@
                     wallWidth: this.wallWidth,
                     racket: this.racket,
                     score: this.score,
+                    hiScore: this.hiScore,
                 };
             }
         }
@@ -135,6 +182,11 @@
             ctx.font = "24px Arial";
             ctx.textAlign = "center";
             ctx.fillText(`Score: ${state.score}`, ctx.canvas.width / 2, 30);
+            // ハイスコアを描画
+            ctx.fillStyle = "black";
+            ctx.font = "18px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText(`Hi Score: ${state.hiScore}`, ctx.canvas.width / 2, 60);
         }
         function renderTitleScreen(ctx) {
             ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
@@ -149,10 +201,16 @@
             ctx.fillText("HIT ANY KEY TO START", ctx.canvas.width / 2, ctx.canvas.height / 2 + 20);
         }
 
-        function renderGameOver(ctx) {
+        function renderGameOver(ctx, isNewHiScore) {
             ctx.font = "40px Arial";
             ctx.fillStyle = "red";
-            ctx.fillText("GAME OVER", 200, 200);
+            ctx.fillText("GAME OVER", ctx.canvas.width / 2, ctx.canvas.height / 2 - 50);
+
+            if (isNewHiScore) {
+                ctx.fillStyle = "green";
+                ctx.font = "30px Arial";
+                ctx.fillText("NEW HI SCORE!", ctx.canvas.width / 2, ctx.canvas.height / 2 + 20);
+            }
         }
 
         function gameLoop(game) {
@@ -162,14 +220,16 @@
                 return;
             }
 
-            if (game.isTitleScreen) {
-                render(ctx, game.getState());
-                renderTitleScreen(ctx);
-                return;
-            }
-
             if (game.isGameOver) {
-                renderGameOver(ctx);    // ゲームオーバー画面を表示
+                // ハイスコアを更新して保存
+                if (game.score > game.hiScore) {
+                    game.hiScore = game.score;
+                    game.isNewHiScore = true; // 新しいハイスコア
+                    saveHiScore(game.hiScore); // Firebaseに保存
+                } else {
+                    game.isNewHiScore = false; // 新しいハイスコアではない
+                }
+                renderGameOver(ctx, game.isNewHiScore);    // ゲームオーバー画面を表示
                 setTimeout(() => {
                     game.isGameOver = false;
                     game.isTitleScreen = true;
@@ -184,7 +244,7 @@
             requestAnimationFrame(() => gameLoop(game));
         }
 
-        function init() {
+        async function init() {
             // canvasとctxを初期化
             canvas = document.getElementById("canvas");
             ctx = canvas.getContext("2d");
@@ -192,7 +252,8 @@
             // ゲームロジックを管理するインスタンスを作成
             const game = new Game(canvas.width, canvas.height);
             game.isTitleScreen = true;
-
+            // Firebaseからハイスコアを取得
+            game.hiScore = await getHiScore();
             // キーボードイベントを設定
             document.addEventListener("keydown", () => {
                 if (game.isTitleScreen) {
