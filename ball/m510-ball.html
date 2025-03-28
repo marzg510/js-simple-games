@@ -158,25 +158,34 @@
 				requestAnimationFrame(gameMain); // 次のフレームを描画
 			}
 
+			// スペースキーが押されたときの処理
+			function handleKeyDown(e) {
+				if (e.key === " ") {
+					pressed = true; // スペースキーが押されたらtrueにする
+				}
+			}
+
+			// スペースキーが離されたときの処理
+			function handleKeyUp(e) {
+				if (e.key === " ") {
+					pressed = false; // スペースキーが離されたらfalseにする
+				}
+			}
+
+			// 初期化処理
 			async function init() {
 				// コンテキストの取得
 				canvas = document.getElementById("canvas");
 				ctx = canvas.getContext("2d");
-				scoreElement = document.getElementById("score");	// スコア表示用の要素
+				scoreElement = document.getElementById("score"); // スコア表示用の要素
 				gameOverElement = document.getElementById("game-over"); // ゲームオーバー表示用の要素
 				titleElement = document.getElementById("title-screen"); // タイトル画面用の要素
-				hiScoreElement = document.getElementById("hi-score"); // タイトル画面用の要素
+				hiScoreElement = document.getElementById("hi-score"); // ハイスコア表示用の要素
+
 				// キーボードのイベントリスナーを設定
-				document.addEventListener("keydown", function(e) {
-					if (e.key === " ") {
-						pressed = true;	// スペースキーが押されたらtrueにする
-					}
-				});
-				document.addEventListener("keyup", function(e) {
-					if (e.key === " ") {
-						pressed = false;	// スペースキーが離されたらfalseにする
-					}
-				});
+				document.addEventListener("keydown", handleKeyDown);
+				document.addEventListener("keyup", handleKeyUp);
+
 				showTitleScreen(); // タイトル画面を表示
 			}
 
