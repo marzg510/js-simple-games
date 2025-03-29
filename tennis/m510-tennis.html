@@ -65,6 +65,7 @@
         // グローバル変数として宣言
         let canvas;
         let ctx;
+        const GAME_OVER_TIMEOUT = 3000; // ゲームオーバー後のタイムアウト期間（ミリ秒）
 
         class Game {
             constructor(canvasWidth, canvasHeight) {
@@ -213,6 +214,27 @@
             }
         }
 
+        // ゲームオーバー時の処理
+        function handleGameOver(game) {
+            // ハイスコアを更新して保存
+            if (game.score > game.hiScore) {
+                game.hiScore = game.score;
+                game.isNewHiScore = true; // 新しいハイスコア
+                saveHiScore(game.hiScore); // Firebaseに保存
+            } else {
+                game.isNewHiScore = false; // 新しいハイスコアではない
+            }
+
+            // ゲームオーバー画面を描画
+            renderGameOver(ctx, game.isNewHiScore);
+
+            // タイトル画面に戻る処理
+            setTimeout(() => {
+                game.isTitleScreen = true;
+                game.reset();
+                gameLoop(game);
+            }, GAME_OVER_TIMEOUT);
+        }
         function gameLoop(game) {
             if (game.isTitleScreen) {
                 render(ctx, game.getState());
@@ -221,21 +243,7 @@
             }
 
             if (game.isGameOver) {
-                // ハイスコアを更新して保存
-                if (game.score > game.hiScore) {
-                    game.hiScore = game.score;
-                    game.isNewHiScore = true; // 新しいハイスコア
-                    saveHiScore(game.hiScore); // Firebaseに保存
-                } else {
-                    game.isNewHiScore = false; // 新しいハイスコアではない
-                }
-                renderGameOver(ctx, game.isNewHiScore);    // ゲームオーバー画面を表示
-                setTimeout(() => {
-                    game.isGameOver = false;
-                    game.isTitleScreen = true;
-                    game.reset();
-                    gameLoop(game);
-                }, 3000);
+                handleGameOver(game); // ゲームオーバー処理を呼び出す   
                 return;                 // ゲームループを終了
             }
             // ゲームロジックを更新
