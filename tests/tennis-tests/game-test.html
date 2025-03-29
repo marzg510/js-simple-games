@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>QUnit Test for Game Class</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+    <script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+    <script src="../../tennis/game.js" ></script>
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script>
+        QUnit.module("Game Class Tests", function(hooks) {
+            let game;
+
+            hooks.beforeEach(function() {
+                // テスト用のGameインスタンスを初期化
+                game = new Game(700, 400);
+            });
+
+            QUnit.test("Game initialization", function(assert) {
+                assert.equal(game.canvasWidth, 700, "Canvas width should be initialized correctly.");
+                assert.equal(game.canvasHeight, 400, "Canvas height should be initialized correctly.");
+                assert.equal(game.score, 0, "Score should be initialized to 0.");
+                assert.equal(game.isGameOver, false, "Game should not be over initially.");
+                assert.equal(game.isTitleScreen, false, "Title screen should not be active initially.");
+            });
+
+            QUnit.test("Racket movement", function(assert) {
+                game.racket.movingLeft = true;
+                game.update();
+                assert.ok(game.racket.x < 350, "Racket should move left when movingLeft is true.");
+
+                game.racket.movingLeft = false;
+                game.racket.movingRight = true;
+                game.update();
+                assert.ok(game.racket.x = 350, "Racket should move right when movingRight is true.");
+            });
+
+            QUnit.test("Ball-wall collision", function(assert) {
+                game.ball.x = 10; // ボールを左端に移動
+                game.ball.dx = -2;
+                game.update();
+                assert.equal(game.ball.dx, 2, "Ball should bounce off the left wall.");
+
+                game.ball.x = 690; // ボールを右端に移動
+                game.ball.dx = 2;
+                game.update();
+                assert.equal(game.ball.dx, -2, "Ball should bounce off the right wall.");
+
+                game.ball.y = 10; // ボールを上端に移動
+                game.ball.dy = -2;
+                game.update();
+                assert.equal(game.ball.dy, 2, "Ball should bounce off the top wall.");
+            });
+
+            QUnit.test("Ball-racket collision", function(assert) {
+                game.ball.y = game.racket.y - game.ball.radius; // ボールをラケットの上に配置
+                game.ball.x = game.racket.x + game.racket.width / 2; // ラケットの中央に配置
+                game.ball.dy = 2;
+                game.update();
+                assert.equal(game.ball.dy, -2, "Ball should bounce off the racket.");
+                assert.equal(game.score, 1, "Score should increase by 1 after hitting the racket.");
+            });
+
+            QUnit.test("Game over condition", function(assert) {
+                game.ball.y = 410; // ボールを画面下に移動
+                game.update();
+                assert.ok(game.isGameOver, "Game should be over when the ball goes below the canvas.");
+            });
+
+            QUnit.test("Game reset", function(assert) {
+                game.score = 50;
+                game.isGameOver = true;
+                beforeIsTitleScreen = game.isTitleScreen;
+                game.reset();
+                assert.equal(game.score, 0, "Score should be reset to 0.");
+                assert.equal(game.isGameOver, false, "Game over flag should be reset.");
+                assert.equal(game.isTitleScreen, beforeIsTitleScreen, "Title screen should not be changed after reset.");
+            });
+        });
+    </script>
+</body>
+</html>

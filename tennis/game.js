@@ -23,6 +23,7 @@ window.Game = class Game {
         this.score = 0;             // スコア
         this.hiScore = 0;           // ハイスコアを初期化
         this.isNewHiScore = false;  // 新しいハイスコアかどうか
+        this.isTitleScreen = false; // タイトル画面かどうか
     }
 
     update() {
@@ -74,6 +75,7 @@ window.Game = class Game {
         this.ball.dy = 2;
         this.racket.x = this.canvasWidth / 2 - this.racket.width / 2;
         this.isGameOver = false;
+        this.score = 0;
     }
 
     getState() {
