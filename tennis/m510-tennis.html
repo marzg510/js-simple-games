@@ -65,6 +65,7 @@
         // グローバル変数として宣言
         let canvas;
         let ctx;
+        const GAME_OVER_TIMEOUT = 3000; // ゲームオーバー後のタイムアウト期間（ミリ秒）
 
         class Game {
             constructor(canvasWidth, canvasHeight) {
@@ -232,7 +233,7 @@
                 game.isTitleScreen = true;
                 game.reset();
                 gameLoop(game);
-            }, 3000);
+            }, GAME_OVER_TIMEOUT);
         }
         function gameLoop(game) {
             if (game.isTitleScreen) {
