@@ -194,35 +194,46 @@
             // ゲームロジックを管理するインスタンスを作成
             const game = new Game(canvas.width, canvas.height);
             game.isTitleScreen = true;
+
             // Firebaseからハイスコアを取得
             game.hiScore = await getHiScore();
-            // キーボードイベントを設定
-            document.addEventListener("keydown", () => {
-                if (game.isTitleScreen) {
-                    game.isTitleScreen = false;
-                    gameLoop(game);
-                }
-            });
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "ArrowLeft") {
-                    game.racket.movingLeft = true;
-                }
-                if (e.key === "ArrowRight") {
-                    game.racket.movingRight = true;
-                }
-            });
 
-            document.addEventListener("keyup", (e) => {
-                if (e.key === "ArrowLeft") {
-                    game.racket.movingLeft = false;
-                }
-                if (e.key === "ArrowRight") {
-                    game.racket.movingRight = false;
-                }
-            });
+            // キーボードイベントを設定
+            setupKeyboardEvents(game);
 
             // ゲームループを開始
             gameLoop(game);
+        }
+
+        // キーボードイベントを設定する関数
+        function setupKeyboardEvents(game) {
+            document.addEventListener("keydown", (e) => handleKeyDown(e, game));
+            document.addEventListener("keyup", (e) => handleKeyUp(e, game));
+        }
+
+        // keydown イベント処理
+        function handleKeyDown(e, game) {
+            if (game.isTitleScreen) {
+                game.isTitleScreen = false;
+                gameLoop(game);
+            }
+
+            if (e.key === "ArrowLeft") {
+                game.racket.movingLeft = true;
+            }
+            if (e.key === "ArrowRight") {
+                game.racket.movingRight = true;
+            }
+        }
+
+        // keyup イベント処理
+        function handleKeyUp(e, game) {
+            if (e.key === "ArrowLeft") {
+                game.racket.movingLeft = false;
+            }
+            if (e.key === "ArrowRight") {
+                game.racket.movingRight = false;
+            }
         }
     </script>
 </body>
