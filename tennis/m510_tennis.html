@@ -52,10 +52,10 @@
 <body onload="init()">
     <canvas id="canvas" width="700" height="400"></canvas>
     <script src="./game.js"></script>
+    <script src="./renderer.js"></script>
     <script>
         // グローバル変数として宣言
-        let canvas;
-        let ctx;
+        let canvas, ctx, renderer, game;
         const GAME_OVER_TIMEOUT = 3000; // ゲームオーバー後のタイムアウト期間（ミリ秒）
 
         function detectWallCollision(ball, wallWidth, canvasWidth, canvasHeight) {
@@ -79,67 +79,8 @@
             return false; // 衝突なし
         }
 
-        function render(ctx, state) {
-            const { ball, wallWidth, racket } = state;
-
-            // キャンバスをクリア
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-            // 壁を描画
-            ctx.fillStyle = "gray";
-            ctx.fillRect(0, 0, ctx.canvas.width, wallWidth); // 上の壁
-            ctx.fillRect(0, 0, wallWidth, ctx.canvas.height); // 左の壁
-            ctx.fillRect(ctx.canvas.width - wallWidth, 0, wallWidth, ctx.canvas.height); // 右の壁
-
-            // ラケットを描画
-            ctx.fillStyle = "blue";
-            ctx.fillRect(racket.x, racket.y, racket.width, racket.height);
-
-            // ボールを描画
-            ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-            ctx.fillStyle = "orange";
-            ctx.fill();
-            ctx.stroke();
-
-            // スコアを描画
-            ctx.fillStyle = "black";
-            ctx.font = "24px Arial";
-            ctx.textAlign = "center";
-            ctx.fillText(`Score: ${state.score}`, ctx.canvas.width / 2, 30);
-            // ハイスコアを描画
-            ctx.fillStyle = "black";
-            ctx.font = "18px Arial";
-            ctx.textAlign = "center";
-            ctx.fillText(`Hi Score: ${state.hiScore}`, ctx.canvas.width / 2, 60);
-        }
-        function renderTitleScreen(ctx) {
-            ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
-            ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-            ctx.fillStyle = "red";
-            ctx.font = "48px Arial";
-            ctx.textAlign = "center";
-            ctx.fillText("M510 Tennis", ctx.canvas.width / 2, ctx.canvas.height / 2 - 50);
-
-            ctx.font = "24px Arial";
-            ctx.fillText("HIT ANY KEY TO START", ctx.canvas.width / 2, ctx.canvas.height / 2 + 20);
-        }
-
-        function renderGameOver(ctx, isNewHiScore) {
-            ctx.font = "40px Arial";
-            ctx.fillStyle = "red";
-            ctx.fillText("GAME OVER", ctx.canvas.width / 2, ctx.canvas.height / 2 - 50);
-
-            if (isNewHiScore) {
-                ctx.fillStyle = "green";
-                ctx.font = "30px Arial";
-                ctx.fillText("NEW HI SCORE!", ctx.canvas.width / 2, ctx.canvas.height / 2 + 20);
-            }
-        }
-
         // ゲームオーバー時の処理
-        function handleGameOver(game) {
+        function handleGameOver() {
             // ハイスコアを更新して保存
             if (game.score > game.hiScore) {
                 game.hiScore = game.score;
@@ -150,30 +91,30 @@
             }
 
             // ゲームオーバー画面を描画
-            renderGameOver(ctx, game.isNewHiScore);
+            renderer.renderGameOver(game.isNewHiScore);
 
             // タイトル画面に戻る処理
             setTimeout(() => {
                 game.isTitleScreen = true;
                 game.reset();
-                gameLoop(game);
+                gameLoop();
             }, GAME_OVER_TIMEOUT);
         }
-        function gameLoop(game) {
+        function gameLoop() {
             if (game.isTitleScreen) {
-                render(ctx, game.getState());
-                renderTitleScreen(ctx);
+                renderer.render(game.getState());
+                renderer.renderTitleScreen();
                 return;
             }
 
             if (game.isGameOver) {
-                handleGameOver(game); // ゲームオーバー処理を呼び出す   
+                handleGameOver(); // ゲームオーバー処理を呼び出す   
                 return;                 // ゲームループを終了
             }
             // ゲームロジックを更新
             game.update();
-            render(ctx, game.getState());
-            requestAnimationFrame(() => gameLoop(game));
+            renderer.render(game.getState());
+            requestAnimationFrame(() => gameLoop());
         }
 
         async function init() {
@@ -181,8 +122,10 @@
             canvas = document.getElementById("canvas");
             ctx = canvas.getContext("2d");
 
+            renderer = new Renderer(ctx);
+
             // ゲームロジックを管理するインスタンスを作成
-            const game = new Game(canvas.width, canvas.height);
+            game = new Game(canvas.width, canvas.height);
             game.isTitleScreen = true;
 
             // Firebaseからハイスコアを取得
@@ -195,35 +138,20 @@
             gameLoop(game);
         }
 
-        // キーボードイベントを設定する関数
+        // キーボードイベントを設定する
         function setupKeyboardEvents(game) {
-            document.addEventListener("keydown", (e) => handleKeyDown(e, game));
-            document.addEventListener("keyup", (e) => handleKeyUp(e, game));
-        }
-
-        // keydown イベント処理
-        function handleKeyDown(e, game) {
-            if (game.isTitleScreen) {
-                game.isTitleScreen = false;
-                gameLoop(game);
-            }
-
-            if (e.key === "ArrowLeft") {
-                game.racket.movingLeft = true;
-            }
-            if (e.key === "ArrowRight") {
-                game.racket.movingRight = true;
-            }
-        }
-
-        // keyup イベント処理
-        function handleKeyUp(e, game) {
-            if (e.key === "ArrowLeft") {
-                game.racket.movingLeft = false;
-            }
-            if (e.key === "ArrowRight") {
-                game.racket.movingRight = false;
-            }
+            document.addEventListener("keydown", (e) => {
+                if (game.isTitleScreen) {
+                    game.isTitleScreen = false;
+                    gameLoop();
+                }
+                if (e.key === "ArrowLeft") game.racket.movingLeft = true;
+                if (e.key === "ArrowRight") game.racket.movingRight = true;
+            });
+            document.addEventListener("keyup", (e) => {
+                if (e.key === "ArrowLeft") game.racket.movingLeft = false;
+                if (e.key === "ArrowRight") game.racket.movingRight = false;
+            });
         }
     </script>
 </body>
