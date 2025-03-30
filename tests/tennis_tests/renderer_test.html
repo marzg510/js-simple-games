@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>QUnit Test for Renderer Class</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+    <script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sinon.js/15.0.1/sinon.min.js"></script>
+    <script src="../../tennis/renderer.js"></script>
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script>
+        QUnit.module("Renderer Class Tests", function(hooks) {
+            let canvas, ctx, renderer;
+
+            hooks.beforeEach(function() {
+                // モックキャンバスとコンテキストを作成
+                canvas = document.createElement('canvas');
+                ctx = canvas.getContext('2d');
+                renderer = new Renderer(ctx);
+
+                // コンテキストメソッドをスパイ
+                sinon.spy(ctx, 'clearRect');
+                sinon.spy(ctx, 'fillRect');
+                sinon.spy(ctx, 'beginPath');
+                sinon.spy(ctx, 'arc');
+                sinon.spy(ctx, 'fill');
+                sinon.spy(ctx, 'stroke');
+                sinon.spy(ctx, 'fillText');
+            });
+
+            hooks.afterEach(function() {
+                // スパイをリセット
+                sinon.restore();
+            });
+
+            QUnit.test("render() should clear the canvas and draw game elements", function(assert) {
+                const state = {
+                    ball: { x: 50, y: 50, radius: 10 },
+                    wallWidth: 10,
+                    racket: { x: 40, y: 100, width: 80, height: 10 },
+                    score: 5,
+                    hiScore: 10,
+                };
+
+                renderer.render(state);
+
+                // キャンバスをクリア
+                assert.ok(ctx.clearRect.calledWith(0, 0, canvas.width, canvas.height), "Canvas should be cleared.");
+
+                // 壁を描画
+                assert.ok(ctx.fillRect.calledWith(0, 0, canvas.width, 10), "Top wall should be drawn.");
+                assert.ok(ctx.fillRect.calledWith(0, 0, 10, canvas.height), "Left wall should be drawn.");
+                assert.ok(ctx.fillRect.calledWith(canvas.width - 10, 0, 10, canvas.height), "Right wall should be drawn.");
+
+                // ラケットを描画
+                assert.ok(ctx.fillRect.calledWith(40, 100, 80, 10), "Racket should be drawn.");
+
+                // ボールを描画
+                assert.ok(ctx.beginPath.called, "beginPath should be called for ball.");
+                assert.ok(ctx.arc.calledWith(50, 50, 10, 0, Math.PI * 2), "Ball should be drawn as an arc.");
+                assert.ok(ctx.fill.called, "Ball should be filled.");
+                assert.ok(ctx.stroke.called, "Ball should be stroked.");
+
+                // スコアを描画
+                assert.ok(ctx.fillText.calledWith("Score: 5", canvas.width / 2, 30), "Score should be drawn.");
+
+                // ハイスコアを描画
+                assert.ok(ctx.fillText.calledWith("Hi Score: 10", canvas.width / 2, 60), "Hi Score should be drawn.");
+            });
+
+            QUnit.test("renderTitleScreen() should draw the title screen", function(assert) {
+                renderer.renderTitleScreen();
+
+                // 背景を描画
+                assert.ok(ctx.fillRect.calledWith(0, 0, canvas.width, canvas.height), "Background should be drawn.");
+
+                // タイトルテキストを描画
+                assert.ok(ctx.fillText.calledWith("M510 Tennis", canvas.width / 2, canvas.height / 2 - 50), "Title text should be drawn.");
+                assert.ok(ctx.fillText.calledWith("HIT ANY KEY TO START", canvas.width / 2, canvas.height / 2 + 20), "Start prompt should be drawn.");
+            });
+
+            QUnit.test("renderGameOver() should draw the game over screen", function(assert) {
+                renderer.renderGameOver(true);
+
+                // "GAME OVER" テキストを描画
+                assert.ok(ctx.fillText.calledWith("GAME OVER", canvas.width / 2, canvas.height / 2 - 50), "Game Over text should be drawn.");
+
+                // 新しいハイスコアの場合
+                assert.ok(ctx.fillText.calledWith("NEW HI SCORE!", canvas.width / 2, canvas.height / 2 + 20), "New Hi Score text should be drawn when isNewHiScore is true.");
+            });
+
+            QUnit.test("renderGameOver() should not draw 'NEW HI SCORE!' if isNewHiScore is false", function(assert) {
+                renderer.renderGameOver(false);
+
+                // "GAME OVER" テキストを描画
+                assert.ok(ctx.fillText.calledWith("GAME OVER", canvas.width / 2, canvas.height / 2 - 50), "Game Over text should be drawn.");
+
+                // "NEW HI SCORE!" は描画されない
+                assert.notOk(ctx.fillText.calledWith("NEW HI SCORE!", canvas.width / 2, canvas.height / 2 + 20), "New Hi Score text should not be drawn when isNewHiScore is false.");
+            });
+        });
+    </script>
+</body>
+</html>
