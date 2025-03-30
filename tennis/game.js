@@ -27,7 +27,7 @@ window.Game = class Game {
     }
 
     detectWallCollision() {
-        const ball = this.ball;
+        const {ball} = this;
         if (ball.x - ball.radius - this.wallWidth <= 0 || ball.x + ball.radius + this.wallWidth >= this.canvasWidth) {
             ball.dx = -ball.dx; // 水平方向の速度を反転
         }
