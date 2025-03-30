@@ -86,6 +86,29 @@
                 assert.equal(game.isGameOver, false, "Game over flag should be reset.");
                 assert.equal(game.isTitleScreen, beforeIsTitleScreen, "Title screen should not be changed after reset.");
             });
+
+            QUnit.test("Racket should not move beyond the left edge of the canvas", function(assert) {
+                game.racket.x = 0; // ラケットを左端に配置
+                game.racket.movingLeft = true;
+                game.update();
+                assert.equal(game.racket.x, 0, "Racket should not move beyond the left edge.");
+            });
+
+            QUnit.test("Racket should not move beyond the right edge of the canvas", function(assert) {
+                game.racket.x = game.canvasWidth - game.racket.width; // ラケットを右端に配置
+                game.racket.movingRight = true;
+                game.update();
+                assert.equal(game.racket.x, game.canvasWidth - game.racket.width, "Racket should not move beyond the right edge.");
+            });
+
+            QUnit.test("Game should not update when title screen is active", function(assert) {
+                game.isTitleScreen = true;
+                const initialBallX = game.ball.x;
+                const initialBallY = game.ball.y;
+                game.update();
+                assert.equal(game.ball.x, initialBallX, "Ball position should not change when title screen is active.");
+                assert.equal(game.ball.y, initialBallY, "Ball position should not change when title screen is active.");
+            });
         });
     </script>
 </body>

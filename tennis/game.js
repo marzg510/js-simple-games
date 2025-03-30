@@ -26,6 +26,30 @@ window.Game = class Game {
         this.isTitleScreen = false; // タイトル画面かどうか
     }
 
+    detectWallCollision() {
+        const {ball} = this;
+        if (ball.x - ball.radius - this.wallWidth <= 0 || ball.x + ball.radius + this.wallWidth >= this.canvasWidth) {
+            ball.dx = -ball.dx; // 水平方向の速度を反転
+        }
+        if (ball.y - ball.radius - this.wallWidth <= 0) {
+            ball.dy = -ball.dy; // 垂直方向の速度を反転
+        }
+    }
+
+    detectRacketCollision() {
+        const ball = this.ball;
+        const {racket} = this;
+        if (
+            ball.y + ball.radius >= racket.y && // ボールがラケットの高さに達した
+            ball.x >= racket.x &&               // ボールがラケットの左端より右
+            ball.x <= racket.x + racket.width   // ボールがラケットの右端より左
+        ) {
+            ball.dy = -ball.dy; // 垂直方向の速度を反転
+            return true;        // 衝突が発生した
+        }
+        return false; // 衝突なし
+    }
+
     update() {
         if (this.isTitleScreen || this.isGameOver) return;
 
@@ -37,21 +61,11 @@ window.Game = class Game {
         ball.y += ball.dy;
 
         // 壁との衝突判定
-        if (ball.x - ball.radius - this.wallWidth <= 0 || ball.x + ball.radius + this.wallWidth >= this.canvasWidth) {
-            ball.dx = -ball.dx;
-        }
-        if (ball.y - ball.radius - this.wallWidth <= 0) {
-            ball.dy = -ball.dy;
-        }
+        this.detectWallCollision();
 
         // ラケットとの衝突判定
-        if (
-            ball.y + ball.radius >= racket.y &&
-            ball.x >= racket.x &&
-            ball.x <= racket.x + racket.width
-        ) {
-            ball.dy = -ball.dy; // ボールの垂直方向の速度を反転
-            this.score += 1;    // スコアを加算
+        if ( this.detectRacketCollision() ) {
+            this.score += 1; // スコアを加算
         }
 
         // ボールが下端からはみ出た場合
@@ -87,4 +101,4 @@ window.Game = class Game {
             hiScore: this.hiScore,
         };
     }
-}
+};
