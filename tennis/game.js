@@ -38,7 +38,7 @@ window.Game = class Game {
 
     detectRacketCollision() {
         const ball = this.ball;
-        const racket = this.racket;
+        const {racket} = this;
         if (
             ball.y + ball.radius >= racket.y && // ボールがラケットの高さに達した
             ball.x >= racket.x &&               // ボールがラケットの左端より右
