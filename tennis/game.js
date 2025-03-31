@@ -37,10 +37,10 @@ window.Game = class Game {
         ball.y += ball.dy;
 
         // 壁との衝突判定
-        CollisionDetector.detectWallCollision(ball, this.wallWidth, this.canvasWidth, this.canvasHeight);
+        detectWallCollision(ball, this.wallWidth, this.canvasWidth, this.canvasHeight);
 
         // ラケットとの衝突判定
-        if (CollisionDetector.detectRacketCollision(ball, racket)) {
+        if (detectRacketCollision(ball, racket)) {
             this.score += 1; // スコアを加算
         }
 
