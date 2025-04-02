@@ -1,3 +1,4 @@
+import { detectWallCollision, detectRacketCollision } from './collision_detector.js';
 export class Game {
     constructor(canvasWidth, canvasHeight) {
         this.canvasWidth = canvasWidth;
