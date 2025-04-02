@@ -1,4 +1,4 @@
-window.Game = class Game {
+export class Game {
     constructor(canvasWidth, canvasHeight) {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
