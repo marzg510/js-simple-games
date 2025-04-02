@@ -14,7 +14,7 @@ Simple Games for My Private Learning by JS
 
 ### Requires
 
-#### VS Code Extention(Local Server)
+#### VS Code Extension(Local Server)
 
 名前: Live Server
 ID: ritwickdey.LiveServer
