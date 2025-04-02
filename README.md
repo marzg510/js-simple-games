@@ -10,8 +10,18 @@ Simple Games for My Private Learning by JS
 
 [Ball](https://marzg510.github.io/js-simple-games/ball/m510-ball.html")
 
-
 ## Tennis
+
+### Requires
+
+#### VS Code Extension(Local Server)
+
+名前: Live Server
+ID: ritwickdey.LiveServer
+説明: Launch a development local Server with live reload feature for static & dynamic pages
+バージョン: 5.7.9
+パブリッシャー: Ritwick Dey
+VS Marketplace リンク: https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer
 
 ## Practice Code
 
