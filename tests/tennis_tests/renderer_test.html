@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
     <script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sinon.js/15.0.1/sinon.min.js"></script>
-    <script src="../../tennis/renderer.js"></script>
 </head>
 <body>
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
-    <script>
+    <script type="module">
+        import { Renderer } from '../../tennis/renderer.js';
         QUnit.module("Renderer Class Tests", function(hooks) {
             let canvas, ctx, renderer;
 

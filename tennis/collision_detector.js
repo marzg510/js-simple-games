@@ -1,4 +1,4 @@
-window.detectWallCollision = function(ball, wallWidth, canvasWidth, canvasHeight) {
+export function detectWallCollision(ball, wallWidth, canvasWidth, canvasHeight) {
   if (ball.x - ball.radius - wallWidth <= 0 || ball.x + ball.radius + wallWidth >= canvasWidth) {
       ball.dx = -ball.dx; // 水平方向の速度を反転
   }
@@ -7,7 +7,7 @@ window.detectWallCollision = function(ball, wallWidth, canvasWidth, canvasHeight
   }
 }
 
-window.detectRacketCollision = function(ball, racket) {
+export function detectRacketCollision(ball, racket) {
     if (
         ball.y + ball.radius >= racket.y && // ボールがラケットの高さに達した
         ball.x >= racket.x &&               // ボールがラケットの左端より右

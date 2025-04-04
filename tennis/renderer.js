@@ -1,4 +1,4 @@
-window.Renderer = class Renderer {
+export class Renderer {
     constructor(ctx) {
         this.ctx = ctx;
     }
