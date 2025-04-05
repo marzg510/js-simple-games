@@ -9,8 +9,15 @@ const db = getDatabase(firebase);
 /**
  * ハイスコアを保存する
  * @param {number} score - 保存するスコア
+ * @throws {Error} - 無効なスコア値の場合にエラーをスロー
  */
 export function saveHiScore(score) {
+    // 無効な値をチェック
+    if (typeof score !== "number" || score < 0 || isNaN(score)) {
+        throw new Error("Invalid score: Score must be a non-negative number.");
+    }
+
+    // Firebaseにスコアを保存
     set(ref(db, 'tennis'), {
         hiScore: score
     });

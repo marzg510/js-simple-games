@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>HiScore Test</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+    <script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+    <script type="module">
+        import { saveHiScore, getHiScore } from '../../tennis/hi_score.js';
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getDatabase, ref, remove, get } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+        import { firebaseConfig } from '../../firebase_config.js';
+
+        // Firebaseの初期化
+        const firebase = initializeApp(firebaseConfig);
+        const db = getDatabase(firebase);
+
+        QUnit.module("HiScore Tests", {
+            beforeEach: async function () {
+                // テスト前にハイスコアをリセット
+                await remove(ref(db, 'tennis'));
+            }
+        });
+
+        QUnit.test("saveHiScore should save the score to Firebase", async function (assert) {
+            const done = assert.async();
+            const testScore = 100;
+
+            await saveHiScore(testScore);
+
+            const snapshot = await get(ref(db, 'tennis/hiScore'));
+            assert.ok(snapshot.exists(), "HiScore should exist in Firebase");
+            assert.equal(snapshot.val(), testScore, "HiScore should match the saved value");
+
+            done();
+        });
+
+        QUnit.test("getHiScore should retrieve the score from Firebase", async function (assert) {
+            const done = assert.async(); // 非同期テストの終了を待つ
+            const testScore = 200;
+
+            // Firebaseにスコアを保存
+            await saveHiScore(testScore);
+
+            // スコアを取得
+            const hiScore = await getHiScore();
+            assert.equal(hiScore, testScore, "getHiScore should retrieve the correct value from Firebase");
+
+            done();
+        });
+
+        QUnit.test("getHiScore should return 0 if no score exists", async function (assert) {
+            const done = assert.async(); // 非同期テストの終了を待つ
+
+            // スコアが存在しない状態で取得
+            const hiScore = await getHiScore();
+            assert.equal(hiScore, 0, "getHiScore should return 0 if no score exists");
+
+            done();
+        });
+
+        QUnit.test("saveHiScore should reject invalid scores", async function (assert) {
+            const done = assert.async();
+
+            // 無効なスコア値のリスト
+            const invalidScores = [-10, "abc", null, undefined, {}, [], NaN];
+
+            for (const invalidScore of invalidScores) {
+                try {
+                    await saveHiScore(invalidScore);
+                    assert.ok(false, `saveHiScore should throw an error for invalid score: ${invalidScore}`);
+                } catch (error) {
+                    assert.ok(true, `saveHiScore correctly rejected invalid score: ${invalidScore}`);
+                }
+            }
+
+            // Firebaseにスコアが保存されていないことを確認
+            const snapshot = await get(ref(db, 'tennis/hiScore'));
+            assert.notOk(snapshot.exists(), "No invalid score should be saved to Firebase");
+
+            done();
+        });
+    </script>
+</head>
+<body>
+    <h1>HiScore Test</h1>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+</body>
+</html>
