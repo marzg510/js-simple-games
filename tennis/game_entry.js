@@ -71,7 +71,7 @@ export function setupKeyboardEvents(game, renderer) {
             game.isTitleScreen = false;
             gameLoop(game, renderer);
         }
-        if (e.key === "ArrowLeft") game.racket.movingLeft = true;
+        if (e.key === "ArrowLeft") {
         if (e.key === "ArrowRight") {
     });
     document.addEventListener("keyup", (e) => {
