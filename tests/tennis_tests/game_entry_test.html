@@ -59,21 +59,28 @@
         });
 
         QUnit.test("handleGameOver should update hiScore if score is higher", function (assert) {
-            mockGame.score = 200;
-            mockGame.hiScore = 100;
+            const mockGame = {
+                score: 200,
+                hiScore: 100,
+                isNewHiScore: false,
+                reset: sinon.spy(), // リセットメソッドをスパイ化
+                getState: sinon.spy() // ゲーム状態取得メソッドをスパイ化
+            };
 
             const mockRenderer = {
                 render: sinon.spy(),
                 renderTitleScreen: sinon.spy(),
-                renderGameOver: (isNewHiScore) => {
-                    assert.ok(isNewHiScore, "Game over screen should indicate a new high score");
-                }
+                renderGameOver: sinon.spy() // ゲームオーバー画面描画メソッドをスパイ化
             };
 
             handleGameOver(mockGame, mockRenderer);
 
+            // ハイスコアが更新されたことを確認
             assert.equal(mockGame.hiScore, 200, "HiScore should be updated to the new high score");
 
+            // ゲームオーバー画面が描画されたことを確認
+            assert.ok(mockRenderer.renderGameOver.calledOnce, "Game over screen should be rendered");
+            assert.ok(mockRenderer.renderGameOver.calledWith(true), "Game over screen should indicate a new high score");
         });
 
         QUnit.test("setupKeyboardEvents should handle key events", function (assert) {
@@ -96,6 +103,7 @@
             document.dispatchEvent(anyKeyDown);
             assert.notOk(mockGame.isTitleScreen, "Title screen should not be active after any key press");
 
+            mockGame.isTitleScreen = false;
             document.dispatchEvent(leftKeyDown);
             assert.ok(mockGame.racket.movingLeft, "ArrowLeft keydown should set movingLeft to true");
 

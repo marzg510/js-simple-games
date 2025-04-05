@@ -72,11 +72,19 @@ export function setupKeyboardEvents(game, renderer) {
             gameLoop(game, renderer);
         }
         if (e.key === "ArrowLeft") {
+            game.racket.movingLeft = true;
+        }
         if (e.key === "ArrowRight") {
+            game.racket.movingRight = true;
+        }
     });
     document.addEventListener("keyup", (e) => {
         if (e.key === "ArrowLeft") {
+            game.racket.movingLeft = false;
+        }
         if (e.key === "ArrowRight") {
+            game.racket.movingRight = false;
+        }
     });
 }
 window.init = init; // init関数をグローバルに公開
