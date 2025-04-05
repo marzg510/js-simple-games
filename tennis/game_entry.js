@@ -76,7 +76,7 @@ export function setupKeyboardEvents(game, renderer) {
     });
     document.addEventListener("keyup", (e) => {
         if (e.key === "ArrowLeft") game.racket.movingLeft = false;
-        if (e.key === "ArrowRight") game.racket.movingRight = false;
+        if (e.key === "ArrowRight") {
     });
 }
 window.init = init; // init関数をグローバルに公開
