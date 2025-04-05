@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Game Entry Test</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+    <script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sinon.js/15.2.0/sinon.min.js"></script>
+    <script type="module">
+        import { Game } from '../../tennis/game.js';
+        import { Renderer } from '../../tennis/renderer.js';
+        import { getHiScore, saveHiScore } from '../../tennis/hi_score.js';
+        import { init, handleGameOver, setupKeyboardEvents } from '../../tennis/game_entry.js';
+
+        let mockGame;
+
+        QUnit.module("Game Entry Tests", {
+            beforeEach: function () {
+                // テスト用のDOMをセットアップ
+                const canvas = document.createElement("canvas");
+                canvas.id = "canvas";
+                canvas.width = 700;
+                canvas.height = 400;
+                document.body.appendChild(canvas);
+
+                // モックゲームオブジェクトを作成
+                mockGame = {
+                    isTitleScreen: true,
+                    isGameOver: false,
+                    score: 0,
+                    hiScore: 0,
+                    update: () => {},
+                    reset: () => {},
+                    getState: () => ({})
+                };
+
+            },
+            afterEach: function () {
+                // テスト後にDOMをクリーンアップ
+                const canvas = document.getElementById("canvas");
+                if (canvas) {
+                    canvas.remove();
+                }
+
+            }
+        });
+
+        QUnit.test("init should initialize the game", async function (assert) {
+            const done = assert.async();
+
+            // init関数を呼び出し
+            await init();
+
+            const canvas = document.getElementById("canvas");
+            assert.ok(canvas, "Canvas element should exist");
+            assert.ok(canvas.getContext("2d"), "Canvas should have a 2D context");
+
+            done();
+        });
+
+        QUnit.test("handleGameOver should update hiScore if score is higher", function (assert) {
+            const mockGame = {
+                score: 200,
+                hiScore: 100,
+                isNewHiScore: false,
+                reset: sinon.spy(), // リセットメソッドをスパイ化
+                getState: sinon.spy() // ゲーム状態取得メソッドをスパイ化
+            };
+
+            const mockRenderer = {
+                render: sinon.spy(),
+                renderTitleScreen: sinon.spy(),
+                renderGameOver: sinon.spy() // ゲームオーバー画面描画メソッドをスパイ化
+            };
+
+            handleGameOver(mockGame, mockRenderer);
+
+            // ハイスコアが更新されたことを確認
+            assert.equal(mockGame.hiScore, 200, "HiScore should be updated to the new high score");
+
+            // ゲームオーバー画面が描画されたことを確認
+            assert.ok(mockRenderer.renderGameOver.calledOnce, "Game over screen should be rendered");
+            assert.ok(mockRenderer.renderGameOver.calledWith(true), "Game over screen should indicate a new high score");
+        });
+
+        QUnit.test("setupKeyboardEvents should handle key events", function (assert) {
+            let mockGame = new Game();
+            const mockRenderer = {
+              render: sinon.spy(),
+              renderTitleScreen: sinon.spy()
+            };
+            
+            setupKeyboardEvents(mockGame, mockRenderer);
+
+            // キー押下イベントをシミュレート
+            const leftKeyDown = new KeyboardEvent("keydown", { key: "ArrowLeft" });
+            const rightKeyDown = new KeyboardEvent("keydown", { key: "ArrowRight" });
+            const leftKeyUp = new KeyboardEvent("keyup", { key: "ArrowLeft" });
+            const rightKeyUp = new KeyboardEvent("keyup", { key: "ArrowRight" });
+            const anyKeyDown = new KeyboardEvent("keydown");
+
+            mockGame.isTitleScreen = true;
+            document.dispatchEvent(anyKeyDown);
+            assert.notOk(mockGame.isTitleScreen, "Title screen should not be active after any key press");
+
+            mockGame.isTitleScreen = false;
+            document.dispatchEvent(leftKeyDown);
+            assert.ok(mockGame.racket.movingLeft, "ArrowLeft keydown should set movingLeft to true");
+
+            document.dispatchEvent(rightKeyDown);
+            assert.ok(mockGame.racket.movingRight, "ArrowRight keydown should set movingRight to true");
+
+            document.dispatchEvent(leftKeyUp);
+            assert.notOk(mockGame.racket.movingLeft, "ArrowLeft keyup should set movingLeft to false");
+
+            document.dispatchEvent(rightKeyUp);
+            assert.notOk(mockGame.racket.movingRight, "ArrowRight keyup should set movingRight to false");
+        });
+    </script>
+</head>
+<body>
+    <h1>Game Entry Test</h1>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+</body>
+</html>
