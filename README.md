@@ -8,7 +8,7 @@ Simple Games for My Private Learning by JS
 
 ## Ball
 
-[Ball](https://marzg510.github.io/js-simple-games/ball/m510-ball.html")
+[Ball](https://marzg510.github.io/js-simple-games/ball/m510-ball.html)
 
 ## Tennis
 
