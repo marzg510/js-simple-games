@@ -28,10 +28,10 @@ export class Game {
     }
 
     update() {
-        if (this.isTitleScreen || this.isGameOver) return;
+        if (this.isTitleScreen || this.isGameOver) {
 
-        const ball = this.ball;
-        const racket = this.racket;
+        const {ball} = this;
+        const {racket} = this;
 
         // ボールの位置を更新
         ball.x += ball.dx;
