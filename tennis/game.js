@@ -31,7 +31,7 @@ export class Game {
         if (this.isTitleScreen || this.isGameOver) {
 
         const {ball} = this;
-        const racket = this.racket;
+        const {racket} = this;
 
         // ボールの位置を更新
         ball.x += ball.dx;
