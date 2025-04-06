@@ -30,7 +30,7 @@ export class Game {
     update() {
         if (this.isTitleScreen || this.isGameOver) {
 
-        const ball = this.ball;
+        const {ball} = this;
         const racket = this.racket;
 
         // ボールの位置を更新
