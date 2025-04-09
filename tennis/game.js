@@ -28,7 +28,7 @@ export class Game {
     }
 
     update() {
-        if (this.isTitleScreen || this.isGameOver) {
+        if (this.isTitleScreen || this.isGameOver) return;
 
         const {ball} = this;
         const {racket} = this;
@@ -42,7 +42,9 @@ export class Game {
 
         // ラケットとの衝突判定
         if (detectRacketCollision(ball, racket)) {
+            ball.y = racket.y - ball.radius; // ボールをラケットの上端に固定
             this.score += 1; // スコアを加算
+            console.log("score: " + this.score);
         }
 
         // ボールが下端からはみ出た場合
