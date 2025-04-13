@@ -23,6 +23,14 @@ ID: ritwickdey.LiveServer
 パブリッシャー: Ritwick Dey
 VS Marketplace リンク: https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer
 
+## Develop
+
+http server
+
+```
+node_modules/.bin/http-server
+```
+
 ## Practice Code
 
 ### Canvas
