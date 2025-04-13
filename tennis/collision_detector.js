@@ -10,8 +10,9 @@ export function detectWallCollision(ball, wallWidth, canvasWidth, canvasHeight) 
 export function detectRacketCollision(ball, racket) {
     if (
         ball.y + ball.radius >= racket.y && // ボールがラケットの高さに達した
-        ball.x >= racket.x &&               // ボールがラケットの左端より右
-        ball.x <= racket.x + racket.width   // ボールがラケットの右端より左
+        ball.y - ball.radius <= racket.y + racket.height && // ボールがラケットの下端より上
+        ball.x + ball.radius >= racket.x &&               // ボールがラケットの左端より右
+        ball.x - ball.radius <= racket.x + racket.width   // ボールがラケットの右端より左
     ) {
         ball.dy = -ball.dy; // 垂直方向の速度を反転
         return true;        // 衝突が発生した
