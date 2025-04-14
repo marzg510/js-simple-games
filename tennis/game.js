@@ -45,6 +45,11 @@ export class Game {
             ball.y = racket.y - ball.radius; // ボールをラケットの上端に固定
             this.score += 1; // スコアを加算
             console.log("score: " + this.score);
+
+            // スコアに応じてボールのスピードを上げる
+            const speedIncrease = 0.2; // スピード増加量
+            ball.dx += ball.dx > 0 ? speedIncrease : -speedIncrease; // x方向の速度を増加
+            ball.dy += ball.dy > 0 ? speedIncrease : -speedIncrease; // y方向の速度を増加
         }
 
         // ボールが下端からはみ出た場合
