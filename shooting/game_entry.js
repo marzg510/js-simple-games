@@ -1,5 +1,5 @@
-// import { ShootingGame } from './game.js';
-// import { Renderer } from './renderer.js';
+import { ShootingGame } from './game.js';
+import { Renderer } from './renderer.js';
 // import { getHiScore, saveHiScore } from './hi_score.js';
 
 const GAME_OVER_TIMEOUT = 2999; // ゲームオーバー後のタイムアウト期間（ミリ秒）
@@ -9,20 +9,20 @@ export async function init() {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
-    // const renderer = new Renderer(ctx);
+    const renderer = new Renderer(ctx);
 
     // ゲームロジックを管理するインスタンスを作成
-    // const game = new ShootingGame(canvas.width, canvas.height);
-    // game.isTitleScreen = false;
+    const game = new ShootingGame(canvas.width, canvas.height);
+    game.isTitleScreen = false;
 
     // Firebaseからハイスコアを取得
     // game.hiScore = await getHiScore();
 
     // キーボードイベントを設定
-    // setupKeyboardEvents(game, renderer);
+    setupKeyboardEvents(game, renderer);
 
     // ゲームループを開始
-    // gameLoop(game, renderer);
+    gameLoop(game, renderer);
 }
 
 // ゲームオーバー時の処理
@@ -60,6 +60,7 @@ function gameLoop(game, renderer) {
     // ゲームロジックを更新
     game.update();
     renderer.render(game.getState());
+    // renderer.renderMyuShip(game.myShip); // 自機を描画
     requestAnimationFrame(() => gameLoop(game, renderer));
 }
 
@@ -71,18 +72,30 @@ export function setupKeyboardEvents(game, renderer) {
             gameLoop(game, renderer);
         }
         if (e.key === "ArrowLeft") {
-            game.racket.movingLeft = true;
+            game.myShip.movingLeft = true;
         }
         if (e.key === "ArrowRight") {
-            game.racket.movingRight = true;
+            game.myShip.movingRight = true;
+        }
+        if (e.key === "ArrowUp") {
+            game.myShip.movingUp = true;
+        }
+        if (e.key === "ArrowDown") {
+            game.myShip.movingDown = true;
         }
     });
     document.addEventListener("keyup", (e) => {
         if (e.key === "ArrowLeft") {
-            game.racket.movingLeft = false;
+            game.myShip.movingLeft = false;
         }
         if (e.key === "ArrowRight") {
-            game.racket.movingRight = false;
+            game.myShip.movingRight = false;
+        }
+        if (e.key === "ArrowUp") {
+            game.myShip.movingUp = false;
+        }
+        if (e.key === "ArrowDown") {
+            game.myShip.movingDown = false;
         }
     });
 }

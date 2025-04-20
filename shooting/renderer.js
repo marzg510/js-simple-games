@@ -10,13 +10,7 @@ export class Renderer {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
         // 自機を描画
-        this.ctx.beginPath();
-        this.ctx.moveTo(myShip.x, myShip.y - myShip.height / 2); // 上の頂点
-        this.ctx.lineTo(myShip.x - myShip.width / 2, myShip.y + myShip.height / 2); // 左下の頂点
-        this.ctx.lineTo(myShip.x + myShip.width / 2, myShip.y + myShip.height / 2); // 右下の頂点
-        this.ctx.closePath();
-        this.ctx.fillStyle = "blue";
-        this.ctx.fill();
+        this.renderMyShip(myShip);
 
         // スコアを描画
         this.ctx.fillStyle = "black";
@@ -27,6 +21,16 @@ export class Renderer {
         // ハイスコアを描画
         this.ctx.font = "18px Arial";
         this.ctx.fillText(`Hi Score: ${hiScore}`, this.ctx.canvas.width / 2, 60);
+    }
+
+    renderMyShip(myShip) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(myShip.x, myShip.y - myShip.height / 2); // 上の頂点
+        this.ctx.lineTo(myShip.x - myShip.width / 2, myShip.y + myShip.height / 2); // 左下の頂点
+        this.ctx.lineTo(myShip.x + myShip.width / 2, myShip.y + myShip.height / 2); // 右下の頂点
+        this.ctx.closePath();
+        this.ctx.fillStyle = "blue";
+        this.ctx.fill();
     }
 
     renderTitleScreen() {

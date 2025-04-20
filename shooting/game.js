@@ -6,8 +6,8 @@ export class ShootingGame {
         this.myShip = {
             x: canvasWidth / 2,     // 自機のx座標
             y: canvasHeight / 2,    // 自機のy座標
-            width: 100,             // 自機の幅
-            height: 10,             // 自機の高さ
+            width: 50,             // 自機の幅
+            height: 50,            // 自機の高さ
             dx: 2,                  // 自機のx方向の速度
             dy: 2,                  // 自機のy方向の速度
             movingLeft: false,      // 自機が左に移動中かどうか
@@ -31,8 +31,14 @@ export class ShootingGame {
         if (myShip.movingLeft && myShip.x > 0) {
             myShip.x -= myShip.dx;
         }
-        if (myShip.movingRight && myShip.x < myShip.canvasWidth) {
+        if (myShip.movingRight && myShip.x < this.canvasWidth) {
             myShip.x += myShip.dx;
+        }
+        if (myShip.movingUp && myShip.y > 0) {
+            myShip.y -= myShip.dy;
+        }
+        if (myShip.movingDown && myShip.y < this.canvasHeight) {
+            myShip.y += myShip.dy;
         }
     }
 
