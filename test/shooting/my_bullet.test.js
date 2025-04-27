@@ -11,6 +11,8 @@ QUnit.module('MyBullet', (hooks) => {
     QUnit.test('初期化時に正しいプロパティが設定される', (assert) => {
         assert.equal(bullet.x, 100, 'x座標が正しい');
         assert.equal(bullet.y, 200, 'y座標が正しい');
+        assert.equal(bullet.width, 3, '幅が正しい');
+        assert.equal(bullet.height, 30, '高さが正しい');
         assert.equal(bullet.speed, 5, '速度が正しい');
         assert.equal(bullet.isActive, true, '初期状態でアクティブ');
     });
