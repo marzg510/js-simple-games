@@ -4,13 +4,16 @@ export class Renderer {
     }
 
     render(state) {
-        const { myShip, score, hiScore } = state;
+        const { myShip, myBullets, score, hiScore } = state;
 
         // キャンバスをクリア
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
         // 自機を描画
         this.renderMyShip(myShip);
+
+        // 自弾を描画
+        this.renderMyBullets(myBullets);
 
         // スコアを描画
         this.ctx.fillStyle = "black";
@@ -31,6 +34,19 @@ export class Renderer {
         this.ctx.closePath();
         this.ctx.fillStyle = "blue";
         this.ctx.fill();
+    }
+
+    renderMyBullet(bullet) {
+        if (!bullet.isActive) {
+
+        this.ctx.beginPath();
+        this.ctx.fillStyle = "red";
+        this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+        this.ctx.closePath();
+    }
+
+    renderMyBullets(bullets) {
+        bullets.forEach((bullet) => this.renderMyBullet(bullet));
     }
 
     renderTitleScreen() {

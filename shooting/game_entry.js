@@ -1,5 +1,6 @@
 import { ShootingGame } from './game.js';
 import { Renderer } from './renderer.js';
+import { MyBullet } from './my_bullet.js';
 // import { getHiScore, saveHiScore } from './hi_score.js';
 
 const GAME_OVER_TIMEOUT = 2999; // ゲームオーバー後のタイムアウト期間（ミリ秒）
@@ -14,6 +15,9 @@ export async function init() {
     // ゲームロジックを管理するインスタンスを作成
     const game = new ShootingGame(canvas.width, canvas.height);
     game.isTitleScreen = false;
+    // テスト表示用の弾を追加
+    game.myBullets.push(new MyBullet(game.myShip.x, game.myShip.y - game.myShip.height / 2  - 50, 5)); // 弾を初期化
+    console.log("Game initialized with bullets: ", game.myBullets); // デバッグ用
 
     // Firebaseからハイスコアを取得
     // game.hiScore = await getHiScore();
