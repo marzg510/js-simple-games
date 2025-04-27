@@ -37,7 +37,7 @@ export class Renderer {
     }
 
     renderMyBullet(bullet) {
-        if (!bullet.isActive) return; // 非アクティブな弾は描画しない
+        if (!bullet.isActive) {
 
         this.ctx.beginPath();
         this.ctx.fillStyle = "red";
