@@ -38,6 +38,8 @@ export class Renderer {
 
     renderMyBullet(bullet) {
         if (!bullet.isActive) {
+            return;
+        }
 
         this.ctx.beginPath();
         this.ctx.fillStyle = "red";
