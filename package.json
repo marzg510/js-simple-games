@@ -1,5 +1,9 @@
 {
+  "type": "module",
   "dependencies": {
     "http-server": "^14.1.1"
+  },
+  "devDependencies": {
+    "qunit": "^2.24.1"
   }
 }

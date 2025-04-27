@@ -12,7 +12,13 @@ Simple Games for My Private Learning by JS
 
 ## Tennis
 
-### Requires
+
+## Shooting
+
+### Test
+
+npx qunit
+
 
 #### VS Code Extension(Local Server)
 
