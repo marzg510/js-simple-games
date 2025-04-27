@@ -1,4 +1,3 @@
-// import { detectWallCollision, detectRacketCollision } from './collision_detector.js';
 export class ShootingGame {
     constructor(canvasWidth, canvasHeight) {
         this.canvasWidth = canvasWidth;
@@ -15,11 +14,13 @@ export class ShootingGame {
             movingUp: false,        // 自機が上に移動中かどうか
             movingDown: false,      // 自機が下に移動中かどうか
         };
+        this.myBullets = [];         // 自機の弾の配列
         this.isGameOver = false;    // ゲームオーバーかどうか
         this.score = 0;             // スコア
         this.hiScore = 0;           // ハイスコアを初期化
         this.isNewHiScore = false;  // 新しいハイスコアかどうか
         this.isTitleScreen = false; // タイトル画面かどうか
+
     }
 
     update() {
@@ -40,6 +41,8 @@ export class ShootingGame {
         if (myShip.movingDown && myShip.y < this.canvasHeight) {
             myShip.y += myShip.dy;
         }
+        // 自機の弾を更新
+        this.myBullets.forEach((bullet) => bullet.update());
     }
 
     reset() {
@@ -50,6 +53,7 @@ export class ShootingGame {
     getState() {
         return {
             myShip: this.myShip,
+            myBullets: this.myBullets,
             score: this.score,
             hiScore: this.hiScore,
         };
