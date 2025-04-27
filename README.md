@@ -17,7 +17,11 @@ Simple Games for My Private Learning by JS
 
 ### Test
 
-npx qunit
+QUnit使用
+
+```
+npm test
+```
 
 
 #### VS Code Extension(Local Server)
