@@ -17,7 +17,6 @@ export async function init() {
     game.isTitleScreen = false;
     // テスト表示用の弾を追加
     game.myBullets.push(new MyBullet(game.myShip.x, game.myShip.y - game.myShip.height / 2  - 50, 5)); // 弾を初期化
-    console.log("Game initialized with bullets: ", game.myBullets); // デバッグ用
 
     // Firebaseからハイスコアを取得
     // game.hiScore = await getHiScore();
