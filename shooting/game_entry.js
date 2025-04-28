@@ -15,7 +15,7 @@ export async function init() {
     // ゲームロジックを管理するインスタンスを作成
     const game = new ShootingGame(canvas.width, canvas.height);
     game.isTitleScreen = false;
-    game.enemies.push(new Enemy(100, 100, 50, 50)); // テスト的に敵を追加
+    game.enemies.push(new Enemy(100, 0, 50, 50)); // テスト的に敵を追加
 
     // Firebaseからハイスコアを取得
     // game.hiScore = await getHiScore();

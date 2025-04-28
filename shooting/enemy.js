@@ -5,4 +5,8 @@ export class Enemy {
         this.width = width; // 敵の幅
         this.height = height; // 敵の高さ
     }
+
+    update() {
+        this.y += 1; // 下に移動
+    }
 }

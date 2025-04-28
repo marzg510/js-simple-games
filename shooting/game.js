@@ -63,6 +63,9 @@ export class ShootingGame {
         // 自機の弾を更新
         this.myBullets.forEach((bullet) => bullet.update());
         this.myBullets = this.myBullets.filter((bullet) => bullet.isActive); // 非アクティブな弾を削除
+
+        // 敵を更新
+        this.enemies.forEach((enemy) => enemy.update());
     }
 
     reset() {
