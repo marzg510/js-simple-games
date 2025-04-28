@@ -8,6 +8,10 @@ export class MyBulletRenderer {
         if (!bullet.isActive) {
             return;
         }
+        // ヒットした弾は描画しない
+        if (bullet.isHit) {
+            return;
+        }
 
         this.ctx.save(); // 現在の状態を保存
         this.ctx.fillStyle = "orange"; // 弾の色

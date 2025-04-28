@@ -4,6 +4,7 @@ export class Enemy {
         this.y = y; // 敵のy座標
         this.width = width; // 敵の幅
         this.height = height; // 敵の高さ
+        this.isHit = false; // 敵が弾に当たったかどうか
     }
 
     update() {
