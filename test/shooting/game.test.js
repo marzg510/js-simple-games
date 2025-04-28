@@ -1,4 +1,5 @@
 import { ShootingGame } from '../../shooting/game.js';
+import { Enemy } from '../../shooting/enemy.js';
 
 QUnit.module('ShootingGame', (hooks) => {
     let game;
@@ -112,5 +113,16 @@ QUnit.module('ShootingGame', (hooks) => {
 
         game.shoot(); // 新しい弾を発射
         assert.equal(game.myBullets.length, 2, '新しい弾を発射できる');
+    });
+
+    QUnit.test('敵が画面外に出たら削除される', (assert) => {
+        const enemy = new Enemy(100, 590, 50, 50);
+        game.enemies.push(enemy);
+        game.update();
+        assert.equal(game.enemies.length, 1, '敵はまだ画面内にいる');
+
+        enemy.y = 601; // 敵を画面外に移動
+        game.update();
+        assert.equal(game.enemies.length, 0, '画面外に出た敵が削除される');
     });
 });
