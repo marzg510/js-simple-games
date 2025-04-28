@@ -14,4 +14,10 @@ QUnit.module('Enemy', (hooks) => {
         assert.equal(enemy.width, 50, '幅が正しい');
         assert.equal(enemy.height, 50, '高さが正しい');
     });
+
+    QUnit.test('updateメソッドで敵が下に移動する', (assert) => {
+        const initialY = enemy.y;
+        enemy.update();
+        assert.equal(enemy.y, initialY + 1, 'y座標が1増加する');
+    });
 });
