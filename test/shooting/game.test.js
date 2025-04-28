@@ -90,4 +90,27 @@ QUnit.module('ShootingGame', (hooks) => {
         game.update();
         assert.equal(game.myBullets.length, 0, '画面外に出た弾が削除される');
     });
+
+    QUnit.test('弾が2つ以上発射されない', (assert) => {
+        game.shoot();
+        game.shoot();
+        game.shoot(); // 3回目の発射は無視される
+        assert.equal(game.myBullets.length, 2, '弾は2つまでしか発射されない');
+    });
+
+    QUnit.test('画面外に出た弾が削除された後、新しい弾を発射できる', (assert) => {
+        game.shoot();
+        game.shoot();
+        const bullet1 = game.myBullets[0];
+        const bullet2 = game.myBullets[1];
+
+        // 弾を画面外に移動
+        bullet1.y = -bullet1.height - 1;
+
+        game.update(); // 画面外の弾を削除
+        assert.equal(game.myBullets.length, 1, '画面外の弾が削除される');
+
+        game.shoot(); // 新しい弾を発射
+        assert.equal(game.myBullets.length, 2, '新しい弾を発射できる');
+    });
 });
