@@ -1,8 +1,11 @@
 import { EnemyRenderer } from "./enemy_renderer.js";
+import { MyBulletRenderer } from "./my_bullet_renderer.js";
+
 export class Renderer {
     constructor(ctx, enemyRenderer) {
         this.ctx = ctx;
         this.enemyRenderer = enemyRenderer
+        this.myBulletRenderer = new MyBulletRenderer(ctx);
     }
 
     render(state) {
@@ -41,19 +44,8 @@ export class Renderer {
         this.ctx.fill();
     }
 
-    renderMyBullet(bullet) {
-        if (!bullet.isActive) {
-            return;
-        }
-
-        this.ctx.beginPath();
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-        this.ctx.closePath();
-    }
-
     renderMyBullets(bullets) {
-        bullets.forEach((bullet) => this.renderMyBullet(bullet));
+        bullets.forEach((bullet) => this.myBulletRenderer.render(bullet));
     }
 
     renderEnemies(enemies) {
