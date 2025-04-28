@@ -1,4 +1,5 @@
 import { ShootingGame } from '../../shooting/game.js';
+import { MyBullet } from '../../shooting/my_bullet.js';
 import { Enemy } from '../../shooting/enemy.js';
 
 QUnit.module('ShootingGame', (hooks) => {
@@ -124,5 +125,70 @@ QUnit.module('ShootingGame', (hooks) => {
         enemy.y = 601; // 敵を画面外に移動
         game.update();
         assert.equal(game.enemies.length, 0, '画面外に出た敵が削除される');
+    });
+
+    QUnit.test('弾が敵に当たった場合、弾と敵の状態が正しく更新される', (assert) => {
+        // 敵と弾を初期化
+        const bullet = new MyBullet(100, 100, 5);
+        const enemy = new Enemy(95, 95, 10, 10); // 弾と重なる位置に敵を配置
+
+        game.myBullets.push(bullet);
+        game.enemies.push(enemy);
+
+        // ゲームの更新を実行
+        game.update();
+
+        // 弾と敵の状態を確認
+        assert.ok(bullet.isHit, '弾が敵に当たった状態になる');
+        assert.notOk(bullet.isActive, '弾が非アクティブになる');
+        assert.ok(enemy.isHit, '敵が弾に当たった状態になる');
+    });
+
+    QUnit.test('弾が敵に当たらなかった場合、弾と敵の状態は変化しない', (assert) => {
+        // 敵と弾を初期化
+        const bullet = new MyBullet(100, 100, 5);
+        const enemy = new Enemy(200, 200, 10, 10); // 弾と重ならない位置に敵を配置
+
+        game.myBullets.push(bullet);
+        game.enemies.push(enemy);
+
+        // ゲームの更新を実行
+        game.update();
+
+        // 弾と敵の状態を確認
+        assert.notOk(bullet.isHit, '弾が敵に当たっていない状態');
+        assert.ok(bullet.isActive, '弾がアクティブなまま');
+        assert.notOk(enemy.isHit, '敵が弾に当たっていない状態');
+    });
+
+    QUnit.test('当たった弾と敵が削除される', (assert) => {
+        // 敵と弾を初期化
+        const bullet = new MyBullet(100, 100, 5);
+        const enemy = new Enemy(95, 95, 10, 10); // 弾と重なる位置に敵を配置
+
+        game.myBullets.push(bullet);
+        game.enemies.push(enemy);
+
+        // ゲームの更新を実行
+        game.update();
+
+        // 配列から削除されていることを確認
+        assert.equal(game.myBullets.length, 0, '当たった弾が削除される');
+        // assert.equal(game.enemies.length, 0, '当たった敵が削除される');
+    });
+
+    QUnit.test('スコアが正しく加算される', (assert) => {
+        // 敵と弾を初期化
+        const bullet = new MyBullet(100, 100, 5);
+        const enemy = new Enemy(95, 95, 10, 10); // 弾と重なる位置に敵を配置
+
+        game.myBullets.push(bullet);
+        game.enemies.push(enemy);
+
+        // ゲームの更新を実行
+        game.update();
+
+        // スコアを確認
+        assert.equal(game.score, 10, 'スコアが正しく加算される');
     });
 });

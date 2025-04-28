@@ -6,12 +6,29 @@ export class MyBullet {
         this.height = 30; // 弾の高さ
         this.speed = speed; // 弾の速度
         this.isActive = true; // 弾がアクティブかどうか
+        this.isHit = false; // 弾が敵に当たったかどうか
     }
 
     update() {
-        this.y -= this.speed; // 弾を上方向に移動
+        if (!this.isHit) {
+            this.y -= this.speed; // 弾を上方向に移動
+        }
         if (this.y + this.height < 0) {
             this.isActive = false; // 画面外に出たら非アクティブにする
         }
+    }
+
+    isCollidingWith(enemy) {
+        if (this.isHit) return false; // ヒットした弾は当たり判定を行わない
+        if (!this.isActive) return false; // 非アクティブな弾は当たり判定を行わない
+        if (enemy.isHit) return false; // ヒットした敵は当たり判定を行わない
+
+        // 当たり判定のロジック
+        return (
+            this.x < enemy.x + enemy.width &&
+            this.x + this.width > enemy.x &&
+            this.y < enemy.y + enemy.height &&
+            this.y + this.height > enemy.y
+        );
     }
 }
