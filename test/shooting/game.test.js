@@ -74,4 +74,20 @@ QUnit.module('ShootingGame', (hooks) => {
         assert.equal(game.score, 0, 'スコアがリセットされる');
         assert.equal(game.isGameOver, false, 'ゲームオーバーが解除される');
     });
+
+    QUnit.test('弾が正しい位置に生成される', (assert) => {
+        game.shoot();
+        assert.equal(game.myBullets.length, 1, '弾が1つ生成される');
+        const bullet = game.myBullets[0];
+        assert.equal(bullet.x, game.myShip.x, '弾のx座標が自機のx座標と一致する');
+        assert.equal(bullet.y, game.myShip.y - game.myShip.height / 2, '弾のy座標が自機の上端に生成される');
+    });
+
+    QUnit.test('画面外に出た弾が削除される', (assert) => {
+        game.shoot();
+        const bullet = game.myBullets[0];
+        bullet.y = -bullet.height - 1; // 弾を画面外に移動
+        game.update();
+        assert.equal(game.myBullets.length, 0, '画面外に出た弾が削除される');
+    });
 });
