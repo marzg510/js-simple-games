@@ -1,6 +1,7 @@
 import { ShootingGame } from './game.js';
 import { Renderer } from './renderer.js';
 import { Enemy } from './enemy.js';
+import { EnemyRenderer } from './enemy_renderer.js';
 // import { getHiScore, saveHiScore } from './hi_score.js';
 
 const GAME_OVER_TIMEOUT = 2999; // ゲームオーバー後のタイムアウト期間（ミリ秒）
@@ -10,7 +11,8 @@ export async function init() {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
-    const renderer = new Renderer(ctx);
+    const enemyImageSrc = "./assets/enemy.png"; // 敵の画像のパス
+    const renderer = new Renderer(ctx, new EnemyRenderer(ctx, enemyImageSrc, 80, 80)); // 敵の幅と高さ
 
     // ゲームロジックを管理するインスタンスを作成
     const game = new ShootingGame(canvas.width, canvas.height);
@@ -62,7 +64,6 @@ function gameLoop(game, renderer) {
     // ゲームロジックを更新
     game.update();
     renderer.render(game.getState());
-    // renderer.renderMyuShip(game.myShip); // 自機を描画
     requestAnimationFrame(() => gameLoop(game, renderer));
 }
 
