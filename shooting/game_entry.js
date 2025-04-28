@@ -1,6 +1,6 @@
 import { ShootingGame } from './game.js';
 import { Renderer } from './renderer.js';
-import { MyBullet } from './my_bullet.js';
+import { Enemy } from './enemy.js';
 // import { getHiScore, saveHiScore } from './hi_score.js';
 
 const GAME_OVER_TIMEOUT = 2999; // ゲームオーバー後のタイムアウト期間（ミリ秒）
@@ -15,6 +15,7 @@ export async function init() {
     // ゲームロジックを管理するインスタンスを作成
     const game = new ShootingGame(canvas.width, canvas.height);
     game.isTitleScreen = false;
+    game.enemies.push(new Enemy(100, 100, 50, 50)); // テスト的に敵を追加
 
     // Firebaseからハイスコアを取得
     // game.hiScore = await getHiScore();

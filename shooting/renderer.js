@@ -4,7 +4,7 @@ export class Renderer {
     }
 
     render(state) {
-        const { myShip, myBullets, score, hiScore } = state;
+        const { myShip, myBullets, enemies, score, hiScore } = state;
 
         // キャンバスをクリア
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
@@ -14,6 +14,9 @@ export class Renderer {
 
         // 自弾を描画
         this.renderMyBullets(myBullets);
+
+        // 敵を描画
+        this.renderEnemies(enemies);
 
         // スコアを描画
         this.ctx.fillStyle = "black";
@@ -49,6 +52,13 @@ export class Renderer {
 
     renderMyBullets(bullets) {
         bullets.forEach((bullet) => this.renderMyBullet(bullet));
+    }
+
+    renderEnemies(enemies) {
+        this.ctx.fillStyle = "darkgreen";
+        enemies.forEach((enemy) => {
+            this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        });
     }
 
     renderTitleScreen() {
