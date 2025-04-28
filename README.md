@@ -15,6 +15,12 @@ Simple Games for My Private Learning by JS
 
 ## Shooting
 
+### Develop
+
+```
+npm run start
+```
+
 ### Test
 
 QUnit使用

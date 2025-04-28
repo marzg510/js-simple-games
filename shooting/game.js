@@ -1,3 +1,5 @@
+import { MyBullet } from './my_bullet.js';
+
 export class ShootingGame {
     constructor(canvasWidth, canvasHeight) {
         this.canvasWidth = canvasWidth;
@@ -23,6 +25,16 @@ export class ShootingGame {
 
     }
 
+    shoot() {
+        // 弾を発射
+        const bullet = new MyBullet(
+            this.myShip.x,
+            this.myShip.y - this.myShip.height / 2,
+            5 // 弾の速度
+        );
+        this.myBullets.push(bullet);
+    }
+
     update() {
         if (this.isTitleScreen || this.isGameOver) return;
 
@@ -43,6 +55,7 @@ export class ShootingGame {
         }
         // 自機の弾を更新
         this.myBullets.forEach((bullet) => bullet.update());
+        this.myBullets = this.myBullets.filter((bullet) => bullet.isActive); // 非アクティブな弾を削除
     }
 
     reset() {

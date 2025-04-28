@@ -15,8 +15,6 @@ export async function init() {
     // ゲームロジックを管理するインスタンスを作成
     const game = new ShootingGame(canvas.width, canvas.height);
     game.isTitleScreen = false;
-    // テスト表示用の弾を追加
-    game.myBullets.push(new MyBullet(game.myShip.x, game.myShip.y - game.myShip.height / 2  - 50, 5)); // 弾を初期化
 
     // Firebaseからハイスコアを取得
     // game.hiScore = await getHiScore();
@@ -86,7 +84,11 @@ export function setupKeyboardEvents(game, renderer) {
         if (e.key === "ArrowDown") {
             game.myShip.movingDown = true;
         }
+        if (e.key === "z" || e.key === "Z") { // Zキーが押された場合
+            game.shoot(); // 弾を発射
+        }
     });
+
     document.addEventListener("keyup", (e) => {
         if (e.key === "ArrowLeft") {
             game.myShip.movingLeft = false;
