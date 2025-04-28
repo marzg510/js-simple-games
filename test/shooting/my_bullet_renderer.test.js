@@ -8,10 +8,12 @@ QUnit.module('BulletRenderer', (hooks) => {
     hooks.beforeEach(() => {
         // ctx のモックを作成
         mockCtx = {
-            fillRect: sinon.spy(), // fillRect をスパイとして設定
+            fillRect: sinon.spy(),
             fillStyle: null,
-            strokeRect: sinon.spy(), // strokeRect をスパイとして設定
+            strokeRect: sinon.spy(),
             strokeStyle: null,
+            save: sinon.spy(),
+            restore: sinon.spy(),
         };
 
         // BulletRenderer を初期化
@@ -33,7 +35,7 @@ QUnit.module('BulletRenderer', (hooks) => {
         );
         // fillStyle の確認
         assert.equal(mockCtx.fillStyle, 'orange', 'fillStyle が orange に設定されている');
-        // ヒットエリアの確認
+        // コリジョンエリアの確認
         assert.ok(mockCtx.strokeRect.calledOnce, 'strokeRect が1回呼び出される');
         assert.deepEqual(
             mockCtx.strokeRect.firstCall.args,
@@ -53,7 +55,7 @@ QUnit.module('BulletRenderer', (hooks) => {
 
         // fillRect が呼び出されていないことを確認
         assert.ok(mockCtx.fillRect.notCalled, '非アクティブな弾は描画されない');
-        // ヒットエリアが呼び出されていないことを確認
-        assert.ok(mockCtx.strokeRect.notCalled, '非アクティブな弾のヒットエリアは描画されない');
+        // コリジョンエリアが呼び出されていないことを確認
+        assert.ok(mockCtx.strokeRect.notCalled, '非アクティブな弾のコリジョンエリアは描画されない');
     });
 });
