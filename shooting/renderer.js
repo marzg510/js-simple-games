@@ -2,9 +2,9 @@ import { EnemyRenderer } from "./enemy_renderer.js";
 import { MyBulletRenderer } from "./my_bullet_renderer.js";
 
 export class Renderer {
-    constructor(ctx, enemyRenderer) {
+    constructor(ctx, enemyImageSrc) {
         this.ctx = ctx;
-        this.enemyRenderer = enemyRenderer
+        this.enemyRenderer = new EnemyRenderer(ctx, enemyImageSrc, 80, 80);
         this.myBulletRenderer = new MyBulletRenderer(ctx);
     }
 
