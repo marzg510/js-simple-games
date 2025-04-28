@@ -1,4 +1,5 @@
 import { MyBullet } from './my_bullet.js';
+import { Enemy } from './enemy.js';
 
 export class ShootingGame {
     constructor(canvasWidth, canvasHeight) {
@@ -17,6 +18,7 @@ export class ShootingGame {
             movingDown: false,      // 自機が下に移動中かどうか
         };
         this.myBullets = [];         // 自機の弾の配列
+        this.enemies = [];           // 敵の配列
         this.isGameOver = false;    // ゲームオーバーかどうか
         this.score = 0;             // スコア
         this.hiScore = 0;           // ハイスコアを初期化
@@ -72,6 +74,7 @@ export class ShootingGame {
         return {
             myShip: this.myShip,
             myBullets: this.myBullets,
+            enemies: this.enemies,
             score: this.score,
             hiScore: this.hiScore,
         };
