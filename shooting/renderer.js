@@ -55,8 +55,8 @@ export class Renderer {
     }
 
     renderEnemies(enemies) {
+        this.ctx.fillStyle = "darkgreen";
         enemies.forEach((enemy) => {
-            this.ctx.fillStyle = "darkgreen";
             this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
         });
     }
