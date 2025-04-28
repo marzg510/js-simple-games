@@ -1,6 +1,8 @@
+import { EnemyRenderer } from "./enemy_renderer.js";
 export class Renderer {
-    constructor(ctx) {
+    constructor(ctx, enemyRenderer) {
         this.ctx = ctx;
+        this.enemyRenderer = enemyRenderer
     }
 
     render(state) {
@@ -55,10 +57,7 @@ export class Renderer {
     }
 
     renderEnemies(enemies) {
-        this.ctx.fillStyle = "darkgreen";
-        enemies.forEach((enemy) => {
-            this.ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-        });
+        enemies.forEach((enemy) => this.enemyRenderer.render(enemy));
     }
 
     renderTitleScreen() {
