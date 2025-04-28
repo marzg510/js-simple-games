@@ -66,6 +66,7 @@ export class ShootingGame {
 
         // 敵を更新
         this.enemies.forEach((enemy) => enemy.update());
+        this.enemies = this.enemies.filter((enemy) => enemy.y <= this.canvasHeight); // 画面外に出た敵を削除
     }
 
     reset() {
