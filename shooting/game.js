@@ -1,28 +1,25 @@
 import { MyBullet } from './my_bullet.js';
 import { Enemy } from './enemy.js';
+import { MyShip } from './my_ship.js';
 
 export class ShootingGame {
     constructor(canvasWidth, canvasHeight) {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
-        this.myShip = {
-            x: canvasWidth / 2,     // 自機のx座標
-            y: canvasHeight / 2,    // 自機のy座標
-            width: 50,             // 自機の幅
-            height: 50,            // 自機の高さ
-            dx: 2,                  // 自機のx方向の速度
-            dy: 2,                  // 自機のy方向の速度
-            movingLeft: false,      // 自機が左に移動中かどうか
-            movingRight: false,     // 自機が右に移動中かどうか
-            movingUp: false,        // 自機が上に移動中かどうか
-            movingDown: false,      // 自機が下に移動中かどうか
-        };
-        this.myBullets = [];         // 自機の弾の配列
-        this.enemies = [];           // 敵の配列
-        this.isGameOver = false;    // ゲームオーバーかどうか
-        this.score = 0;             // スコア
-        this.hiScore = 0;           // ハイスコアを初期化
-        this.isNewHiScore = false;  // 新しいハイスコアかどうか
+        this.myShip = new MyShip(
+            canvasWidth / 2,
+            canvasHeight / 2,
+            50, // 自機の幅
+            50, // 自機の高さ
+            2,  // 自機のx方向の速度
+            2   // 自機のy方向の速度
+        );
+        this.myBullets = []; // 自機の弾の配列
+        this.enemies = []; // 敵の配列
+        this.isGameOver = false; // ゲームオーバーかどうか
+        this.score = 0; // スコア
+        this.hiScore = 0; // ハイスコアを初期化
+        this.isNewHiScore = false; // 新しいハイスコアかどうか
         this.isTitleScreen = false; // タイトル画面かどうか
 
     }
@@ -48,18 +45,8 @@ export class ShootingGame {
         const {myShip} = this;
 
         // 自機の移動を更新
-        if (myShip.movingLeft && myShip.x > 0) {
-            myShip.x -= myShip.dx;
-        }
-        if (myShip.movingRight && myShip.x < this.canvasWidth) {
-            myShip.x += myShip.dx;
-        }
-        if (myShip.movingUp && myShip.y > 0) {
-            myShip.y -= myShip.dy;
-        }
-        if (myShip.movingDown && myShip.y < this.canvasHeight) {
-            myShip.y += myShip.dy;
-        }
+        this.myShip.update(this.canvasWidth, this.canvasHeight);
+
         // 自機の弾を更新
         this.myBullets.forEach((bullet) => bullet.update());
 
@@ -97,4 +84,4 @@ export class ShootingGame {
             hiScore: this.hiScore,
         };
     }
-};
+}
