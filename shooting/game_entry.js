@@ -10,8 +10,9 @@ export async function init() {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
 
+    const myShipImageSrc = "./assets/myship2.png"; // 敵の画像のパス
     const enemyImageSrc = "./assets/enemy.png"; // 敵の画像のパス
-    const renderer = new Renderer(ctx, enemyImageSrc);
+    const renderer = new Renderer(ctx, myShipImageSrc, enemyImageSrc);
 
     // ゲームロジックを管理するインスタンスを作成
     const game = new ShootingGame(canvas.width, canvas.height);

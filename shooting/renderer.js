@@ -1,11 +1,14 @@
 import { EnemyRenderer } from "./enemy_renderer.js";
 import { MyBulletRenderer } from "./my_bullet_renderer.js";
+import { MyShipRenderer } from "./my_ship_renderer.js";
 
 export class Renderer {
-    constructor(ctx, enemyImageSrc) {
+    constructor(ctx, myShipImageSrc, enemyImageSrc) {
         this.ctx = ctx;
         this.enemyRenderer = new EnemyRenderer(ctx, enemyImageSrc, 80, 80);
         this.myBulletRenderer = new MyBulletRenderer(ctx);
+        this.myShipImageSrc = myShipImageSrc;
+        this.myShipRenderer = new MyShipRenderer(ctx, myShipImageSrc, 80, 80);
     }
 
     render(state) {
@@ -15,7 +18,7 @@ export class Renderer {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
         // 自機を描画
-        this.renderMyShip(myShip);
+        this.myShipRenderer.render(myShip);
 
         // 自弾を描画
         this.renderMyBullets(myBullets);
@@ -32,16 +35,6 @@ export class Renderer {
         // ハイスコアを描画
         this.ctx.font = "18px Arial";
         this.ctx.fillText(`Hi Score: ${hiScore}`, this.ctx.canvas.width / 2, 60);
-    }
-
-    renderMyShip(myShip) {
-        this.ctx.beginPath();
-        this.ctx.moveTo(myShip.x, myShip.y - myShip.height / 2); // 上の頂点
-        this.ctx.lineTo(myShip.x - myShip.width / 2, myShip.y + myShip.height / 2); // 左下の頂点
-        this.ctx.lineTo(myShip.x + myShip.width / 2, myShip.y + myShip.height / 2); // 右下の頂点
-        this.ctx.closePath();
-        this.ctx.fillStyle = "blue";
-        this.ctx.fill();
     }
 
     renderMyBullets(bullets) {
