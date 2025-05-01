@@ -42,8 +42,6 @@ export class ShootingGame {
     update() {
         if (this.isTitleScreen || this.isGameOver) return;
 
-        const {myShip} = this;
-
         // 自機の移動を更新
         this.myShip.update(this.canvasWidth, this.canvasHeight);
 
@@ -53,9 +51,9 @@ export class ShootingGame {
         // 敵を更新
         this.enemies.forEach((enemy) => enemy.update());
 
-        // 当たり判定をチェック
-        for ( const bullet of this.myBullets) {
-            for ( const enemy of this.enemies) {
+        // 弾と敵の当たり判定
+        for (const bullet of this.myBullets) {
+            for (const enemy of this.enemies) {
                 if (bullet.isCollidingWith(enemy)) {
                     bullet.isHit = true; // 弾が敵に当たった
                     bullet.isActive = false; // 弾を非アクティブにする
@@ -63,6 +61,13 @@ export class ShootingGame {
                     this.score += 10;    // スコアを加算
                     break;
                 }
+            }
+        }
+        // 自機と敵の当たり判定
+        for (const enemy of this.enemies) {
+            if (this.myShip.isCollidingWith(enemy)) {
+                this.isGameOver = true; // ゲームオーバー状態にする
+                break;
             }
         }
 
