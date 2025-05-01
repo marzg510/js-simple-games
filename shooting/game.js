@@ -67,7 +67,6 @@ export class ShootingGame {
         for (const enemy of this.enemies) {
             if (this.myShip.isCollidingWith(enemy)) {
                 this.isGameOver = true; // ゲームオーバー状態にする
-                console.log("Hit with enemy! Game Over!");
                 break;
             }
         }
