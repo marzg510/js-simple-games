@@ -69,3 +69,41 @@ QUnit.module('MyShip', (hooks) => {
         assert.equal(ship.y, 600, 'y座標がキャンバス高さを超えない');
     });
 });
+
+QUnit.module('MyShip - Collision Detection', (hooks) => {
+    let ship;
+
+    hooks.beforeEach(() => {
+        // テストごとに新しい自機を初期化
+        ship = new MyShip(100, 100, 50, 50, 5, 5);
+    });
+    QUnit.test('敵と衝突している場合、true を返す', (assert) => {
+        const enemy = { x: 120, y: 120, width: 30, height: 30 }; // 自機と重なる位置に敵を配置
+        assert.ok(ship.isCollidingWith(enemy), '敵と衝突している場合、true を返す');
+    });
+
+    QUnit.test('敵と衝突していない場合、false を返す (右側)', (assert) => {
+        const enemy = { x: 200, y: 100, width: 30, height: 30 }; // 自機の右側に敵を配置
+        assert.notOk(ship.isCollidingWith(enemy), '敵と衝突していない場合、false を返す');
+    });
+
+    QUnit.test('敵と衝突していない場合、false を返す (左側)', (assert) => {
+        const enemy = { x: 50, y: 100, width: 30, height: 30 }; // 自機の左側に敵を配置
+        assert.notOk(ship.isCollidingWith(enemy), '敵と衝突していない場合、false を返す');
+    });
+
+    QUnit.test('敵と衝突していない場合、false を返す (上側)', (assert) => {
+        const enemy = { x: 100, y: 50, width: 30, height: 30 }; // 自機の上側に敵を配置
+        assert.notOk(ship.isCollidingWith(enemy), '敵と衝突していない場合、false を返す');
+    });
+
+    QUnit.test('敵と衝突していない場合、false を返す (下側)', (assert) => {
+        const enemy = { x: 100, y: 200, width: 30, height: 30 }; // 自機の下側に敵を配置
+        assert.notOk(ship.isCollidingWith(enemy), '敵と衝突していない場合、false を返す');
+    });
+
+    QUnit.test('敵が自機の境界線上にある場合、false を返す', (assert) => {
+        const enemy = { x: 150, y: 100, width: 30, height: 30 }; // 自機の右端に接する位置に敵を配置
+        assert.notOk(ship.isCollidingWith(enemy), '敵が自機の境界線上にある場合、true を返す');
+    });
+});

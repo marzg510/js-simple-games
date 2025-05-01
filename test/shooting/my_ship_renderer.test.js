@@ -18,6 +18,7 @@ QUnit.module('MyShipRenderer', (hooks) => {
             strokeRect: sinon.spy(),
             strokeStyle: null,
             lineWidth: null,
+            save: sinon.spy(),
             restore: sinon.spy(),
         };
 

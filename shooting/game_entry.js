@@ -30,26 +30,26 @@ export async function init() {
 }
 
 // ゲームオーバー時の処理
-// export function handleGameOver(game, renderer) {
-//     // ハイスコアを更新して保存
-//     if (game.score > game.hiScore) {
-//         game.hiScore = game.score;
-//         game.isNewHiScore = true; // 新しいハイスコア
-//         saveHiScore(game.hiScore); // Firebaseに保存
-//     } else {
-//         game.isNewHiScore = false; // 新しいハイスコアではない
-//     }
+export function handleGameOver(game, renderer) {
+    // ハイスコアを更新して保存
+    if (game.score > game.hiScore) {
+        game.hiScore = game.score;
+        game.isNewHiScore = true; // 新しいハイスコア
+        saveHiScore(game.hiScore); // Firebaseに保存
+    } else {
+        game.isNewHiScore = false; // 新しいハイスコアではない
+    }
 
-//     // ゲームオーバー画面を描画
-//     renderer.renderGameOver(game.isNewHiScore);
+    // ゲームオーバー画面を描画
+    renderer.renderGameOver(game.isNewHiScore);
 
-//     // タイトル画面に戻る処理
-//     setTimeout(() => {
-//         game.isTitleScreen = true;
-//         game.reset();
-//         gameLoop(game, renderer);
-//     }, GAME_OVER_TIMEOUT);
-// }
+    // タイトル画面に戻る処理
+    // setTimeout(() => {
+    //     game.isTitleScreen = true;
+    //     game.reset();
+    //     gameLoop(game, renderer);
+    // }, GAME_OVER_TIMEOUT);
+}
 function gameLoop(game, renderer) {
     if (game.isTitleScreen) {
         renderer.render(game.getState());
