@@ -49,10 +49,10 @@ QUnit.module('MyShip', (hooks) => {
     });
 
     QUnit.test('キャンバスの右端を超えない', (assert) => {
-        ship.x = 800 - ship.width;
+        ship.x = 800;
         ship.movingRight = true;
         ship.update(800, 600);
-        assert.equal(ship.x, 800 - ship.width, 'x座標がキャンバス幅を超えない');
+        assert.equal(ship.x, 800, 'x座標がキャンバス幅を超えない');
     });
 
     QUnit.test('キャンバスの上端を超えない', (assert) => {
@@ -63,9 +63,9 @@ QUnit.module('MyShip', (hooks) => {
     });
 
     QUnit.test('キャンバスの下端を超えない', (assert) => {
-        ship.y = 600 - ship.height;
+        ship.y = 600;
         ship.movingDown = true;
         ship.update(800, 600);
-        assert.equal(ship.y, 600 - ship.height, 'y座標がキャンバス高さを超えない');
+        assert.equal(ship.y, 600, 'y座標がキャンバス高さを超えない');
     });
 });

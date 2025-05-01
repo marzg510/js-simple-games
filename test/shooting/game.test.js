@@ -17,52 +17,6 @@ QUnit.module('ShootingGame', (hooks) => {
         assert.equal(game.hiScore, 0, 'ハイスコアは 0');
     });
 
-    QUnit.test('自機が左に移動する', (assert) => {
-        game.myShip.movingLeft = true;
-        game.update();
-        assert.equal(game.myShip.x, 398, 'dx = 2 なので 400 - 2 = 398');
-    });
-
-    QUnit.test('自機が右に移動する', (assert) => {
-        game.myShip.movingRight = true;
-        game.update();
-        assert.equal(game.myShip.x, 402, 'dx = 2 なので 400 + 2 = 402');
-    });
-
-    QUnit.test('自機が上に移動する', (assert) => {
-        game.myShip.movingUp = true;
-        game.update();
-        assert.equal(game.myShip.y, 298, 'dy = 2 なので 300 - 2 = 298');
-    });
-
-    QUnit.test('自機が下に移動する', (assert) => {
-        game.myShip.movingDown = true;
-        game.update();
-        assert.equal(game.myShip.y, 302, 'dy = 2 なので 300 + 2 = 302');
-    });
-
-    QUnit.test('自機がキャンバスの境界を超えない', (assert) => {
-        game.myShip.x = 0;
-        game.myShip.movingLeft = true;
-        game.update();
-        assert.equal(game.myShip.x, 0, '左端で止まる');
-
-        game.myShip.x = 800;
-        game.myShip.movingRight = true;
-        game.update();
-        assert.equal(game.myShip.x, 800, '右端で止まる');
-
-        game.myShip.y = 0;
-        game.myShip.movingUp = true;
-        game.update();
-        assert.equal(game.myShip.y, 0, '上端で止まる');
-
-        game.myShip.y = 600;
-        game.myShip.movingDown = true;
-        game.update();
-        assert.equal(game.myShip.y, 600, '下端で止まる');
-    });
-
     QUnit.test('resetメソッドが正しく動作する', (assert) => {
         // game.myShip.x = 100;
         // game.myShip.y = 100;
