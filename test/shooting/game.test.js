@@ -1,6 +1,7 @@
 import { ShootingGame } from '../../shooting/game.js';
 import { MyBullet } from '../../shooting/my_bullet.js';
 import { Enemy } from '../../shooting/enemy.js';
+import { EnemyStatus } from '../../shooting/enemy_status.js';
 
 QUnit.module('ShootingGame', (hooks) => {
     let game;
@@ -95,7 +96,7 @@ QUnit.module('ShootingGame', (hooks) => {
         // 弾と敵の状態を確認
         assert.ok(bullet.isHit, '弾が敵に当たった状態になる');
         assert.notOk(bullet.isActive, '弾が非アクティブになる');
-        assert.ok(enemy.isHit, '敵が弾に当たった状態になる');
+        assert.equal(enemy.status, EnemyStatus.EXPLODING, '敵が爆発中の状態になる');
     });
 
     QUnit.test('弾が敵に当たらなかった場合、弾と敵の状態は変化しない', (assert) => {
@@ -112,10 +113,10 @@ QUnit.module('ShootingGame', (hooks) => {
         // 弾と敵の状態を確認
         assert.notOk(bullet.isHit, '弾が敵に当たっていない状態');
         assert.ok(bullet.isActive, '弾がアクティブなまま');
-        assert.notOk(enemy.isHit, '敵が弾に当たっていない状態');
+        assert.equal(enemy.status, EnemyStatus.ACTIVE, '敵が通常状態');
     });
 
-    QUnit.test('当たった弾と敵が削除される', (assert) => {
+    QUnit.test('当たった弾が削除される', (assert) => {
         // 敵と弾を初期化
         const bullet = new MyBullet(100, 100, 5);
         const enemy = new Enemy(95, 95, 10, 10); // 弾と重なる位置に敵を配置
@@ -128,7 +129,6 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // 配列から削除されていることを確認
         assert.equal(game.myBullets.length, 0, '当たった弾が削除される');
-        // assert.equal(game.enemies.length, 0, '当たった敵が削除される');
     });
 
     QUnit.test('スコアが正しく加算される', (assert) => {
@@ -144,5 +144,26 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // スコアを確認
         assert.equal(game.score, 10, 'スコアが正しく加算される');
+    });
+
+    QUnit.test('削除可能な敵が削除される', (assert) => {
+        // 敵を初期化
+        const enemy1 = new Enemy(100, 100, 50, 50);
+        const enemy2 = new Enemy(200, 200, 50, 50);
+
+        // 敵をゲームに追加
+        game.enemies.push(enemy1);
+        game.enemies.push(enemy2);
+
+        // 1つの敵を削除対象に設定
+        enemy1.status = EnemyStatus.REMOVED;
+
+        // ゲームの更新を実行
+        game.update();
+
+        // 削除対象の敵が配列から削除されていることを確認
+        assert.equal(game.enemies.length, 1, '削除対象の敵が配列から削除される');
+        assert.notEqual(game.enemies[0], enemy1, '削除された敵が配列に含まれていない');
+        assert.equal(game.enemies[0], enemy2, '削除されていない敵が配列に残っている');
     });
 });

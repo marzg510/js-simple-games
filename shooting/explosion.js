@@ -10,10 +10,6 @@ export class Explosion {
 
     update(deltaTime) {
         this.elapsedTime += deltaTime;
-        // 実験用に爆発を繰り返す　TODO:後で消す
-        if (this.elapsedTime > this.duration) {
-            this.elapsedTime = 0; // 経過時間をリセット
-        }
     }
 
     isFinished() {

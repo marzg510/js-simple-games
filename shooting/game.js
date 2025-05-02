@@ -1,5 +1,5 @@
+import { EnemyStatus } from './enemy_status.js';
 import { MyBullet } from './my_bullet.js';
-import { Enemy } from './enemy.js';
 import { MyShip } from './my_ship.js';
 
 export class ShootingGame {
@@ -39,7 +39,7 @@ export class ShootingGame {
         this.myBullets.push(bullet);
     }
 
-    update() {
+    update(deltaTime) {
         if (this.isTitleScreen || this.isGameOver) return;
 
         // 自機の移動を更新
@@ -49,7 +49,7 @@ export class ShootingGame {
         this.myBullets.forEach((bullet) => bullet.update());
 
         // 敵を更新
-        this.enemies.forEach((enemy) => enemy.update());
+        this.enemies.forEach((enemy) => enemy.update(deltaTime));
 
         // 弾と敵の当たり判定
         for (const bullet of this.myBullets) {
@@ -57,7 +57,7 @@ export class ShootingGame {
                 if (bullet.isCollidingWith(enemy)) {
                     bullet.isHit = true; // 弾が敵に当たった
                     bullet.isActive = false; // 弾を非アクティブにする
-                    enemy.isHit = true;  // 敵が弾に当たった
+                    enemy.explode();    // 敵の爆発を開始
                     this.score += 10;    // スコアを加算
                     break;
                 }
@@ -73,6 +73,7 @@ export class ShootingGame {
 
         this.myBullets = this.myBullets.filter((bullet) => bullet.isActive); // 非アクティブな弾を削除
         this.enemies = this.enemies.filter((enemy) => enemy.y <= this.canvasHeight); // 画面外に出た敵を削除
+        this.enemies = this.enemies.filter((enemy) => enemy.status !== EnemyStatus.REMOVED);    // 削除対象を削除
     }
 
     reset() {

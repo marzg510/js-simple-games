@@ -3,12 +3,9 @@ import { Renderer } from './renderer.js';
 import { Enemy } from './enemy.js';
 import { ExplosionRenderer } from './explosion_renderer.js';
 import { Explosion } from './explosion.js';
-// import { getHiScore, saveHiScore } from './hi_score.js';
+// import { getHiScore, saveHiScore } from './hi_score.js'; // TODO:後できちんと実装
 
 const GAME_OVER_TIMEOUT = 2999; // ゲームオーバー後のタイムアウト期間（ミリ秒）
-const explosionImageSrc = "./assets/explosion.png"; // 爆発画像のパス
-let explosionRenderer; // 爆発エフェクトのレンダラー
-const explosion = new Explosion(0, 0, 50, 50, 1000); // 爆発エフェクトのインスタンスを作成
 
 export async function init() {
     // canvasとctxを初期化
@@ -17,15 +14,15 @@ export async function init() {
 
     const myShipImageSrc = "./assets/myship2.png"; // 敵の画像のパス
     const enemyImageSrc = "./assets/enemy.png"; // 敵の画像のパス
-    const renderer = new Renderer(ctx, myShipImageSrc, enemyImageSrc);
-    explosionRenderer = new ExplosionRenderer(ctx, explosionImageSrc, 5, 100); // 爆発エフェクトのレンダラーを初期化
+    const explosionImageSrc = "./assets/explosion.png"; // 爆発画像のパス
+    const renderer = new Renderer(ctx, myShipImageSrc, enemyImageSrc, explosionImageSrc);
 
     // ゲームロジックを管理するインスタンスを作成
     const game = new ShootingGame(canvas.width, canvas.height);
     game.isTitleScreen = false;
-    game.enemies.push(new Enemy(100, 0, 50, 50)); // テスト的に敵を追加
+    game.enemies.push(new Enemy(100, 0, 50, 50)); // テスト的に敵を追加　 TODO:後できちんと実装
 
-    // Firebaseからハイスコアを取得
+    // Firebaseからハイスコアを取得　TODO:後で実装
     // game.hiScore = await getHiScore();
 
     // キーボードイベントを設定
@@ -37,9 +34,7 @@ export async function init() {
 
 function gameLoop(game, renderer, lastTimestamp = 0) {
     requestAnimationFrame((timestamp) => {
-        // console.log("gameLoop loop", timestamp);
         const deltaTime = timestamp - lastTimestamp; // 前回のタイムスタンプとの差分を計算
-        console.log("gameLoop", deltaTime, lastTimestamp, timestamp);
         lastTimestamp = timestamp; // 現在のタイムスタンプを保存
         if (game.isTitleScreen) {
             renderer.render(game.getState());
@@ -52,12 +47,8 @@ function gameLoop(game, renderer, lastTimestamp = 0) {
             return;                 // ゲームループを終了
         }
         // ゲームロジックを更新
-        game.update();
-        explosion.update(deltaTime); // 爆発エフェクトを更新
+        game.update(deltaTime);
         renderer.render(game.getState());
-        explosionRenderer.render(explosion); // 爆発エフェクトを描画
-        // requestAnimationFrame(() => gameLoop(game, renderer, lastTimestamp));
-        // requestAnimationFrame(loop);
         gameLoop(game, renderer, lastTimestamp); // 次のフレームをリクエスト
     });
 }
