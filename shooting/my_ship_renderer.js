@@ -8,7 +8,7 @@ export class MyShipRenderer {
         this.image.src = myShipImageSrc;
         this.width = width;
         this.height = height;
-        this.explosionRenderer = new ExplosionRenderer(ctx, explosionImageSrc, width, height, 5, 100); // 爆発エフェクトのレンダラーを初期化　TODO::後で移動
+        this.explosionRenderer = new ExplosionRenderer(ctx, explosionImageSrc, width, height, 5, 100);
     }
 
     render(myShip) {
