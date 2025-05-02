@@ -1,4 +1,6 @@
 import { MyShip } from '../../shooting/my_ship.js';
+import { MyShipStatus } from '../../shooting/my_ship_status.js';
+import { Explosion } from '../../shooting/explosion.js';
 
 QUnit.module('MyShip', (hooks) => {
     let ship;
@@ -68,6 +70,26 @@ QUnit.module('MyShip', (hooks) => {
         ship.update(800, 600);
         assert.equal(ship.y, 600, 'y座標がキャンバス高さを超えない');
     });
+
+    QUnit.test('explodeメソッドで自機が爆発状態になる', (assert) => {
+        ship.explode();
+        assert.equal(ship.status, MyShipStatus.EXPLODING, '状態が EXPLODING に変更される');
+        assert.ok(ship.explosion instanceof Explosion, 'Explosion オブジェクトが作成される');
+    });
+
+    QUnit.test('updateメソッドで爆発が進行し、終了後に削除状態になる', (assert) => {
+        ship.explode();
+        for (let i = 0; i < 10; i++) {
+            ship.update(100, 100, 200); // deltaTime を渡して爆発を進行
+        }
+        assert.equal(ship.status, MyShipStatus.REMOVED, '爆発が終了し、状態が REMOVED に変更される');
+    });
+
+    QUnit.test('removeメソッドで自機が削除状態になる', (assert) => {
+        ship.explode();
+        ship.remove();
+        assert.equal(ship.status, MyShipStatus.REMOVED, '状態が REMOVED に変更される');
+    });
 });
 
 QUnit.module('MyShip - Collision Detection', (hooks) => {
@@ -106,4 +128,5 @@ QUnit.module('MyShip - Collision Detection', (hooks) => {
         const enemy = { x: 150, y: 100, width: 30, height: 30 }; // 自機の右端に接する位置に敵を配置
         assert.notOk(ship.isCollidingWith(enemy), '敵が自機の境界線上にある場合、true を返す');
     });
+    
 });
