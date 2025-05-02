@@ -43,7 +43,6 @@ QUnit.module('EnemyRenderer', (hooks) => {
     QUnit.test('爆発中の敵を描画する', (assert) => {
         enemy.explode();
         renderer.explosionRenderer.frameWidth = 10;
-        renderer.explosionRenderer.frameHeight = 10;
 
         renderer.render(enemy);
 
