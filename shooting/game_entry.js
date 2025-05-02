@@ -32,25 +32,31 @@ export async function init() {
     gameLoop(game, renderer);
 }
 
-function gameLoop(game, renderer, lastTimestamp = 0) {
-    requestAnimationFrame((timestamp) => {
-        const deltaTime = timestamp - lastTimestamp; // 前回のタイムスタンプとの差分を計算
-        lastTimestamp = timestamp; // 現在のタイムスタンプを保存
+function gameLoop(game, renderer) {
+    let lastTimestamp = 0;
+
+    function step(timestamp) {
+        const deltaTime = timestamp - lastTimestamp;
+        lastTimestamp = timestamp;
+
         if (game.isTitleScreen) {
             renderer.render(game.getState());
             renderer.renderTitleScreen();
             return;
         }
-    
+
         if (game.isGameOver) {
-            handleGameOver(game, renderer); // ゲームオーバー処理を呼び出す   
-            return;                 // ゲームループを終了
+            handleGameOver(game, renderer);
+            return;
         }
-        // ゲームロジックを更新
+
         game.update(deltaTime);
         renderer.render(game.getState());
-        gameLoop(game, renderer, lastTimestamp); // 次のフレームをリクエスト
-    });
+
+        requestAnimationFrame(step);
+    }
+
+    requestAnimationFrame(step);
 }
 
 // キーボードイベントを設定する

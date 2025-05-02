@@ -29,7 +29,8 @@ export class EnemyRenderer {
                 this.explosionRenderer.render(enemy.explosion)
                 break;
             default:
-                ;
+                // 何もしない
+                break;
         }
     }
 }
