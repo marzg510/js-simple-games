@@ -22,7 +22,8 @@ export class Enemy {
                 }
                 break;
             default:
-                ;
+                // 何もしない
+                break;
         }
     }
     explode() {

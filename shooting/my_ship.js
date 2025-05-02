@@ -1,3 +1,6 @@
+import { MyShipStatus } from "./my_ship_status.js";
+import { Explosion } from "./explosion.js";
+
 export class MyShip {
     constructor(x, y, width, height, dx, dy) {
         this.x = x; // 自機のx座標
@@ -10,9 +13,26 @@ export class MyShip {
         this.movingRight = false; // 右に移動中かどうか
         this.movingUp = false; // 上に移動中かどうか
         this.movingDown = false; // 下に移動中かどうか
+        this.status = MyShipStatus.ACTIVE; // 敵の状態
     }
 
-    update(canvasWidth, canvasHeight) {
+    update(canvasWidth, canvasHeight, deltaTime) {
+        switch (this.status) {
+            case MyShipStatus.ACTIVE:
+                this.move(canvasWidth, canvasHeight);
+                break;
+            case MyShipStatus.EXPLODING:
+                this.explosion.update(deltaTime);
+                if ( this.explosion.isFinished() ) {
+                    this.remove();
+                }
+                break;
+            default:
+                // 何もしない
+                break;
+        }
+    }
+    move(canvasWidth, canvasHeight) {
         if (this.movingLeft && this.x > 0) {
             this.x -= this.dx;
         }
@@ -34,5 +54,16 @@ export class MyShip {
             this.y < enemy.y + enemy.height &&
             this.y + this.height > enemy.y
         );
+    }
+    explode() {
+        if ( this.status === MyShipStatus.ACTIVE) {
+            this.status = MyShipStatus.EXPLODING; // 爆発中に変更
+            this.explosion = new Explosion(this.x, this.y, this.width, this.height, 2000);
+        }
+    }
+    remove() {
+        if ( this.status === MyShipStatus.EXPLODING ) {
+            this.status = MyShipStatus.REMOVED;
+        }
     }
 }

@@ -1,8 +1,6 @@
 import { ShootingGame } from './game.js';
 import { Renderer } from './renderer.js';
 import { Enemy } from './enemy.js';
-import { ExplosionRenderer } from './explosion_renderer.js';
-import { Explosion } from './explosion.js';
 // import { getHiScore, saveHiScore } from './hi_score.js'; // TODO:後できちんと実装
 
 const GAME_OVER_TIMEOUT = 2999; // ゲームオーバー後のタイムアウト期間（ミリ秒）
