@@ -1,7 +1,9 @@
 import { ShootingGame } from './game.js';
 import { Renderer } from './renderer.js';
 import { Enemy } from './enemy.js';
-// import { getHiScore, saveHiScore } from './hi_score.js';
+import { ExplosionRenderer } from './explosion_renderer.js';
+import { Explosion } from './explosion.js';
+// import { getHiScore, saveHiScore } from './hi_score.js'; // TODO:後できちんと実装
 
 const GAME_OVER_TIMEOUT = 2999; // ゲームオーバー後のタイムアウト期間（ミリ秒）
 
@@ -12,14 +14,15 @@ export async function init() {
 
     const myShipImageSrc = "./assets/myship2.png"; // 敵の画像のパス
     const enemyImageSrc = "./assets/enemy.png"; // 敵の画像のパス
-    const renderer = new Renderer(ctx, myShipImageSrc, enemyImageSrc);
+    const explosionImageSrc = "./assets/explosion.png"; // 爆発画像のパス
+    const renderer = new Renderer(ctx, myShipImageSrc, enemyImageSrc, explosionImageSrc);
 
     // ゲームロジックを管理するインスタンスを作成
     const game = new ShootingGame(canvas.width, canvas.height);
     game.isTitleScreen = false;
-    game.enemies.push(new Enemy(100, 0, 50, 50)); // テスト的に敵を追加
+    game.enemies.push(new Enemy(100, 0, 50, 50)); // テスト的に敵を追加　 TODO:後できちんと実装
 
-    // Firebaseからハイスコアを取得
+    // Firebaseからハイスコアを取得　TODO:後で実装
     // game.hiScore = await getHiScore();
 
     // キーボードイベントを設定
@@ -29,42 +32,31 @@ export async function init() {
     gameLoop(game, renderer);
 }
 
-// ゲームオーバー時の処理
-export function handleGameOver(game, renderer) {
-    // ハイスコアを更新して保存
-    if (game.score > game.hiScore) {
-        game.hiScore = game.score;
-        game.isNewHiScore = true; // 新しいハイスコア
-        saveHiScore(game.hiScore); // Firebaseに保存
-    } else {
-        game.isNewHiScore = false; // 新しいハイスコアではない
-    }
-
-    // ゲームオーバー画面を描画
-    renderer.renderGameOver(game.isNewHiScore);
-
-    // タイトル画面に戻る処理
-    // setTimeout(() => {
-    //     game.isTitleScreen = true;
-    //     game.reset();
-    //     gameLoop(game, renderer);
-    // }, GAME_OVER_TIMEOUT);
-}
 function gameLoop(game, renderer) {
-    if (game.isTitleScreen) {
+    let lastTimestamp = 0;
+
+    function step(timestamp) {
+        const deltaTime = timestamp - lastTimestamp;
+        lastTimestamp = timestamp;
+
+        if (game.isTitleScreen) {
+            renderer.render(game.getState());
+            renderer.renderTitleScreen();
+            return;
+        }
+
+        if (game.isGameOver) {
+            handleGameOver(game, renderer);
+            return;
+        }
+
+        game.update(deltaTime);
         renderer.render(game.getState());
-        renderer.renderTitleScreen();
-        return;
+
+        requestAnimationFrame(step);
     }
 
-    if (game.isGameOver) {
-        handleGameOver(game, renderer); // ゲームオーバー処理を呼び出す   
-        return;                 // ゲームループを終了
-    }
-    // ゲームロジックを更新
-    game.update();
-    renderer.render(game.getState());
-    requestAnimationFrame(() => gameLoop(game, renderer));
+    requestAnimationFrame(step);
 }
 
 // キーボードイベントを設定する
@@ -105,5 +97,27 @@ export function setupKeyboardEvents(game, renderer) {
             game.myShip.movingDown = false;
         }
     });
+}
+
+// ゲームオーバー時の処理
+export function handleGameOver(game, renderer) {
+    // ハイスコアを更新して保存
+    if (game.score > game.hiScore) {
+        game.hiScore = game.score;
+        game.isNewHiScore = true; // 新しいハイスコア
+        saveHiScore(game.hiScore); // Firebaseに保存
+    } else {
+        game.isNewHiScore = false; // 新しいハイスコアではない
+    }
+
+    // ゲームオーバー画面を描画
+    renderer.renderGameOver(game.isNewHiScore);
+
+    // タイトル画面に戻る処理
+    // setTimeout(() => {
+    //     game.isTitleScreen = true;
+    //     game.reset();
+    //     gameLoop(game, renderer);
+    // }, GAME_OVER_TIMEOUT);
 }
 window.init = init; // init関数をグローバルに公開

@@ -1,14 +1,15 @@
 import { EnemyRenderer } from "./enemy_renderer.js";
 import { MyBulletRenderer } from "./my_bullet_renderer.js";
 import { MyShipRenderer } from "./my_ship_renderer.js";
+import { ExplosionRenderer } from "./explosion_renderer.js";
 
 export class Renderer {
-    constructor(ctx, myShipImageSrc, enemyImageSrc) {
+    constructor(ctx, myShipImageSrc, enemyImageSrc, explosionImageSrc) {
         this.ctx = ctx;
-        this.enemyRenderer = new EnemyRenderer(ctx, enemyImageSrc, 80, 80);
         this.myBulletRenderer = new MyBulletRenderer(ctx);
         this.myShipImageSrc = myShipImageSrc;
         this.myShipRenderer = new MyShipRenderer(ctx, myShipImageSrc, 80, 80);
+        this.enemyRenderer = new EnemyRenderer(ctx, enemyImageSrc, 80, 80, explosionImageSrc);
     }
 
     render(state) {
@@ -21,10 +22,10 @@ export class Renderer {
         this.myShipRenderer.render(myShip);
 
         // 自弾を描画
-        this.renderMyBullets(myBullets);
+        myBullets.forEach((bullet) => this.myBulletRenderer.render(bullet));
 
         // 敵を描画
-        this.renderEnemies(enemies);
+        enemies.forEach((enemy) => this.enemyRenderer.render(enemy));
 
         // スコアを描画
         this.ctx.fillStyle = "black";
@@ -35,14 +36,6 @@ export class Renderer {
         // ハイスコアを描画
         this.ctx.font = "18px Arial";
         this.ctx.fillText(`Hi Score: ${hiScore}`, this.ctx.canvas.width / 2, 60);
-    }
-
-    renderMyBullets(bullets) {
-        bullets.forEach((bullet) => this.myBulletRenderer.render(bullet));
-    }
-
-    renderEnemies(enemies) {
-        enemies.forEach((enemy) => this.enemyRenderer.render(enemy));
     }
 
     renderTitleScreen() {

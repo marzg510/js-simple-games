@@ -15,6 +15,11 @@ Simple Games for My Private Learning by JS
 
 ## Shooting
 
+### Resources
+
+- 爆発エフェクト
+  - https://blockfrei.web.fc2.com/index.html
+
 ### Develop
 
 ```
