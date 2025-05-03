@@ -33,8 +33,8 @@ export class ShootingGame {
 
         // 弾を発射
         const bullet = new MyBullet(
-            this.myShip.x,
-            this.myShip.y - this.myShip.height / 2,
+            this.myShip.cx,
+            this.myShip.cy - this.myShip.height,
             5 // 弾の速度
         );
         this.myBullets.push(bullet);

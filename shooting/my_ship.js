@@ -71,8 +71,8 @@ export class MyShip {
         if (this.status === MyShipStatus.ACTIVE) {
             this.status = MyShipStatus.EXPLODING; // 爆発中に変更
             this.explosion = new Explosion(
-                this.cx - this.width / 2,
-                this.cy - this.height / 2,
+                this.cx,
+                this.cy,
                 this.width,
                 this.height,
                 2000
