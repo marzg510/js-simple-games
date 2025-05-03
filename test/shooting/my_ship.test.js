@@ -90,6 +90,12 @@ QUnit.module('MyShip', (hooks) => {
         ship.remove();
         assert.equal(ship.status, MyShipStatus.REMOVED, '状態が REMOVED に変更される');
     });
+
+    QUnit.test('removeメソッドで自機がACTIVE状態のままである', (assert) => {  
+        // Assuming ship is initialized and in ACTIVE state by default.  
+        ship.remove();  
+        assert.equal(ship.status, MyShipStatus.ACTIVE, '状態が ACTIVE のままである');  
+    });
 });
 
 QUnit.module('MyShip - Collision Detection', (hooks) => {

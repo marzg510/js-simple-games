@@ -181,7 +181,7 @@ QUnit.module('ShootingGame', (hooks) => {
     });
 
     QUnit.test('自機の爆発が終了した場合、ゲームオーバーになる', (assert) => {
-        const myShip = game.myShip;
+        const {myShip} = game;
         // 自機を爆発状態に設定
         myShip.explode();
 

@@ -18,19 +18,21 @@ export class MyShip {
     }
 
     update(canvasWidth, canvasHeight, deltaTime) {
-        switch (this.status) {
-            case MyShipStatus.ACTIVE:
-                this.move(canvasWidth, canvasHeight);
-                break;
-            case MyShipStatus.EXPLODING:
-                this.explosion.update(deltaTime);
-                if ( this.explosion.isFinished() ) {
-                    this.remove();
-                }
-                break;
-            default:
-                // 何もしない
-                break;
+        if (this.status === MyShipStatus.ACTIVE) {
+            this.handleActiveState(canvasWidth, canvasHeight);
+        } else if (this.status === MyShipStatus.EXPLODING) {
+            this.handleExplodingState(deltaTime);
+        }
+    }
+
+    handleActiveState(canvasWidth, canvasHeight) {
+        this.move(canvasWidth, canvasHeight);
+    }
+
+    handleExplodingState(deltaTime) {
+        this.explosion.update(deltaTime);
+        if (this.explosion.isFinished()) {
+            this.remove();
         }
     }
     move(canvasWidth, canvasHeight) {
