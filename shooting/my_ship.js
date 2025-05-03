@@ -14,6 +14,7 @@ export class MyShip {
         this.movingUp = false; // 上に移動中かどうか
         this.movingDown = false; // 下に移動中かどうか
         this.status = MyShipStatus.ACTIVE; // 敵の状態
+        this.explosion = null; // 爆発オブジェクト
     }
 
     update(canvasWidth, canvasHeight, deltaTime) {

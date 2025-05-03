@@ -2,6 +2,7 @@ import { ShootingGame } from '../../shooting/game.js';
 import { MyBullet } from '../../shooting/my_bullet.js';
 import { Enemy } from '../../shooting/enemy.js';
 import { EnemyStatus } from '../../shooting/enemy_status.js';
+import { MyShipStatus } from '../../shooting/my_ship_status.js';
 
 QUnit.module('ShootingGame', (hooks) => {
     let game;
@@ -165,5 +166,35 @@ QUnit.module('ShootingGame', (hooks) => {
         assert.equal(game.enemies.length, 1, '削除対象の敵が配列から削除される');
         assert.notEqual(game.enemies[0], enemy1, '削除された敵が配列に含まれていない');
         assert.equal(game.enemies[0], enemy2, '削除されていない敵が配列に残っている');
+    });
+
+    QUnit.test('自機が敵に当たった場合、自機が爆発状態になる', (assert) => {
+        // 自機と敵を初期化
+        const enemy = new Enemy(game.myShip.x, game.myShip.y, 50, 50); // 自機と同じ位置に敵を配置
+        game.enemies.push(enemy);
+
+        // ゲームの更新を実行
+        game.update();
+
+        // 自機の状態を確認
+        assert.equal(game.myShip.status, MyShipStatus.EXPLODING, '自機が爆発状態になる');
+    });
+
+    QUnit.test('自機の爆発が終了した場合、ゲームオーバーになる', (assert) => {
+        const myShip = game.myShip;
+        // 自機を爆発状態に設定
+        myShip.explode();
+
+        // 自機の爆発が終了するまで更新
+        const deltaTime = 100;  // 100msの経過時間を仮定
+        for (let i = 0; i < myShip.explosion.duration / deltaTime; i++) {
+            game.update(deltaTime); // deltaTime を渡して更新
+        }
+
+        // ゲームの更新を実行
+        game.update();
+
+        // ゲームオーバー状態を確認
+        assert.ok(game.isGameOver, 'ゲームオーバー状態になる');
     });
 });
