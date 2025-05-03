@@ -17,14 +17,14 @@ export class Renderer {
         // キャンバスをクリア
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
-        // 自機を描画
-        this.myShipRenderer.render(myShip);
+        // 敵を描画
+        enemies.forEach((enemy) => this.enemyRenderer.render(enemy));
 
         // 自弾を描画
         myBullets.forEach((bullet) => this.myBulletRenderer.render(bullet));
 
-        // 敵を描画
-        enemies.forEach((enemy) => this.enemyRenderer.render(enemy));
+        // 自機を描画
+        this.myShipRenderer.render(myShip);
 
         // スコアを描画
         this.ctx.fillStyle = "black";

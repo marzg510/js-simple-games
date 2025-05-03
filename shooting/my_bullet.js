@@ -25,10 +25,10 @@ export class MyBullet {
 
         // 当たり判定のロジック
         return (
-            this.x < enemy.x + enemy.width &&
-            this.x + this.width > enemy.x &&
-            this.y < enemy.y + enemy.height &&
-            this.y + this.height > enemy.y
+            this.x < enemy.cx + enemy.width / 2 &&
+            this.x + this.width > enemy.cx - enemy.width / 2 &&
+            this.y < enemy.cy + enemy.height / 2 &&
+            this.y + this.height > enemy.cy - enemy.height / 2
         );
     }
 }

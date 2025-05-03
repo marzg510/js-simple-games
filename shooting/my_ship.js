@@ -60,10 +60,10 @@ export class MyShip {
         const halfHeight = this.height / 2;
 
         return (
-            this.cx - halfWidth < enemy.x + enemy.width &&
-            this.cx + halfWidth > enemy.x &&
-            this.cy - halfHeight < enemy.y + enemy.height &&
-            this.cy + halfHeight > enemy.y
+            this.cx - halfWidth < enemy.cx + enemy.width / 2 &&
+            this.cx + halfWidth > enemy.cx - enemy.width / 2 &&
+            this.cy - halfHeight < enemy.cy + enemy.height / 2 &&
+            this.cy + halfHeight > enemy.cy - enemy.height / 2
         );
     }
 

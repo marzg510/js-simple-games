@@ -78,7 +78,7 @@ export class ShootingGame {
         }
 
         this.myBullets = this.myBullets.filter((bullet) => bullet.isActive); // 非アクティブな弾を削除
-        this.enemies = this.enemies.filter((enemy) => enemy.y <= this.canvasHeight); // 画面外に出た敵を削除
+        this.enemies = this.enemies.filter((enemy) => enemy.cy <= this.canvasHeight); // 画面外に出た敵を削除
         this.enemies = this.enemies.filter((enemy) => enemy.status !== EnemyStatus.REMOVED);    // 削除対象を削除
     }
 
