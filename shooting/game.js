@@ -1,6 +1,7 @@
-import { EnemyStatus } from './enemy_status.js';
 import { MyBullet } from './my_bullet.js';
 import { MyShip } from './my_ship.js';
+import { MyShipStatus } from './my_ship_status.js';
+import { EnemyStatus } from './enemy_status.js';
 
 export class ShootingGame {
     constructor(canvasWidth, canvasHeight) {
@@ -43,7 +44,7 @@ export class ShootingGame {
         if (this.isTitleScreen || this.isGameOver) return;
 
         // 自機の移動を更新
-        this.myShip.update(this.canvasWidth, this.canvasHeight);
+        this.myShip.update(this.canvasWidth, this.canvasHeight, deltaTime);
 
         // 自機の弾を更新
         this.myBullets.forEach((bullet) => bullet.update());
@@ -66,9 +67,14 @@ export class ShootingGame {
         // 自機と敵の当たり判定
         for (const enemy of this.enemies) {
             if (this.myShip.isCollidingWith(enemy)) {
-                this.isGameOver = true; // ゲームオーバー状態にする
+                this.myShip.explode(); // 自機の爆発を開始
                 break;
             }
+        }
+
+        // 自機の爆発が終了したら、ゲームオーバーにする
+        if (this.myShip.status === MyShipStatus.REMOVED) {
+            this.isGameOver = true; // ゲームオーバー状態にする
         }
 
         this.myBullets = this.myBullets.filter((bullet) => bullet.isActive); // 非アクティブな弾を削除

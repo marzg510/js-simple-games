@@ -1,14 +1,13 @@
 import { EnemyRenderer } from "./enemy_renderer.js";
 import { MyBulletRenderer } from "./my_bullet_renderer.js";
 import { MyShipRenderer } from "./my_ship_renderer.js";
-import { ExplosionRenderer } from "./explosion_renderer.js";
 
 export class Renderer {
     constructor(ctx, myShipImageSrc, enemyImageSrc, explosionImageSrc) {
         this.ctx = ctx;
         this.myBulletRenderer = new MyBulletRenderer(ctx);
         this.myShipImageSrc = myShipImageSrc;
-        this.myShipRenderer = new MyShipRenderer(ctx, myShipImageSrc, 80, 80);
+        this.myShipRenderer = new MyShipRenderer(ctx, myShipImageSrc, 80, 80, explosionImageSrc);
         this.enemyRenderer = new EnemyRenderer(ctx, enemyImageSrc, 80, 80, explosionImageSrc);
     }
 

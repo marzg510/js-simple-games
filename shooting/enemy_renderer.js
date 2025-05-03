@@ -8,7 +8,7 @@ export class EnemyRenderer {
         this.enemyImage.src = enemyImageSrc;
         this.width = width;
         this.height = height; // 爆発の高さ
-        this.explosionRenderer = new ExplosionRenderer(ctx, explosionImageSrc, width, height, 5, 100); // 爆発エフェクトのレンダラーを初期化　TODO::後で移動
+        this.explosionRenderer = new ExplosionRenderer(ctx, explosionImageSrc, width, height, 5, 100);
     }
 
     render(enemy) {
