@@ -9,8 +9,8 @@ QUnit.module('Explosion', (hooks) => {
     });
 
     QUnit.test('初期化時に正しいプロパティが設定される', (assert) => {
-        assert.equal(explosion.x, 100, 'x座標が正しい');
-        assert.equal(explosion.y, 100, 'y座標が正しい');
+        assert.equal(explosion.cx, 100, 'x座標が正しい');
+        assert.equal(explosion.cy, 100, 'y座標が正しい');
         assert.equal(explosion.width, 50, '幅が正しい');
         assert.equal(explosion.height, 50, '高さが正しい');
         assert.equal(explosion.duration, 1000, 'アニメーションの合計時間が正しい');

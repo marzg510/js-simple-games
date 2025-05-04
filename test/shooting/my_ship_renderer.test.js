@@ -37,7 +37,7 @@ QUnit.module('MyShipRenderer', (hooks) => {
         assert.ok(ctx.drawImage.calledOnce, 'drawImage が1回呼び出される');
         assert.deepEqual(
             ctx.drawImage.firstCall.args,
-            [renderer.image, ship.cx, ship.cy, 50, 50],
+            [renderer.image, ship.cx - ship.width / 2, ship.cy - ship.height / 2, 50, 50],
             'drawImage が正しい引数で呼び出される'
         );
 
@@ -45,7 +45,7 @@ QUnit.module('MyShipRenderer', (hooks) => {
         assert.ok(ctx.strokeRect.calledOnce, 'strokeRect が1回呼び出される');
         assert.deepEqual(
             ctx.strokeRect.firstCall.args,
-            [ship.cx, ship.cy, ship.width, ship.height],
+            [ship.cx - ship.width / 2, ship.cy - ship.height / 2, ship.width, ship.height],
             'strokeRect が正しい引数で呼び出される'
         );
 
@@ -74,7 +74,7 @@ QUnit.module('MyShipRenderer', (hooks) => {
           [renderer.explosionRenderer.explosionImage, 
            0, 0, // フレームのx, y
            10, 10, // フレームの幅, 高さ
-            ship.cx, ship.cy, ship.width, ship.height],
+            ship.cx - ship.width / 2, ship.cy - ship.height / 2, ship.width, ship.height],
           'drawImage が正しい引数で呼び出される'
         );
     });

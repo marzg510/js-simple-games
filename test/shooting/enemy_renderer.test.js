@@ -35,7 +35,7 @@ QUnit.module('EnemyRenderer', (hooks) => {
         assert.ok(ctx.drawImage.calledOnce, 'drawImage が1回呼び出される');
         assert.deepEqual(
           ctx.drawImage.firstCall.args,
-          [renderer.enemyImage, enemy.x, enemy.y, 50, 50],
+          [renderer.enemyImage, enemy.cx - 25, enemy.cy - 25, 50, 50],
           'drawImage が正しい引数で呼び出される'
         );
     });
@@ -52,7 +52,9 @@ QUnit.module('EnemyRenderer', (hooks) => {
           [renderer.explosionRenderer.explosionImage, 
            0, 0, // フレームのx, y
            10, 10, // フレームの幅, 高さ
-            enemy.x, enemy.y, enemy.width, enemy.height],
+           enemy.cx - enemy.width / 2, enemy.cy - enemy.height /2, // 描画先のx, y
+           enemy.width, enemy.height  // 描画先の幅, 高さ
+          ],
           'drawImage が正しい引数で呼び出される'
         );
     });
