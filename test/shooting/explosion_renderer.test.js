@@ -38,8 +38,8 @@ QUnit.module('ExplosionRenderer', (hooks) => {
                 0, // フレームの y 座標
                 64, // フレームの幅
                 renderer.explosionImage.height, // フレームの高さ
-                explosion.x, // 描画先の x 座標
-                explosion.y, // 描画先の y 座標
+                explosion.cx - explosion.width / 2, // 描画先の x 座標
+                explosion.cy - explosion.height / 2, // 描画先の y 座標
                 explosion.width, // 描画先の幅
                 explosion.height, // 描画先の高さ
             ],

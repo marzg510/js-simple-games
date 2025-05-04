@@ -30,6 +30,7 @@ QUnit.module('MyShipRenderer', (hooks) => {
     });
 
     QUnit.test('自機が正しく描画される', (assert) => {
+        const bounds = ship.getBounds();
         // 描画を実行
         renderer.render(ship);
 
@@ -37,7 +38,7 @@ QUnit.module('MyShipRenderer', (hooks) => {
         assert.ok(ctx.drawImage.calledOnce, 'drawImage が1回呼び出される');
         assert.deepEqual(
             ctx.drawImage.firstCall.args,
-            [renderer.image, ship.x, ship.y, 50, 50],
+            [renderer.image, bounds.left, bounds.top, 50, 50],
             'drawImage が正しい引数で呼び出される'
         );
 
@@ -45,7 +46,7 @@ QUnit.module('MyShipRenderer', (hooks) => {
         assert.ok(ctx.strokeRect.calledOnce, 'strokeRect が1回呼び出される');
         assert.deepEqual(
             ctx.strokeRect.firstCall.args,
-            [ship.x, ship.y, ship.width, ship.height],
+            [bounds.left, bounds.top, ship.width, ship.height],
             'strokeRect が正しい引数で呼び出される'
         );
 
@@ -67,6 +68,7 @@ QUnit.module('MyShipRenderer', (hooks) => {
         renderer.explosionRenderer.frameWidth = 10;
 
         renderer.render(ship);
+        const bounds = ship.getBounds();
 
         assert.ok(ctx.drawImage.calledOnce, 'drawImage が1回呼び出される');
         assert.deepEqual(
@@ -74,7 +76,7 @@ QUnit.module('MyShipRenderer', (hooks) => {
           [renderer.explosionRenderer.explosionImage, 
            0, 0, // フレームのx, y
            10, 10, // フレームの幅, 高さ
-            ship.x, ship.y, ship.width, ship.height],
+           bounds.left, bounds.top, ship.width, ship.height],
           'drawImage が正しい引数で呼び出される'
         );
     });

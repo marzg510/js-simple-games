@@ -18,12 +18,26 @@ export class MyShipRenderer {
         }
 
         if (myShip.status === MyShipStatus.ACTIVE) {
-            this.ctx.drawImage(this.image, myShip.x, myShip.y, this.width, this.height);
+            const myShipBounds = myShip.getBounds();
+            // 自機を描画
+            this.ctx.drawImage(
+                this.image,
+                myShipBounds.left,
+                myShipBounds.top,
+                this.width,
+                this.height
+            );
+
             // コリジョンエリアを描画
             this.ctx.save();
             this.ctx.strokeStyle = "red";
             this.ctx.lineWidth = 2;
-            this.ctx.strokeRect(myShip.x, myShip.y, myShip.width, myShip.height);
+            this.ctx.strokeRect(
+                myShipBounds.left,
+                myShipBounds.top,
+                myShip.width,
+                myShip.height
+            );
             this.ctx.restore();
         }
     }

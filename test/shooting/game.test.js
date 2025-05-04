@@ -12,8 +12,8 @@ QUnit.module('ShootingGame', (hooks) => {
     });
 
     QUnit.test('初期状態の確認', (assert) => {
-        assert.equal(game.myShip.x, 400, '自機の初期位置 (canvasWidth / 2)');
-        assert.equal(game.myShip.y, 300, '自機の初期位置 (canvasHeight / 2)');
+        assert.equal(game.myShip.cx, 400, '自機の初期位置 (canvasWidth / 2)');
+        assert.equal(game.myShip.cy, 300, '自機の初期位置 (canvasHeight / 2)');
         assert.equal(game.isGameOver, false, 'ゲームオーバー状態は false');
         assert.equal(game.score, 0, 'スコアは 0');
         assert.equal(game.hiScore, 0, 'ハイスコアは 0');
@@ -37,14 +37,14 @@ QUnit.module('ShootingGame', (hooks) => {
         game.shoot();
         assert.equal(game.myBullets.length, 1, '弾が1つ生成される');
         const bullet = game.myBullets[0];
-        assert.equal(bullet.x, game.myShip.x, '弾のx座標が自機のx座標と一致する');
-        assert.equal(bullet.y, game.myShip.y - game.myShip.height / 2, '弾のy座標が自機の上端に生成される');
+        assert.equal(bullet.cx, game.myShip.cx, '弾のx座標が自機のx座標と一致する');
+        assert.equal(bullet.cy, game.myShip.cy - game.myShip.height, '弾のy座標が自機の上端に生成される');
     });
 
     QUnit.test('画面外に出た弾が削除される', (assert) => {
         game.shoot();
         const bullet = game.myBullets[0];
-        bullet.y = -bullet.height - 1; // 弾を画面外に移動
+        bullet.cy = -bullet.height / 2 - 1; // 弾を画面外に移動
         game.update();
         assert.equal(game.myBullets.length, 0, '画面外に出た弾が削除される');
     });
@@ -63,7 +63,7 @@ QUnit.module('ShootingGame', (hooks) => {
         const bullet2 = game.myBullets[1];
 
         // 弾を画面外に移動
-        bullet1.y = -bullet1.height - 1;
+        bullet1.cy = -bullet1.height / 2 - 1;
 
         game.update(); // 画面外の弾を削除
         assert.equal(game.myBullets.length, 1, '画面外の弾が削除される');
@@ -73,7 +73,7 @@ QUnit.module('ShootingGame', (hooks) => {
     });
 
     QUnit.test('敵が画面外に出たら削除される', (assert) => {
-        const enemy = new Enemy(100, 590, 50, 50);
+        const enemy = new Enemy(100, 599, 50, 50);
         game.enemies.push(enemy);
         game.update();
         assert.equal(game.enemies.length, 1, '敵はまだ画面内にいる');
@@ -86,7 +86,7 @@ QUnit.module('ShootingGame', (hooks) => {
     QUnit.test('弾が敵に当たった場合、弾と敵の状態が正しく更新される', (assert) => {
         // 敵と弾を初期化
         const bullet = new MyBullet(100, 100, 5);
-        const enemy = new Enemy(95, 95, 10, 10); // 弾と重なる位置に敵を配置
+        const enemy = new Enemy(100, 100, 10, 10); // 弾と重なる位置に敵を配置
 
         game.myBullets.push(bullet);
         game.enemies.push(enemy);
@@ -120,7 +120,7 @@ QUnit.module('ShootingGame', (hooks) => {
     QUnit.test('当たった弾が削除される', (assert) => {
         // 敵と弾を初期化
         const bullet = new MyBullet(100, 100, 5);
-        const enemy = new Enemy(95, 95, 10, 10); // 弾と重なる位置に敵を配置
+        const enemy = new Enemy(100, 100, 10, 10); // 弾と重なる位置に敵を配置
 
         game.myBullets.push(bullet);
         game.enemies.push(enemy);
@@ -135,7 +135,7 @@ QUnit.module('ShootingGame', (hooks) => {
     QUnit.test('スコアが正しく加算される', (assert) => {
         // 敵と弾を初期化
         const bullet = new MyBullet(100, 100, 5);
-        const enemy = new Enemy(95, 95, 10, 10); // 弾と重なる位置に敵を配置
+        const enemy = new Enemy(100, 100, 10, 10); // 弾と重なる位置に敵を配置
 
         game.myBullets.push(bullet);
         game.enemies.push(enemy);

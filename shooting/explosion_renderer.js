@@ -27,8 +27,8 @@ export class ExplosionRenderer {
                 0,
                 this.frameWidth,
                 this.explosionImage.height,
-                explosion.x,
-                explosion.y,
+                explosion.cx - this.width / 2,
+                explosion.cy - this.height / 2,
                 this.width,
                 this.height
             );

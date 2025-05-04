@@ -11,16 +11,16 @@ QUnit.module('Enemy', (hooks) => {
     });
 
     QUnit.test('初期化時に正しいプロパティが設定される', (assert) => {
-        assert.equal(enemy.x, 100, 'x座標が正しい');
-        assert.equal(enemy.y, 150, 'y座標が正しい');
+        assert.equal(enemy.cx, 100, 'x座標が正しい');
+        assert.equal(enemy.cy, 150, 'y座標が正しい');
         assert.equal(enemy.width, 50, '幅が正しい');
         assert.equal(enemy.height, 50, '高さが正しい');
     });
 
     QUnit.test('updateメソッドで敵が下に移動する', (assert) => {
-        const initialY = enemy.y;
+        const initialY = enemy.cy;
         enemy.update(16);
-        assert.equal(enemy.y, initialY + 1, 'y座標が1増加する');
+        assert.equal(enemy.cy, initialY + 1, 'y座標が1増加する');
     });
     QUnit.test('explodeメソッドで敵が爆発状態になる', (assert) => {
         enemy.explode();

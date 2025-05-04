@@ -33,8 +33,8 @@ export class ShootingGame {
 
         // 弾を発射
         const bullet = new MyBullet(
-            this.myShip.x,
-            this.myShip.y - this.myShip.height / 2,
+            this.myShip.cx,
+            this.myShip.cy - this.myShip.height,
             5 // 弾の速度
         );
         this.myBullets.push(bullet);
@@ -78,7 +78,7 @@ export class ShootingGame {
         }
 
         this.myBullets = this.myBullets.filter((bullet) => bullet.isActive); // 非アクティブな弾を削除
-        this.enemies = this.enemies.filter((enemy) => enemy.y <= this.canvasHeight); // 画面外に出た敵を削除
+        this.enemies = this.enemies.filter((enemy) => enemy.cy <= this.canvasHeight); // 画面外に出た敵を削除
         this.enemies = this.enemies.filter((enemy) => enemy.status !== EnemyStatus.REMOVED);    // 削除対象を削除
     }
 

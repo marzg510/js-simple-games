@@ -1,7 +1,7 @@
 export class Explosion {
-    constructor(x, y, width, height, duration) {
-        this.x = x; // 爆発のx座標
-        this.y = y; // 爆発のy座標
+    constructor(cx, cy, width, height, duration) {
+        this.cx = cx; // 爆発の中心x座標
+        this.cy = cy; // 爆発の中心y座標
         this.width = width; // 爆発の幅
         this.height = height; // 爆発の高さ
         this.duration = duration; // アニメーションの合計時間（ミリ秒）
