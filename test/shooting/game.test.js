@@ -37,14 +37,14 @@ QUnit.module('ShootingGame', (hooks) => {
         game.shoot();
         assert.equal(game.myBullets.length, 1, '弾が1つ生成される');
         const bullet = game.myBullets[0];
-        assert.equal(bullet.x, game.myShip.cx, '弾のx座標が自機のx座標と一致する');
-        assert.equal(bullet.y, game.myShip.cy - game.myShip.height, '弾のy座標が自機の上端に生成される');
+        assert.equal(bullet.cx, game.myShip.cx, '弾のx座標が自機のx座標と一致する');
+        assert.equal(bullet.cy, game.myShip.cy - game.myShip.height, '弾のy座標が自機の上端に生成される');
     });
 
     QUnit.test('画面外に出た弾が削除される', (assert) => {
         game.shoot();
         const bullet = game.myBullets[0];
-        bullet.y = -bullet.height - 1; // 弾を画面外に移動
+        bullet.cy = -bullet.height / 2 - 1; // 弾を画面外に移動
         game.update();
         assert.equal(game.myBullets.length, 0, '画面外に出た弾が削除される');
     });
@@ -63,7 +63,7 @@ QUnit.module('ShootingGame', (hooks) => {
         const bullet2 = game.myBullets[1];
 
         // 弾を画面外に移動
-        bullet1.y = -bullet1.height - 1;
+        bullet1.cy = -bullet1.height / 2 - 1;
 
         game.update(); // 画面外の弾を削除
         assert.equal(game.myBullets.length, 1, '画面外の弾が削除される');
