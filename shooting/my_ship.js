@@ -17,6 +17,18 @@ export class MyShip {
         this.explosion = null; // 爆発オブジェクト
     }
 
+    getBounds() {
+        const halfWidth = this.width / 2;
+        const halfHeight = this.height / 2;
+        return {
+            left: this.cx - halfWidth,
+            right: this.cx + halfWidth,
+            top: this.cy - halfHeight,
+            bottom: this.cy + halfHeight,
+        };
+    }
+
+
     update(canvasWidth, canvasHeight, deltaTime) {
         if (this.status === MyShipStatus.ACTIVE) {
             this.handleActiveState(canvasWidth, canvasHeight);
@@ -37,19 +49,18 @@ export class MyShip {
     }
 
     move(canvasWidth, canvasHeight) {
-        const halfWidth = this.width / 2;
-        const halfHeight = this.height / 2;
+        const { left, right, top, bottom } = this.getBounds();
 
-        if (this.movingLeft && this.cx - halfWidth > 0) {
+        if (this.movingLeft && left > 0) {
             this.cx -= this.dx;
         }
-        if (this.movingRight && this.cx + halfWidth < canvasWidth) {
+        if (this.movingRight && right < canvasWidth) {
             this.cx += this.dx;
         }
-        if (this.movingUp && this.cy - halfHeight > 0) {
+        if (this.movingUp && top > 0) {
             this.cy -= this.dy;
         }
-        if (this.movingDown && this.cy + halfHeight < canvasHeight) {
+        if (this.movingDown && bottom < canvasHeight) {
             this.cy += this.dy;
         }
     }
@@ -58,10 +69,10 @@ export class MyShip {
         // 当たり判定のロジック
         const halfWidth = this.width / 2;
         const halfHeight = this.height / 2;
-        if ( this.cx + halfWidth <= enemy.cx - enemy.width / 2 ) return false;  // 自分の右端が敵の左端より左にある
-        if ( this.cx - halfWidth >= enemy.cx + enemy.width / 2 ) return false;  // 自分の左端が敵の右端より右にある
-        if ( this.cy + halfHeight <= enemy.cy - enemy.height / 2 ) return false; // 自分の下端が敵の上端より上にある
-        if ( this.cy - halfHeight >= enemy.cy + enemy.height / 2 ) return false; // 自分の上端が敵の下端より下にある
+        if (this.cx + halfWidth <= enemy.cx - enemy.width / 2) return false;  // 自分の右端が敵の左端より左にある
+        if (this.cx - halfWidth >= enemy.cx + enemy.width / 2) return false;  // 自分の左端が敵の右端より右にある
+        if (this.cy + halfHeight <= enemy.cy - enemy.height / 2) return false; // 自分の下端が敵の上端より上にある
+        if (this.cy - halfHeight >= enemy.cy + enemy.height / 2) return false; // 自分の上端が敵の下端より下にある
         return true;
     }
 

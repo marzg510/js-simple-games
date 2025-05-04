@@ -97,6 +97,28 @@ QUnit.module('MyShip', (hooks) => {
         ship.remove();  
         assert.equal(ship.status, MyShipStatus.ACTIVE, '状態が ACTIVE のままである');  
     });
+
+    QUnit.test('getBounds が正しい境界値を返す', (assert) => {
+        const bounds = ship.getBounds();
+
+        assert.equal(bounds.left, 75, '左端が正しい (cx - width / 2)');
+        assert.equal(bounds.right, 125, '右端が正しい (cx + width / 2)');
+        assert.equal(bounds.top, 75, '上端が正しい (cy - height / 2)');
+        assert.equal(bounds.bottom, 125, '下端が正しい (cy + height / 2)');
+    });
+
+    QUnit.test('getBounds が移動後の境界値を正しく返す', (assert) => {
+        // 自機を移動
+        ship.cx = 150;
+        ship.cy = 200;
+
+        const bounds = ship.getBounds();
+
+        assert.equal(bounds.left, 125, '移動後の左端が正しい (cx - width / 2)');
+        assert.equal(bounds.right, 175, '移動後の右端が正しい (cx + width / 2)');
+        assert.equal(bounds.top, 175, '移動後の上端が正しい (cy - height / 2)');
+        assert.equal(bounds.bottom, 225, '移動後の下端が正しい (cy + height / 2)');
+    });
 });
 
 QUnit.module('MyShip - Collision Detection', (hooks) => {

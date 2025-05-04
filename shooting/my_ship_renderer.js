@@ -18,11 +18,12 @@ export class MyShipRenderer {
         }
 
         if (myShip.status === MyShipStatus.ACTIVE) {
+            const myShipBounds = myShip.getBounds();
             // 自機を描画
             this.ctx.drawImage(
                 this.image,
-                myShip.cx - this.width / 2,
-                myShip.cy - this.height / 2,
+                myShipBounds.left,
+                myShipBounds.top,
                 this.width,
                 this.height
             );
@@ -32,8 +33,8 @@ export class MyShipRenderer {
             this.ctx.strokeStyle = "red";
             this.ctx.lineWidth = 2;
             this.ctx.strokeRect(
-                myShip.cx - myShip.width / 2,
-                myShip.cy - myShip.height / 2,
+                myShipBounds.left,
+                myShipBounds.top,
                 myShip.width,
                 myShip.height
             );
