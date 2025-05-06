@@ -22,7 +22,12 @@ export class ShootingGame {
         this.hiScore = 0; // ハイスコアを初期化
         this.isNewHiScore = false; // 新しいハイスコアかどうか
         this.isTitleScreen = false; // タイトル画面かどうか
+        this.isShootReqeuested = false; // 発射要求フラグ
 
+    }
+
+    handleShootRequest() {
+        this.isShootReqeuested = true; // 発射要求をセット
     }
 
     shoot() {
@@ -40,6 +45,12 @@ export class ShootingGame {
 
     update(deltaTime) {
         if (this.isTitleScreen || this.isGameOver) return;
+
+        // 発射の要求を処理
+        if (this.isShootReqeuested) {
+            this.shoot();
+            this.isShootReqeuested = false; // 発射要求をリセット
+        }
 
         // 自機の移動を更新
         this.myShip.update(this.canvasWidth, this.canvasHeight, deltaTime);

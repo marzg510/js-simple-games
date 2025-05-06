@@ -77,7 +77,7 @@ export function setupKeyboardEvents(game, renderer) {
             game.myShip.movingDown = true;
         }
         if (e.key === "z" || e.key === "Z") { // Zキーが押された場合
-            game.shoot(); // 弾を発射
+            game.handleShootRequest(); // 発射要求を処理
         }
     });
 
