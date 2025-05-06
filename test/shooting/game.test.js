@@ -197,4 +197,29 @@ QUnit.module('ShootingGame', (hooks) => {
         // ゲームオーバー状態を確認
         assert.ok(game.isGameOver, 'ゲームオーバー状態になる');
     });
+
+    QUnit.test('自機がアクティブでなければ弾は打てない', (assert) => {
+        const {myShip} = game;
+        // 自機を爆発状態に設定
+        myShip.explode();
+        // ゲームの更新を実行
+        game.update(100);
+        // 弾を発射
+        game.shoot();
+        // ゲームの更新を実行
+        game.update(100);
+        // 弾が発射されていないことを確認
+        assert.equal(game.myBullets.length, 0, '自機が爆発中は、弾は発射されない');
+
+        // 自機を削除
+        myShip.remove();
+        // ゲームの更新を実行
+        game.update(100);
+        // 弾を発射
+        game.shoot();
+        // ゲームの更新を実行
+        game.update(100);
+        // 弾が発射されていないことを確認
+        assert.equal(game.myBullets.length, 0, '自機が削除状態中は、弾は発射されない');
+    });
 });

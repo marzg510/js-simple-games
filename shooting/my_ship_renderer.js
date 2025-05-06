@@ -22,8 +22,8 @@ export class MyShipRenderer {
             // 自機を描画
             this.ctx.drawImage(
                 this.image,
-                myShipBounds.left,
-                myShipBounds.top,
+                myShip.cx - this.width / 2,
+                myShip.cy - this.height / 2,
                 this.width,
                 this.height
             );
