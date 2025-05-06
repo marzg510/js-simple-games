@@ -26,10 +26,8 @@ export class ShootingGame {
     }
 
     shoot() {
-        // 弾が2つ以上ある場合は新しい弾を発射しない
-        if (this.myBullets.length >= 2) {
-            return;
-        }
+        if (this.myShip.status !== MyShipStatus.ACTIVE) return; // 自機がアクティブでない場合は発射しない
+        if (this.myBullets.length >= 2) return; // 弾が2つ以上ある場合は新しい弾を発射しない
 
         // 弾を発射
         const bullet = new MyBullet(
