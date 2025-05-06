@@ -53,6 +53,7 @@ export class ShootingGame {
         // 弾と敵の当たり判定
         for (const bullet of this.myBullets) {
             for (const enemy of this.enemies) {
+                if (enemy.status !== EnemyStatus.ACTIVE) continue; // 敵がアクティブでない場合はスキップ
                 if (bullet.isCollidingWith(enemy)) {
                     bullet.isHit = true; // 弾が敵に当たった
                     bullet.isActive = false; // 弾を非アクティブにする
