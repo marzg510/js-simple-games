@@ -19,6 +19,17 @@ QUnit.module('ShootingGame', (hooks) => {
         assert.equal(game.hiScore, 0, 'ハイスコアは 0');
     });
 
+    QUnit.test('handleShootRequest が射撃要求を正しく記録する', (assert) => {
+        // 初期状態を確認
+        assert.equal(game.isShootReqeuested, false, '初期状態では射撃要求は false');
+
+        // handleShootRequest を呼び出す
+        game.handleShootRequest();
+
+        // 射撃要求が記録されていることを確認
+        assert.equal(game.isShootReqeuested, true, 'handleShootRequest を呼び出すと射撃要求が true になる');
+    });
+
     QUnit.test('resetメソッドが正しく動作する', (assert) => {
         // game.myShip.x = 100;
         // game.myShip.y = 100;
@@ -39,6 +50,18 @@ QUnit.module('ShootingGame', (hooks) => {
         const bullet = game.myBullets[0];
         assert.equal(bullet.cx, game.myShip.cx, '弾のx座標が自機のx座標と一致する');
         assert.equal(bullet.cy, game.myShip.cy - game.myShip.height, '弾のy座標が自機の上端に生成される');
+    });
+
+    QUnit.test('handleShootRequest後にupdateで弾が生成される', (assert) => {
+        // 初期状態を確認
+        assert.equal(game.isShootReqeuested, false, '初期状態では射撃要求は false');
+
+        // handleShootRequest を呼び出す
+        game.handleShootRequest();
+        // update を呼び出す
+        game.update(100);   // deltaTimeを仮定
+
+        assert.equal(game.myBullets.length, 1, '弾が1つ生成される');
     });
 
     QUnit.test('画面外に出た弾が削除される', (assert) => {
