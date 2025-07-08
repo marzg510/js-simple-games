@@ -2,13 +2,14 @@ import { MyShip } from '../../shooting/my_ship.js';
 import { MyShipStatus } from '../../shooting/my_ship_status.js';
 import { Explosion } from '../../shooting/explosion.js';
 import { Enemy } from '../../shooting/enemy.js';
+import { ActionRange } from '../../shooting/action_range.js';
 
 QUnit.module('MyShip', (hooks) => {
     let ship;
 
     hooks.beforeEach(() => {
         // テストごとに新しい自機を初期化
-        ship = new MyShip(100, 100, 50, 50, 5);
+        ship = new MyShip(100, 100, 50, 50, 5, new ActionRange(10, 20, 800, 600));
     });
 
     QUnit.test('初期化時に正しいプロパティが設定される', (assert) => {
@@ -21,53 +22,53 @@ QUnit.module('MyShip', (hooks) => {
 
     QUnit.test('左に移動する', (assert) => {
         ship.movingLeft = true;
-        ship.update(800, 600); // キャンバスサイズを渡す
+        ship.update();
         assert.equal(ship.cx, 95, 'x座標が左に移動する');
     });
 
     QUnit.test('右に移動する', (assert) => {
         ship.movingRight = true;
-        ship.update(800, 600); // キャンバスサイズを渡す
+        ship.update();
         assert.equal(ship.cx, 105, 'x座標が右に移動する');
     });
 
     QUnit.test('上に移動する', (assert) => {
         ship.movingUp = true;
-        ship.update(800, 600); // キャンバスサイズを渡す
+        ship.update();
         assert.equal(ship.cy, 95, 'y座標が上に移動する');
     });
 
     QUnit.test('下に移動する', (assert) => {
         ship.movingDown = true;
-        ship.update(800, 600); // キャンバスサイズを渡す
+        ship.update();
         assert.equal(ship.cy, 105, 'y座標が下に移動する');
     });
 
     QUnit.test('キャンバスの左端を超えない', (assert) => {
-        ship.x = 0;
+        ship.x = 10;
         ship.movingLeft = true;
-        ship.update(800, 600);
-        assert.equal(ship.x, 0, 'x座標が0未満にならない');
+        ship.update()
+        assert.equal(ship.x, 10, 'x座標が0未満にならない');
     });
 
     QUnit.test('キャンバスの右端を超えない', (assert) => {
         ship.x = 800;
         ship.movingRight = true;
-        ship.update(800, 600);
+        ship.update();
         assert.equal(ship.x, 800, 'x座標がキャンバス幅を超えない');
     });
 
     QUnit.test('キャンバスの上端を超えない', (assert) => {
-        ship.y = 0;
+        ship.y = 20;
         ship.movingUp = true;
-        ship.update(800, 600);
-        assert.equal(ship.y, 0, 'y座標が0未満にならない');
+        ship.update();
+        assert.equal(ship.y, 20, 'y座標が0未満にならない');
     });
 
     QUnit.test('キャンバスの下端を超えない', (assert) => {
         ship.y = 600;
         ship.movingDown = true;
-        ship.update(800, 600);
+        ship.update();
         assert.equal(ship.y, 600, 'y座標がキャンバス高さを超えない');
     });
 
@@ -80,7 +81,7 @@ QUnit.module('MyShip', (hooks) => {
     QUnit.test('updateメソッドで爆発が進行し、終了後に削除状態になる', (assert) => {
         ship.explode();
         for (let i = 0; i < 10; i++) {
-            ship.update(100, 100, 200); // deltaTime を渡して爆発を進行
+            ship.update(200); // deltaTime を渡して爆発を進行
         }
         assert.equal(ship.status, MyShipStatus.REMOVED, '爆発が終了し、状態が REMOVED に変更される');
     });
