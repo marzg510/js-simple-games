@@ -37,8 +37,8 @@ export class ShootingGame {
     }
 
     shoot() {
-        if (this.myShip.status !== MyShipStatus.ACTIVE) return; // 自機がアクティブでない場合は発射しない
-        if (this.myBullets.length >= 2) return; // 弾が2つ以上ある場合は新しい弾を発射しない
+        if (this.myShip.status !== MyShipStatus.ACTIVE) return false; // 自機がアクティブでない場合は発射しない
+        if (this.myBullets.length >= 2) return false; // 弾が2つ以上ある場合は新しい弾を発射しない
 
         // 弾を発射
         const bullet = new MyBullet(
@@ -47,16 +47,17 @@ export class ShootingGame {
             5 // 弾の速度
         );
         this.myBullets.push(bullet);
+        return true; // 発射成功
     }
 
     update(deltaTime) {
         if (this.isTitleScreen || this.isGameOver) return;
 
         // 発射の要求を処理
-        if (this.isShootRequested) {
-            this.shoot();
-            this.isShootRequested = false; // 発射要求をリセット
+        if (this.isShootRequested && this.shoot()) {
+              this.isShootRequested = false;
         }
+
 
         // 自機の移動を更新
         this.myShip.update(deltaTime);

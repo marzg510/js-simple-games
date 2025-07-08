@@ -287,4 +287,29 @@ QUnit.module('ShootingGame', (hooks) => {
         // 弾が発射されていないことを確認
         assert.equal(game.myBullets.length, 0, '自機が削除状態中は、弾は発射されない');
     });
+
+    QUnit.test('発射が阻害される場合、射撃要求が保持される', (assert) => {
+        // 弾を2つ追加して発射を阻害
+        game.shoot();
+        game.shoot();
+        assert.equal(game.myBullets.length, 2, '弾が2つ発射される');
+
+        // 射撃要求を設定
+        game.handleShootRequest();
+        assert.equal(game.isShootRequested, true, '射撃要求が設定される');
+
+        // 更新を実行（発射が阻害されるはず）
+        game.update(100);
+        assert.equal(game.myBullets.length, 2, '弾は2つのまま（新しい弾は発射されない）');
+        assert.equal(game.isShootRequested, true, '射撃要求が保持される');
+
+        // 弾を1つ削除して発射可能にする
+        game.myBullets.pop();
+        assert.equal(game.myBullets.length, 1, '弾が1つ削除される');
+
+        // 更新を実行（今度は発射されるはず）
+        game.update(100);
+        assert.equal(game.myBullets.length, 2, '新しい弾が発射される');
+        assert.equal(game.isShootRequested, false, '射撃要求がリセットされる');
+    });
 });
