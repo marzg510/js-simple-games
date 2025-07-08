@@ -8,7 +8,7 @@ QUnit.module('MyShip', (hooks) => {
 
     hooks.beforeEach(() => {
         // テストごとに新しい自機を初期化
-        ship = new MyShip(100, 100, 50, 50, 5, 5);
+        ship = new MyShip(100, 100, 50, 50, 5);
     });
 
     QUnit.test('初期化時に正しいプロパティが設定される', (assert) => {
@@ -16,8 +16,7 @@ QUnit.module('MyShip', (hooks) => {
         assert.equal(ship.cy, 100, 'y座標が正しい');
         assert.equal(ship.width, 50, '幅が正しい');
         assert.equal(ship.height, 50, '高さが正しい');
-        assert.equal(ship.dx, 5, 'x方向の速度が正しい');
-        assert.equal(ship.dy, 5, 'y方向の速度が正しい');
+        assert.equal(ship.speed, 5, 'x方向の速度が正しい');
     });
 
     QUnit.test('左に移動する', (assert) => {

@@ -2,13 +2,12 @@ import { MyShipStatus } from "./my_ship_status.js";
 import { Explosion } from "./explosion.js";
 
 export class MyShip {
-    constructor(cx, cy, width, height, dx, dy) {
+    constructor(cx, cy, width, height, speed = 2) {
         this.cx = cx; // 自機の中心のx座標
         this.cy = cy; // 自機の中心のy座標
         this.width = width; // 自機の幅
         this.height = height; // 自機の高さ
-        this.dx = dx; // 自機のx方向の速度
-        this.dy = dy; // 自機のy方向の速度
+        this.speed = speed; // 自機の移動速度
         this.movingLeft = false; // 左に移動中かどうか
         this.movingRight = false; // 右に移動中かどうか
         this.movingUp = false; // 上に移動中かどうか
@@ -52,16 +51,16 @@ export class MyShip {
         const { left, right, top, bottom } = this.getBounds();
 
         if (this.movingLeft && left > 0) {
-            this.cx -= this.dx;
+            this.cx -= this.speed;
         }
         if (this.movingRight && right < canvasWidth) {
-            this.cx += this.dx;
+            this.cx += this.speed;
         }
         if (this.movingUp && top > 0) {
-            this.cy -= this.dy;
+            this.cy -= this.speed;
         }
         if (this.movingDown && bottom < canvasHeight) {
-            this.cy += this.dy;
+            this.cy += this.speed;
         }
     }
 
