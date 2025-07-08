@@ -2,6 +2,7 @@ import { MyBullet } from './my_bullet.js';
 import { MyShip } from './my_ship.js';
 import { MyShipStatus } from './my_ship_status.js';
 import { EnemyStatus } from './enemy_status.js';
+import { ActionRange } from './action_range.js';
 
 export class ShootingGame {
     constructor(canvasWidth, canvasHeight) {
@@ -12,8 +13,13 @@ export class ShootingGame {
             canvasHeight / 2,
             50, // 自機の幅
             50, // 自機の高さ
-            2,  // 自機のx方向の速度
-            2   // 自機のy方向の速度
+            2,  // 自機の速度
+            new ActionRange(
+                0, // 自機の移動範囲のx座標
+                0, // 自機の移動範囲のy座標
+                canvasWidth, // 自機の移動範囲の幅
+                canvasHeight // 自機の移動範囲の高さ
+            )
         );
         this.myBullets = []; // 自機の弾の配列
         this.enemies = []; // 敵の配列
@@ -53,7 +59,7 @@ export class ShootingGame {
         }
 
         // 自機の移動を更新
-        this.myShip.update(this.canvasWidth, this.canvasHeight, deltaTime);
+        this.myShip.update(deltaTime);
 
         // 自機の弾を更新
         this.myBullets.forEach((bullet) => bullet.update());
