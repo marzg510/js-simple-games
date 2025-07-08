@@ -21,13 +21,13 @@ QUnit.module('ShootingGame', (hooks) => {
 
     QUnit.test('handleShootRequest が射撃要求を正しく記録する', (assert) => {
         // 初期状態を確認
-        assert.equal(game.isShootReqeuested, false, '初期状態では射撃要求は false');
+        assert.equal(game.isShootRequested, false, '初期状態では射撃要求は false');
 
         // handleShootRequest を呼び出す
         game.handleShootRequest();
 
         // 射撃要求が記録されていることを確認
-        assert.equal(game.isShootReqeuested, true, 'handleShootRequest を呼び出すと射撃要求が true になる');
+        assert.equal(game.isShootRequested, true, 'handleShootRequest を呼び出すと射撃要求が true になる');
     });
 
     QUnit.test('resetメソッドが正しく動作する', (assert) => {
@@ -54,7 +54,7 @@ QUnit.module('ShootingGame', (hooks) => {
 
     QUnit.test('handleShootRequest後にupdateで弾が生成される', (assert) => {
         // 初期状態を確認
-        assert.equal(game.isShootReqeuested, false, '初期状態では射撃要求は false');
+        assert.equal(game.isShootRequested, false, '初期状態では射撃要求は false');
 
         // handleShootRequest を呼び出す
         game.handleShootRequest();
