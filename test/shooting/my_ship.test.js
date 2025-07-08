@@ -45,6 +45,7 @@ QUnit.module('MyShip', (hooks) => {
     });
 
     QUnit.test('キャンバスの左端を超えない', (assert) => {
+        ship.actionRange.x = 10;
         ship.x = 10;
         ship.movingLeft = true;
         ship.update()
@@ -52,6 +53,7 @@ QUnit.module('MyShip', (hooks) => {
     });
 
     QUnit.test('キャンバスの右端を超えない', (assert) => {
+        ship.actionRange.width = 800;
         ship.x = 800;
         ship.movingRight = true;
         ship.update();
@@ -59,6 +61,7 @@ QUnit.module('MyShip', (hooks) => {
     });
 
     QUnit.test('キャンバスの上端を超えない', (assert) => {
+        ship.actionRange.y = 20;
         ship.y = 20;
         ship.movingUp = true;
         ship.update();
@@ -66,6 +69,7 @@ QUnit.module('MyShip', (hooks) => {
     });
 
     QUnit.test('キャンバスの下端を超えない', (assert) => {
+        ship.actionRange.y = 600;
         ship.y = 600;
         ship.movingDown = true;
         ship.update();
