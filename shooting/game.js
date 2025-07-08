@@ -54,11 +54,10 @@ export class ShootingGame {
         if (this.isTitleScreen || this.isGameOver) return;
 
         // 発射の要求を処理
-        if (this.isShootRequested) {
-            if (this.shoot()) {
-                this.isShootRequested = false; // 発射成功時のみ発射要求をリセット
-            }
+        if (this.isShootRequested && this.shoot()) {
+              this.isShootRequested = false;
         }
+
 
         // 自機の移動を更新
         this.myShip.update(deltaTime);
