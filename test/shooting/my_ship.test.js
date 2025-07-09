@@ -1,5 +1,5 @@
 import { MyShip } from '../../shooting/my_ship.js';
-import { MyShipStatus } from '../../shooting/my_ship_status.js';
+import { EntityStatus } from '../../shooting/entity_status.js';
 import { Explosion } from '../../shooting/explosion.js';
 import { Enemy } from '../../shooting/enemy.js';
 import { ActionRange } from '../../shooting/action_range.js';
@@ -78,7 +78,7 @@ QUnit.module('MyShip', (hooks) => {
 
     QUnit.test('explodeメソッドで自機が爆発状態になる', (assert) => {
         ship.explode();
-        assert.equal(ship.status, MyShipStatus.EXPLODING, '状態が EXPLODING に変更される');
+        assert.equal(ship.status, EntityStatus.EXPLODING, '状態が EXPLODING に変更される');
         assert.ok(ship.explosion instanceof Explosion, 'Explosion オブジェクトが作成される');
     });
 
@@ -87,19 +87,19 @@ QUnit.module('MyShip', (hooks) => {
         for (let i = 0; i < 10; i++) {
             ship.update(200); // deltaTime を渡して爆発を進行
         }
-        assert.equal(ship.status, MyShipStatus.REMOVED, '爆発が終了し、状態が REMOVED に変更される');
+        assert.equal(ship.status, EntityStatus.REMOVED, '爆発が終了し、状態が REMOVED に変更される');
     });
 
     QUnit.test('removeメソッドで自機が削除状態になる', (assert) => {
         ship.explode();
         ship.remove();
-        assert.equal(ship.status, MyShipStatus.REMOVED, '状態が REMOVED に変更される');
+        assert.equal(ship.status, EntityStatus.REMOVED, '状態が REMOVED に変更される');
     });
 
     QUnit.test('removeメソッドで自機がACTIVE状態のままである', (assert) => {  
         // Assuming ship is initialized and in ACTIVE state by default.  
         ship.remove();  
-        assert.equal(ship.status, MyShipStatus.ACTIVE, '状態が ACTIVE のままである');  
+        assert.equal(ship.status, EntityStatus.ACTIVE, '状態が ACTIVE のままである');  
     });
 
     QUnit.test('getBounds が正しい境界値を返す', (assert) => {

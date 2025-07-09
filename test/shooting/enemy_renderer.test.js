@@ -1,6 +1,6 @@
 import { EnemyRenderer } from '../../shooting/enemy_renderer.js';
 import { Enemy } from '../../shooting/enemy.js';
-import { EnemyStatus } from '../../shooting/enemy_status.js';
+import { EntityStatus } from '../../shooting/entity_status.js';
 import { createContextMock, createImageMock } from '../test_utils/context_mock.js';
 
 QUnit.module('EnemyRenderer', (hooks) => {
@@ -21,7 +21,7 @@ QUnit.module('EnemyRenderer', (hooks) => {
     });
 
     QUnit.test('アクティブ状態の敵を描画する', (assert) => {
-        enemy.status = EnemyStatus.ACTIVE;
+        enemy.status = EntityStatus.ACTIVE;
         // 画像読み込み状態を設定
         renderer.imageLoaded = true;
         renderer.image.complete = true;
@@ -56,7 +56,7 @@ QUnit.module('EnemyRenderer', (hooks) => {
     });
 
     QUnit.test('削除状態の敵は描画されない', (assert) => {
-        enemy.status = EnemyStatus.REMOVED;
+        enemy.status = EntityStatus.REMOVED;
 
         renderer.render(enemy);
 

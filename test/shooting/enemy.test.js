@@ -1,5 +1,5 @@
 import { Enemy } from '../../shooting/enemy.js';
-import { EnemyStatus } from '../../shooting/enemy_status.js';
+import { EntityStatus } from '../../shooting/entity_status.js';
 import { Explosion } from '../../shooting/explosion.js';
 
 QUnit.module('Enemy', (hooks) => {
@@ -24,7 +24,7 @@ QUnit.module('Enemy', (hooks) => {
     });
     QUnit.test('explodeメソッドで敵が爆発状態になる', (assert) => {
         enemy.explode();
-        assert.equal(enemy.status, EnemyStatus.EXPLODING, '状態が EXPLODING に変更される');
+        assert.equal(enemy.status, EntityStatus.EXPLODING, '状態が EXPLODING に変更される');
         assert.ok(enemy.explosion instanceof Explosion, 'Explosion オブジェクトが作成される');
     });
 
@@ -33,12 +33,12 @@ QUnit.module('Enemy', (hooks) => {
         for (let i = 0; i < 10; i++) {
             enemy.update(100); // deltaTime を渡して爆発を進行
         }
-        assert.equal(enemy.status, EnemyStatus.REMOVED, '爆発が終了し、状態が REMOVED に変更される');
+        assert.equal(enemy.status, EntityStatus.REMOVED, '爆発が終了し、状態が REMOVED に変更される');
     });
 
     QUnit.test('removeメソッドで敵が削除状態になる', (assert) => {
         enemy.explode();
         enemy.remove();
-        assert.equal(enemy.status, EnemyStatus.REMOVED, '状態が REMOVED に変更される');
+        assert.equal(enemy.status, EntityStatus.REMOVED, '状態が REMOVED に変更される');
     });
 });

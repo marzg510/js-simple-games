@@ -1,5 +1,5 @@
 import { EntityRenderer } from "./entity_renderer.js";
-import { MyShipStatus } from "./my_ship_status.js";
+import { EntityStatus } from "./entity_status.js";
 
 export class MyShipRenderer extends EntityRenderer {
     constructor(ctx, myShipImageSrc, width, height, explosionImageSrc) {
@@ -7,12 +7,12 @@ export class MyShipRenderer extends EntityRenderer {
     }
 
     render(myShip) {
-        if (myShip.status === MyShipStatus.EXPLODING) {
+        if (myShip.status === EntityStatus.EXPLODING) {
             this.drawExplosion(myShip.explosion);
             return;
         }
 
-        if (myShip.status === MyShipStatus.ACTIVE) {
+        if (myShip.status === EntityStatus.ACTIVE) {
             // 自機を描画
             this.drawImage(myShip);
 

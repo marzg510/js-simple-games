@@ -1,6 +1,6 @@
 import { MyShipRenderer } from '../../shooting/my_ship_renderer.js';
 import { MyShip } from '../../shooting/my_ship.js';
-import { MyShipStatus } from '../../shooting/my_ship_status.js';
+import { EntityStatus } from '../../shooting/entity_status.js';
 import { createContextMock, createImageMock } from '../test_utils/context_mock.js';
 
 QUnit.module('MyShipRenderer', (hooks) => {
@@ -74,7 +74,7 @@ QUnit.module('MyShipRenderer', (hooks) => {
     });
 
     QUnit.test('削除状態の自機は描画されない', (assert) => {
-        ship.status = MyShipStatus.REMOVED;
+        ship.status = EntityStatus.REMOVED;
 
         renderer.render(ship);
 

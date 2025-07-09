@@ -1,6 +1,5 @@
 import { Entity } from "./entity.js";
 import { EntityStatus } from "./entity_status.js";
-import { MyShipStatus } from "./my_ship_status.js";
 import { Explosion } from "./explosion.js";
 import { ActionRange } from "./action_range.js";
 
@@ -13,15 +12,15 @@ export class MyShip extends Entity {
         this.movingRight = false; // 右に移動中かどうか
         this.movingUp = false; // 上に移動中かどうか
         this.movingDown = false; // 下に移動中かどうか
-        this.status = MyShipStatus.ACTIVE; // 自機の状態
+        this.status = EntityStatus.ACTIVE; // 自機の状態
     }
 
 
 
     update(deltaTime) {
-        if (this.status === MyShipStatus.ACTIVE) {
+        if (this.status === EntityStatus.ACTIVE) {
             this.handleActiveState();
-        } else if (this.status === MyShipStatus.EXPLODING) {
+        } else if (this.status === EntityStatus.EXPLODING) {
             this.handleExplodingState(deltaTime);
         }
     }
@@ -59,8 +58,8 @@ export class MyShip extends Entity {
     }
 
     explode() {
-        if (this.status === MyShipStatus.ACTIVE) {
-            this.status = MyShipStatus.EXPLODING; // 爆発中に変更
+        if (this.status === EntityStatus.ACTIVE) {
+            this.status = EntityStatus.EXPLODING; // 爆発中に変更
             this.explosion = new Explosion(
                 this.cx,
                 this.cy,
@@ -72,8 +71,8 @@ export class MyShip extends Entity {
     }
 
     remove() {
-        if (this.status === MyShipStatus.EXPLODING) {
-            this.status = MyShipStatus.REMOVED;
+        if (this.status === EntityStatus.EXPLODING) {
+            this.status = EntityStatus.REMOVED;
         }
     }
 }
