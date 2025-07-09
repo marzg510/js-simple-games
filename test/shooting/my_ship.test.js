@@ -102,6 +102,88 @@ QUnit.module('MyShip', (hooks) => {
         assert.equal(ship.status, EntityStatus.ACTIVE, '状態が ACTIVE のままである');  
     });
 
+    QUnit.test('explode() を複数回呼び出しても安全', (assert) => {
+        const initialStatus = ship.status;
+        
+        // 最初の explode() 呼び出し
+        ship.explode();
+        assert.equal(ship.status, EntityStatus.EXPLODING, '最初の explode() で爆発状態になる');
+        assert.ok(ship.explosion instanceof Explosion, '爆発オブジェクトが作成される');
+        
+        const firstExplosion = ship.explosion;
+        
+        // 2回目の explode() 呼び出し
+        ship.explode();
+        assert.equal(ship.status, EntityStatus.EXPLODING, '2回目の explode() でも爆発状態が維持される');
+        assert.strictEqual(ship.explosion, firstExplosion, '爆発オブジェクトが変更されない');
+        
+        // 3回目の explode() 呼び出し
+        ship.explode();
+        assert.equal(ship.status, EntityStatus.EXPLODING, '3回目の explode() でも爆発状態が維持される');
+        assert.strictEqual(ship.explosion, firstExplosion, '爆発オブジェクトが変更されない');
+    });
+
+    QUnit.test('remove() を複数回呼び出しても安全', (assert) => {
+        // 自機を爆発状態にする
+        ship.explode();
+        assert.equal(ship.status, EntityStatus.EXPLODING, '爆発状態になる');
+        
+        // 最初の remove() 呼び出し
+        ship.remove();
+        assert.equal(ship.status, EntityStatus.REMOVED, '最初の remove() で削除状態になる');
+        
+        // 2回目の remove() 呼び出し
+        ship.remove();
+        assert.equal(ship.status, EntityStatus.REMOVED, '2回目の remove() でも削除状態が維持される');
+        
+        // 3回目の remove() 呼び出し
+        ship.remove();
+        assert.equal(ship.status, EntityStatus.REMOVED, '3回目の remove() でも削除状態が維持される');
+    });
+
+    QUnit.test('explode() と remove() を混在して呼び出しても安全', (assert) => {
+        // explode() を呼び出し
+        ship.explode();
+        assert.equal(ship.status, EntityStatus.EXPLODING, 'explode() で爆発状態になる');
+        
+        // remove() を呼び出し
+        ship.remove();
+        assert.equal(ship.status, EntityStatus.REMOVED, 'remove() で削除状態になる');
+        
+        // 再度 explode() を呼び出し（削除状態からは変更されない）
+        ship.explode();
+        assert.equal(ship.status, EntityStatus.REMOVED, '削除状態では explode() が無効');
+        
+        // 再度 remove() を呼び出し
+        ship.remove();
+        assert.equal(ship.status, EntityStatus.REMOVED, '削除状態が維持される');
+    });
+
+    QUnit.test('アクティブ状態での remove() 呼び出しは無効', (assert) => {
+        // 自機は初期状態でアクティブ
+        assert.equal(ship.status, EntityStatus.ACTIVE, '初期状態でアクティブ');
+        
+        // アクティブ状態で remove() を呼び出し
+        ship.remove();
+        assert.equal(ship.status, EntityStatus.ACTIVE, 'アクティブ状態では remove() が無効');
+        
+        // 複数回 remove() を呼び出し
+        ship.remove();
+        ship.remove();
+        assert.equal(ship.status, EntityStatus.ACTIVE, '複数回呼び出してもアクティブ状態が維持される');
+    });
+
+    QUnit.test('非アクティブ状態での explode() 呼び出しは無効', (assert) => {
+        // 自機を爆発→削除状態にする
+        ship.explode();
+        ship.remove();
+        assert.equal(ship.status, EntityStatus.REMOVED, '削除状態になる');
+        
+        // 削除状態で explode() を呼び出し
+        ship.explode();
+        assert.equal(ship.status, EntityStatus.REMOVED, '削除状態では explode() が無効');
+    });
+
     QUnit.test('getBounds が正しい境界値を返す', (assert) => {
         const bounds = ship.getBounds();
 

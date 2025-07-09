@@ -41,4 +41,68 @@ QUnit.module('Enemy', (hooks) => {
         enemy.remove();
         assert.equal(enemy.status, EntityStatus.REMOVED, '状態が REMOVED に変更される');
     });
+
+    QUnit.test('explode() を複数回呼び出しても安全', (assert) => {
+        const initialStatus = enemy.status;
+        
+        // 最初の explode() 呼び出し
+        enemy.explode();
+        assert.equal(enemy.status, EntityStatus.EXPLODING, '最初の explode() で爆発状態になる');
+        assert.ok(enemy.explosion instanceof Explosion, '爆発オブジェクトが作成される');
+        
+        const firstExplosion = enemy.explosion;
+        
+        // 2回目の explode() 呼び出し
+        enemy.explode();
+        assert.equal(enemy.status, EntityStatus.EXPLODING, '2回目の explode() でも爆発状態が維持される');
+        assert.strictEqual(enemy.explosion, firstExplosion, '爆発オブジェクトが変更されない');
+        
+        // 3回目の explode() 呼び出し
+        enemy.explode();
+        assert.equal(enemy.status, EntityStatus.EXPLODING, '3回目の explode() でも爆発状態が維持される');
+        assert.strictEqual(enemy.explosion, firstExplosion, '爆発オブジェクトが変更されない');
+    });
+
+    QUnit.test('remove() を複数回呼び出しても安全', (assert) => {
+        // 最初の remove() 呼び出し
+        enemy.remove();
+        assert.equal(enemy.status, EntityStatus.REMOVED, '最初の remove() で削除状態になる');
+        
+        // 2回目の remove() 呼び出し
+        enemy.remove();
+        assert.equal(enemy.status, EntityStatus.REMOVED, '2回目の remove() でも削除状態が維持される');
+        
+        // 3回目の remove() 呼び出し
+        enemy.remove();
+        assert.equal(enemy.status, EntityStatus.REMOVED, '3回目の remove() でも削除状態が維持される');
+    });
+
+    QUnit.test('explode() と remove() を混在して呼び出しても安全', (assert) => {
+        // explode() を呼び出し
+        enemy.explode();
+        assert.equal(enemy.status, EntityStatus.EXPLODING, 'explode() で爆発状態になる');
+        
+        // remove() を呼び出し
+        enemy.remove();
+        assert.equal(enemy.status, EntityStatus.REMOVED, 'remove() で削除状態になる');
+        
+        // 再度 explode() を呼び出し（削除状態からは変更されない）
+        enemy.explode();
+        assert.equal(enemy.status, EntityStatus.REMOVED, '削除状態では explode() が無効');
+        
+        // 再度 remove() を呼び出し
+        enemy.remove();
+        assert.equal(enemy.status, EntityStatus.REMOVED, '削除状態が維持される');
+    });
+
+    QUnit.test('非アクティブ状態での explode() 呼び出しは無効', (assert) => {
+        // 敵を削除状態にする
+        enemy.remove();
+        assert.equal(enemy.status, EntityStatus.REMOVED, '削除状態になる');
+        
+        // 削除状態で explode() を呼び出し
+        enemy.explode();
+        assert.equal(enemy.status, EntityStatus.REMOVED, '削除状態では explode() が無効');
+        assert.strictEqual(enemy.explosion, null, '爆発オブジェクトが作成されない');
+    });
 });
