@@ -194,7 +194,8 @@ QUnit.module('ShootingGame', (hooks) => {
         // 敵と弾を初期化
         const bullet = new MyBullet(100, 100, 5);
         const enemy = new Enemy(100, 100, 10, 10); // 弾と重なる位置に敵を配置
-        enemy.remove(); // 敵を爆発状態にする
+        enemy.explode(); // 敵を爆発状態にする
+        enemy.remove(); // 敵を削除状態にする
 
         game.myBullets.push(bullet);
         game.enemies.push(enemy);
@@ -258,7 +259,8 @@ QUnit.module('ShootingGame', (hooks) => {
 
     QUnit.test('自機が削除対象の敵に当たっても、自機は爆発しない', (assert) => {
         // 自機と敵を初期化
-        const enemy = new Enemy(game.myShip.x, game.myShip.y, 50, 50); // 自機と同じ位置に敵を配置
+        const enemy = new Enemy(game.myShip.cx, game.myShip.cy, 50, 50); // 自機と同じ位置に敵を配置
+        enemy.explode(); // 敵を爆発状態にする
         enemy.remove(); // 敵を削除対象にする
         game.enemies.push(enemy);
 

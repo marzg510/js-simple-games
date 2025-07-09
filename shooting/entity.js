@@ -1,3 +1,6 @@
+import { EntityStatus } from './entity_status.js';
+import { Explosion } from './explosion.js';
+
 /**
  * 全エンティティの基底クラス
  */
@@ -46,10 +49,49 @@ export class Entity {
     }
 
     /**
-     * エンティティの更新処理（サブクラスで実装）
+     * エンティティを爆発状態にする
+     * @param {number} explosionDuration - 爆発の持続時間（ミリ秒）
+     */
+    explode(explosionDuration = 1000) {
+        if (this.status === EntityStatus.ACTIVE) {
+            this.status = EntityStatus.EXPLODING;
+            this.explosion = new Explosion(
+                this.cx,
+                this.cy,
+                this.width,
+                this.height,
+                explosionDuration
+            );
+        }
+    }
+
+    /**
+     * エンティティを削除状態にする
+     */
+    remove() {
+        if (this.status === EntityStatus.EXPLODING) {
+            this.status = EntityStatus.REMOVED;
+        }
+    }
+
+    /**
+     * 爆発状態の処理
      * @param {number} deltaTime - 前フレームからの経過時間
      */
-    update(deltaTime) {
+    handleExplodingState(deltaTime) {
+        if (this.explosion) {
+            this.explosion.update(deltaTime);
+            if (this.explosion.isFinished()) {
+                this.remove();
+            }
+        }
+    }
+
+    /**
+     * エンティティの更新処理（サブクラスで実装）
+     * @param {number} _deltaTime - 前フレームからの経過時間
+     */
+    update(_deltaTime) {
         throw new Error("update method must be implemented by subclass");
     }
 }

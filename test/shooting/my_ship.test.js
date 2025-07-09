@@ -103,8 +103,6 @@ QUnit.module('MyShip', (hooks) => {
     });
 
     QUnit.test('explode() を複数回呼び出しても安全', (assert) => {
-        const initialStatus = ship.status;
-        
         // 最初の explode() 呼び出し
         ship.explode();
         assert.equal(ship.status, EntityStatus.EXPLODING, '最初の explode() で爆発状態になる');

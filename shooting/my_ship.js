@@ -1,7 +1,5 @@
 import { Entity } from "./entity.js";
 import { EntityStatus } from "./entity_status.js";
-import { Explosion } from "./explosion.js";
-import { ActionRange } from "./action_range.js";
 
 export class MyShip extends Entity {
     constructor(cx, cy, width, height, speed = 2, actionRange) {
@@ -21,19 +19,12 @@ export class MyShip extends Entity {
         if (this.status === EntityStatus.ACTIVE) {
             this.handleActiveState();
         } else if (this.status === EntityStatus.EXPLODING) {
-            this.handleExplodingState(deltaTime);
+            super.handleExplodingState(deltaTime);
         }
     }
 
     handleActiveState() {
         this.move();
-    }
-
-    handleExplodingState(deltaTime) {
-        this.explosion.update(deltaTime);
-        if (this.explosion.isFinished()) {
-            this.remove();
-        }
     }
 
     move() {
@@ -58,21 +49,10 @@ export class MyShip extends Entity {
     }
 
     explode() {
-        if (this.status === EntityStatus.ACTIVE) {
-            this.status = EntityStatus.EXPLODING; // 爆発中に変更
-            this.explosion = new Explosion(
-                this.cx,
-                this.cy,
-                this.width,
-                this.height,
-                2000
-            );
-        }
+        super.explode(2000); // MyShipの爆発時間は2000ms
     }
 
     remove() {
-        if (this.status === EntityStatus.EXPLODING) {
-            this.status = EntityStatus.REMOVED;
-        }
+        super.remove();
     }
 }
