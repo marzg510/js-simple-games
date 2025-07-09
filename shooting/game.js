@@ -83,6 +83,7 @@ export class ShootingGame {
         }
         // 自機と敵の当たり判定
         for (const enemy of this.enemies) {
+            if (enemy.status !== EnemyStatus.ACTIVE) continue; // 敵がアクティブでない場合はスキップ
             if (this.myShip.isCollidingWith(enemy)) {
                 this.myShip.explode(); // 自機の爆発を開始
                 break;

@@ -241,8 +241,34 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // 自機の状態を確認
         assert.equal(game.myShip.status, MyShipStatus.EXPLODING, '自機が爆発状態になる');
+    });
 
-        // TODO: 敵が爆発中は自機は爆発しない
+    QUnit.test('自機が爆発中の敵に当たっても、自機は爆発しない', (assert) => {
+        // 自機と敵を初期化
+        const enemy = new Enemy(game.myShip.x, game.myShip.y, 50, 50); // 自機と同じ位置に敵を配置
+        enemy.explode(); // 敵を爆発状態にする
+        game.enemies.push(enemy);
+
+        // ゲームの更新を実行
+        game.update();
+
+        // 自機の状態を確認
+        assert.equal(game.myShip.status, MyShipStatus.ACTIVE, '自機はアクティブ状態のまま');
+        assert.equal(enemy.status, EnemyStatus.EXPLODING, '敵は爆発状態');
+    });
+
+    QUnit.test('自機が削除対象の敵に当たっても、自機は爆発しない', (assert) => {
+        // 自機と敵を初期化
+        const enemy = new Enemy(game.myShip.x, game.myShip.y, 50, 50); // 自機と同じ位置に敵を配置
+        enemy.remove(); // 敵を削除対象にする
+        game.enemies.push(enemy);
+
+        // ゲームの更新を実行
+        game.update();
+
+        // 自機の状態を確認
+        assert.equal(game.myShip.status, MyShipStatus.ACTIVE, '自機はアクティブ状態のまま');
+        assert.equal(enemy.status, EnemyStatus.REMOVED, '敵は削除対象状態');
     });
 
     QUnit.test('自機の爆発が終了した場合、ゲームオーバーになる', (assert) => {
