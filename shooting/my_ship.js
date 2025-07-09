@@ -1,13 +1,12 @@
+import { Entity } from "./entity.js";
+import { EntityStatus } from "./entity_status.js";
 import { MyShipStatus } from "./my_ship_status.js";
 import { Explosion } from "./explosion.js";
 import { ActionRange } from "./action_range.js";
 
-export class MyShip {
+export class MyShip extends Entity {
     constructor(cx, cy, width, height, speed = 2, actionRange) {
-        this.cx = cx; // 自機の中心のx座標
-        this.cy = cy; // 自機の中心のy座標
-        this.width = width; // 自機の幅
-        this.height = height; // 自機の高さ
+        super(cx, cy, width, height);
         this.speed = speed; // 自機の移動速度
         this.actionRange = actionRange; // 自機の移動範囲を定義するオブジェクト
         this.movingLeft = false; // 左に移動中かどうか
@@ -15,19 +14,8 @@ export class MyShip {
         this.movingUp = false; // 上に移動中かどうか
         this.movingDown = false; // 下に移動中かどうか
         this.status = MyShipStatus.ACTIVE; // 自機の状態
-        this.explosion = null; // 爆発オブジェクト
     }
 
-    getBounds() {
-        const halfWidth = this.width / 2;
-        const halfHeight = this.height / 2;
-        return {
-            left: this.cx - halfWidth,
-            right: this.cx + halfWidth,
-            top: this.cy - halfHeight,
-            bottom: this.cy + halfHeight,
-        };
-    }
 
 
     update(deltaTime) {
@@ -67,14 +55,7 @@ export class MyShip {
     }
 
     isCollidingWith(enemy) {
-        // 当たり判定のロジック
-        const halfWidth = this.width / 2;
-        const halfHeight = this.height / 2;
-        if (this.cx + halfWidth <= enemy.cx - enemy.width / 2) return false;  // 自分の右端が敵の左端より左にある
-        if (this.cx - halfWidth >= enemy.cx + enemy.width / 2) return false;  // 自分の左端が敵の右端より右にある
-        if (this.cy + halfHeight <= enemy.cy - enemy.height / 2) return false; // 自分の下端が敵の上端より上にある
-        if (this.cy - halfHeight >= enemy.cy + enemy.height / 2) return false; // 自分の上端が敵の下端より下にある
-        return true;
+        return super.isCollidingWith(enemy);
     }
 
     explode() {

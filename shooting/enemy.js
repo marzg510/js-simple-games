@@ -1,14 +1,11 @@
+import { Entity } from "./entity.js";
 import { EnemyStatus } from "./enemy_status.js";
 import { Explosion } from "./explosion.js";
 
-export class Enemy {
+export class Enemy extends Entity {
     constructor(cx, cy, width, height) {
-        this.cx = cx; // 敵の中心x座標
-        this.cy = cy; // 敵の中心y座標
-        this.width = width; // 敵の幅
-        this.height = height; // 敵の高さ
+        super(cx, cy, width, height);
         this.status = EnemyStatus.ACTIVE; // 敵の状態
-        this.explosion = null; // 爆発オブジェクト
     }
 
     update(deltaTime) {

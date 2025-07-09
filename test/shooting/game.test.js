@@ -3,6 +3,7 @@ import { MyBullet } from '../../shooting/my_bullet.js';
 import { Enemy } from '../../shooting/enemy.js';
 import { EnemyStatus } from '../../shooting/enemy_status.js';
 import { MyShipStatus } from '../../shooting/my_ship_status.js';
+import { EntityStatus } from '../../shooting/entity_status.js';
 
 QUnit.module('ShootingGame', (hooks) => {
     let game;
@@ -119,7 +120,7 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // 弾と敵の状態を確認
         assert.ok(bullet.isHit, '弾が敵に当たった状態になる');
-        assert.notOk(bullet.isActive, '弾が非アクティブになる');
+        assert.notEqual(bullet.status, EntityStatus.ACTIVE, '弾が非アクティブになる');
         assert.equal(enemy.status, EnemyStatus.EXPLODING, '敵が爆発中の状態になる');
     });
 
@@ -136,7 +137,7 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // 弾と敵の状態を確認
         assert.notOk(bullet.isHit, '弾が敵に当たっていない状態');
-        assert.ok(bullet.isActive, '弾がアクティブなまま');
+        assert.equal(bullet.status, EntityStatus.ACTIVE, '弾がアクティブなまま');
         assert.equal(enemy.status, EnemyStatus.ACTIVE, '敵が通常状態');
     });
 
@@ -185,7 +186,7 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // 弾と敵の状態を確認
         assert.notOk(bullet.isHit, '弾が敵に当たっていない状態');
-        assert.ok(bullet.isActive, '弾がアクティブなまま');
+        assert.equal(bullet.status, EntityStatus.ACTIVE, '弾がアクティブなまま');
         assert.equal(game.score, initialScore, 'スコアが加算されない');
         assert.equal(enemy.status, EnemyStatus.EXPLODING, '敵が爆発状態');
     });
@@ -205,7 +206,7 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // 弾と敵の状態を確認
         assert.notOk(bullet.isHit, '弾が敵に当たっていない状態');
-        assert.ok(bullet.isActive, '弾がアクティブなまま');
+        assert.equal(bullet.status, EntityStatus.ACTIVE, '弾がアクティブなまま');
         assert.equal(game.score, initialScore, 'スコアが加算されない');
         assert.equal(enemy.status, EnemyStatus.REMOVED, '敵が削除可能状態');
     });

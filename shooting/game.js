@@ -2,6 +2,7 @@ import { MyBullet } from './my_bullet.js';
 import { MyShip } from './my_ship.js';
 import { MyShipStatus } from './my_ship_status.js';
 import { EnemyStatus } from './enemy_status.js';
+import { EntityStatus } from './entity_status.js';
 import { ActionRange } from './action_range.js';
 
 export const MAX_BULLETS = 2; // 自機が同時に発射できる弾の最大数
@@ -76,7 +77,7 @@ export class ShootingGame {
                 if (enemy.status !== EnemyStatus.ACTIVE) continue; // 敵がアクティブでない場合はスキップ
                 if (bullet.isCollidingWith(enemy)) {
                     bullet.isHit = true; // 弾が敵に当たった
-                    bullet.isActive = false; // 弾を非アクティブにする
+                    bullet.status = EntityStatus.INACTIVE; // 弾を非アクティブにする
                     enemy.explode();    // 敵の爆発を開始
                     this.score += 10;    // スコアを加算
                     break;
@@ -97,7 +98,7 @@ export class ShootingGame {
             this.isGameOver = true; // ゲームオーバー状態にする
         }
 
-        this.myBullets = this.myBullets.filter((bullet) => bullet.isActive); // 非アクティブな弾を削除
+        this.myBullets = this.myBullets.filter((bullet) => bullet.status === EntityStatus.ACTIVE); // 非アクティブな弾を削除
         this.enemies = this.enemies.filter((enemy) => enemy.cy <= this.canvasHeight); // 画面外に出た敵を削除
         this.enemies = this.enemies.filter((enemy) => enemy.status !== EnemyStatus.REMOVED);    // 削除対象を削除
     }

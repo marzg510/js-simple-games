@@ -1,4 +1,5 @@
 import { EntityRenderer } from "./entity_renderer.js";
+import { EntityStatus } from "./entity_status.js";
 
 export class MyBulletRenderer extends EntityRenderer {
     constructor(ctx) {
@@ -20,7 +21,7 @@ export class MyBulletRenderer extends EntityRenderer {
 
     render(bullet) {
         // 非アクティブな弾は描画しない
-        if (!bullet.isActive) {
+        if (bullet.status !== EntityStatus.ACTIVE) {
             return;
         }
         // ヒットした弾は描画しない
