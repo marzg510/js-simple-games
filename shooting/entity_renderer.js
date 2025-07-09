@@ -9,13 +9,31 @@ export class EntityRenderer {
         this.ctx = ctx;
         this.width = width;
         this.height = height;
+        this.imageLoaded = false; // 画像の読み込み状態を管理
         
         // エンティティのメイン画像を読み込み
-        this.image = new Image();
-        this.image.src = imageSrc;
+        if (imageSrc) {
+            this.image = new Image();
+            this.image.onload = () => {
+                this.imageLoaded = true;
+            };
+            this.image.src = imageSrc;
+        } else {
+            // imageSrcがnullの場合（MyBulletRendererなど）
+            this.image = null;
+            this.imageLoaded = true;
+        }
         
         // 爆発レンダラーを初期化
         this.explosionRenderer = new ExplosionRenderer(ctx, explosionImageSrc, width, height, 5, 100);
+    }
+
+    /**
+     * 画像が読み込み完了しているかチェックする
+     * @returns {boolean} 画像が読み込み完了している場合true
+     */
+    isImageReady() {
+        return this.imageLoaded && (this.image ? this.image.complete : true);
     }
 
     /**
@@ -23,6 +41,11 @@ export class EntityRenderer {
      * @param {Object} entity - 描画するエンティティ
      */
     drawImage(entity) {
+        // 画像が読み込まれていない場合は描画しない
+        if (!this.isImageReady()) {
+            return;
+        }
+        
         this.ctx.drawImage(
             this.image,
             entity.cx - this.width / 2,

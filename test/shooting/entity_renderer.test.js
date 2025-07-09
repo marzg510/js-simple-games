@@ -23,10 +23,15 @@ QUnit.module('EntityRenderer', (hooks) => {
         assert.ok(renderer.image, '画像オブジェクトが作成される');
         assert.equal(renderer.image.src, './entity.png', '画像のソースが正しく設定される');
         assert.ok(renderer.explosionRenderer, '爆発レンダラーが作成される');
+        assert.equal(renderer.imageLoaded, false, '画像読み込み状態が初期化される');
     });
 
     QUnit.test('drawImage が正しく動作する', (assert) => {
         const entity = { cx: 100, cy: 200 };
+        
+        // 画像読み込みを完了にする
+        renderer.imageLoaded = true;
+        renderer.image.complete = true;
         
         renderer.drawImage(entity);
         
@@ -36,6 +41,38 @@ QUnit.module('EntityRenderer', (hooks) => {
             [renderer.image, 75, 175, 50, 50], // cx-width/2, cy-height/2
             'drawImage が正しい引数で呼び出される'
         );
+    });
+
+    QUnit.test('drawImage が画像未読み込み時に描画しない', (assert) => {
+        const entity = { cx: 100, cy: 200 };
+        
+        // 画像読み込みが未完了の状態
+        renderer.imageLoaded = false;
+        renderer.image.complete = false;
+        
+        renderer.drawImage(entity);
+        
+        assert.ok(ctx.drawImage.notCalled, '画像未読み込み時はdrawImageが呼び出されない');
+    });
+
+    QUnit.test('isImageReady が正しく動作する', (assert) => {
+        // 画像読み込み未完了の状態
+        renderer.imageLoaded = false;
+        renderer.image.complete = false;
+        assert.notOk(renderer.isImageReady(), '画像未読み込み時はfalseを返す');
+        
+        // 画像読み込み完了の状態
+        renderer.imageLoaded = true;
+        renderer.image.complete = true;
+        assert.ok(renderer.isImageReady(), '画像読み込み完了時はtrueを返す');
+    });
+
+    QUnit.test('imageSrcがnullの場合は画像準備完了とする', (assert) => {
+        // imageSrcがnullの場合のレンダラーを作成
+        const nullImageRenderer = new EntityRenderer(ctx, null, 50, 50, './explosion.png');
+        
+        assert.equal(nullImageRenderer.imageLoaded, true, 'imageSrcがnullの場合はimageLoadedがtrueになる');
+        assert.ok(nullImageRenderer.isImageReady(), 'imageSrcがnullの場合はisImageReadyがtrueを返す');
     });
 
     QUnit.test('drawCollisionArea が正しく動作する', (assert) => {

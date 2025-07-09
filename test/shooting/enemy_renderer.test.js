@@ -22,6 +22,9 @@ QUnit.module('EnemyRenderer', (hooks) => {
 
     QUnit.test('アクティブ状態の敵を描画する', (assert) => {
         enemy.status = EnemyStatus.ACTIVE;
+        // 画像読み込み状態を設定
+        renderer.imageLoaded = true;
+        renderer.image.complete = true;
 
         renderer.render(enemy);
 
