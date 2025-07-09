@@ -1,28 +1,17 @@
-import * as sinon from 'sinon';
 import { MyShipRenderer } from '../../shooting/my_ship_renderer.js';
 import { MyShip } from '../../shooting/my_ship.js';
 import { MyShipStatus } from '../../shooting/my_ship_status.js';
+import { createContextMock, createImageMock } from '../test_utils/context_mock.js';
 
 QUnit.module('MyShipRenderer', (hooks) => {
     let ctx, renderer, ship;
 
     hooks.beforeEach(() => {
         // Image のモックを作成
-        global.Image = class {
-            constructor() {
-                this.src = '';
-                this.height = 10;
-            }
-        };
+        global.Image = createImageMock();
+        
         // ctx のモックを作成
-        ctx = {
-            drawImage: sinon.spy(),
-            strokeRect: sinon.spy(),
-            strokeStyle: null,
-            lineWidth: null,
-            save: sinon.spy(),
-            restore: sinon.spy(),
-        };
+        ctx = createContextMock();
 
         // MyShipRenderer を初期化
         renderer = new MyShipRenderer(ctx, './assets/my_ship.png', 50, 50);

@@ -1,15 +1,13 @@
-import * as sinon from 'sinon';
 import { ExplosionRenderer } from '../../shooting/explosion_renderer.js';
 import { Explosion } from '../../shooting/explosion.js';
+import { createContextMock } from '../test_utils/context_mock.js';
 
 QUnit.module('ExplosionRenderer', (hooks) => {
     let ctx, renderer, explosion;
 
     hooks.beforeEach(() => {
         // CanvasRenderingContext2D のモックを作成
-        ctx = {
-            drawImage: sinon.spy(), // drawImage をモック化
-        };
+        ctx = createContextMock();
 
         // ExplosionRenderer を初期化
         renderer = new ExplosionRenderer(ctx, './explosion.png', 50, 50, 8, 100); // 8フレーム、各フレーム100ms
