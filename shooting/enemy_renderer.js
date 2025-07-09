@@ -1,38 +1,21 @@
+import { EntityRenderer } from "./entity_renderer.js";
 import { EnemyStatus } from "./enemy_status.js";
-import { ExplosionRenderer } from "./explosion_renderer.js";
 
-export class EnemyRenderer {
+export class EnemyRenderer extends EntityRenderer {
     constructor(ctx, enemyImageSrc, width, height, explosionImageSrc) {
-        this.ctx = ctx;
-        this.enemyImage = new Image();
-        this.enemyImage.src = enemyImageSrc;
-        this.width = width;
-        this.height = height; // 爆発の高さ
-        this.explosionRenderer = new ExplosionRenderer(ctx, explosionImageSrc, width, height, 5, 100);
+        super(ctx, enemyImageSrc, width, height, explosionImageSrc);
     }
 
     render(enemy) {
         switch (enemy.status) {
             case EnemyStatus.ACTIVE:
-                this.ctx.drawImage(
-                    this.enemyImage,
-                    enemy.cx - this.width / 2,
-                    enemy.cy - this.height / 2,
-                    this.width,
-                    this.height
-                );
+                // エンティティを描画
+                this.drawImage(enemy);
                 // コリジョンエリアを描画
-                this.ctx.strokeStyle = "red";
-                this.ctx.lineWidth = 2;
-                this.ctx.strokeRect(
-                    enemy.cx - enemy.width / 2,
-                    enemy.cy - enemy.height / 2,
-                    enemy.width,
-                    enemy.height
-                );
+                this.drawCollisionArea(enemy);
                 break;
             case EnemyStatus.EXPLODING:
-                this.explosionRenderer.render(enemy.explosion)
+                this.drawExplosion(enemy.explosion);
                 break;
             default:
                 // 何もしない

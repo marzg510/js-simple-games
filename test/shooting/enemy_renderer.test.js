@@ -28,7 +28,7 @@ QUnit.module('EnemyRenderer', (hooks) => {
         assert.ok(ctx.drawImage.calledOnce, 'drawImage が1回呼び出される');
         assert.deepEqual(
           ctx.drawImage.firstCall.args,
-          [renderer.enemyImage, enemy.cx - 25, enemy.cy - 25, 50, 50],
+          [renderer.image, enemy.cx - 25, enemy.cy - 25, 50, 50],
           'drawImage が正しい引数で呼び出される'
         );
     });
