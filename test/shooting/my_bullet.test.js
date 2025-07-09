@@ -1,4 +1,5 @@
 import { MyBullet } from '../../shooting/my_bullet.js';
+import { EntityStatus } from '../../shooting/entity_status.js';
 
 QUnit.module('MyBullet', (hooks) => {
     let bullet;
@@ -14,18 +15,18 @@ QUnit.module('MyBullet', (hooks) => {
         assert.equal(bullet.width, 3, '幅が正しい');
         assert.equal(bullet.height, 30, '高さが正しい');
         assert.equal(bullet.speed, 5, '速度が正しい');
-        assert.equal(bullet.isActive, true, '初期状態でアクティブ');
+        assert.equal(bullet.status, EntityStatus.ACTIVE, '初期状態でアクティブ');
     });
 
     QUnit.test('updateメソッドで弾が移動する', (assert) => {
         bullet.update();
-        assert.equal(bullet.isActive, true, 'アクティブ状態が維持される');
+        assert.equal(bullet.status, EntityStatus.ACTIVE, 'アクティブ状態が維持される');
         assert.equal(bullet.cy, 195, 'y座標が速度分だけ減少する');
     });
 
     QUnit.test('画面外に出たら非アクティブになる', (assert) => {
         bullet.cy = 0 - bullet.height / 2; // 弾を画面上端に移動
         bullet.update();
-        assert.equal(bullet.isActive, false, '画面外に出たら非アクティブ');
+        assert.equal(bullet.status, EntityStatus.INACTIVE, '画面外に出たら非アクティブ');
     });
 });

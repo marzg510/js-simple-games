@@ -1,7 +1,6 @@
 import { MyBullet } from './my_bullet.js';
 import { MyShip } from './my_ship.js';
-import { MyShipStatus } from './my_ship_status.js';
-import { EnemyStatus } from './enemy_status.js';
+import { EntityStatus } from './entity_status.js';
 import { ActionRange } from './action_range.js';
 
 export const MAX_BULLETS = 2; // 自機が同時に発射できる弾の最大数
@@ -39,7 +38,7 @@ export class ShootingGame {
     }
 
     shoot() {
-        if (this.myShip.status !== MyShipStatus.ACTIVE) return false; // 自機がアクティブでない場合は発射しない
+        if (this.myShip.status !== EntityStatus.ACTIVE) return false; // 自機がアクティブでない場合は発射しない
         if (this.myBullets.length >= MAX_BULLETS) return false; // 弾が最大数以上ある場合は新しい弾を発射しない
 
         // 弾を発射
@@ -73,10 +72,10 @@ export class ShootingGame {
         // 弾と敵の当たり判定
         for (const bullet of this.myBullets) {
             for (const enemy of this.enemies) {
-                if (enemy.status !== EnemyStatus.ACTIVE) continue; // 敵がアクティブでない場合はスキップ
+                if (enemy.status !== EntityStatus.ACTIVE) continue; // 敵がアクティブでない場合はスキップ
                 if (bullet.isCollidingWith(enemy)) {
                     bullet.isHit = true; // 弾が敵に当たった
-                    bullet.isActive = false; // 弾を非アクティブにする
+                    bullet.status = EntityStatus.INACTIVE; // 弾を非アクティブにする
                     enemy.explode();    // 敵の爆発を開始
                     this.score += 10;    // スコアを加算
                     break;
@@ -85,7 +84,7 @@ export class ShootingGame {
         }
         // 自機と敵の当たり判定
         for (const enemy of this.enemies) {
-            if (enemy.status !== EnemyStatus.ACTIVE) continue; // 敵がアクティブでない場合はスキップ
+            if (enemy.status !== EntityStatus.ACTIVE) continue; // 敵がアクティブでない場合はスキップ
             if (this.myShip.isCollidingWith(enemy)) {
                 this.myShip.explode(); // 自機の爆発を開始
                 break;
@@ -93,13 +92,13 @@ export class ShootingGame {
         }
 
         // 自機の爆発が終了したら、ゲームオーバーにする
-        if (this.myShip.status === MyShipStatus.REMOVED) {
+        if (this.myShip.status === EntityStatus.REMOVED) {
             this.isGameOver = true; // ゲームオーバー状態にする
         }
 
-        this.myBullets = this.myBullets.filter((bullet) => bullet.isActive); // 非アクティブな弾を削除
+        this.myBullets = this.myBullets.filter((bullet) => bullet.status === EntityStatus.ACTIVE); // 非アクティブな弾を削除
         this.enemies = this.enemies.filter((enemy) => enemy.cy <= this.canvasHeight); // 画面外に出た敵を削除
-        this.enemies = this.enemies.filter((enemy) => enemy.status !== EnemyStatus.REMOVED);    // 削除対象を削除
+        this.enemies = this.enemies.filter((enemy) => enemy.status !== EntityStatus.REMOVED);    // 削除対象を削除
     }
 
     reset() {

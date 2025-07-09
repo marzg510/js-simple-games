@@ -1,8 +1,7 @@
 import { ShootingGame, MAX_BULLETS } from '../../shooting/game.js';
 import { MyBullet } from '../../shooting/my_bullet.js';
 import { Enemy } from '../../shooting/enemy.js';
-import { EnemyStatus } from '../../shooting/enemy_status.js';
-import { MyShipStatus } from '../../shooting/my_ship_status.js';
+import { EntityStatus } from '../../shooting/entity_status.js';
 
 QUnit.module('ShootingGame', (hooks) => {
     let game;
@@ -119,8 +118,8 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // 弾と敵の状態を確認
         assert.ok(bullet.isHit, '弾が敵に当たった状態になる');
-        assert.notOk(bullet.isActive, '弾が非アクティブになる');
-        assert.equal(enemy.status, EnemyStatus.EXPLODING, '敵が爆発中の状態になる');
+        assert.notEqual(bullet.status, EntityStatus.ACTIVE, '弾が非アクティブになる');
+        assert.equal(enemy.status, EntityStatus.EXPLODING, '敵が爆発中の状態になる');
     });
 
     QUnit.test('弾が敵に当たらなかった場合、弾と敵の状態は変化しない', (assert) => {
@@ -136,8 +135,8 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // 弾と敵の状態を確認
         assert.notOk(bullet.isHit, '弾が敵に当たっていない状態');
-        assert.ok(bullet.isActive, '弾がアクティブなまま');
-        assert.equal(enemy.status, EnemyStatus.ACTIVE, '敵が通常状態');
+        assert.equal(bullet.status, EntityStatus.ACTIVE, '弾がアクティブなまま');
+        assert.equal(enemy.status, EntityStatus.ACTIVE, '敵が通常状態');
     });
 
     QUnit.test('当たった弾が削除される', (assert) => {
@@ -185,9 +184,9 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // 弾と敵の状態を確認
         assert.notOk(bullet.isHit, '弾が敵に当たっていない状態');
-        assert.ok(bullet.isActive, '弾がアクティブなまま');
+        assert.equal(bullet.status, EntityStatus.ACTIVE, '弾がアクティブなまま');
         assert.equal(game.score, initialScore, 'スコアが加算されない');
-        assert.equal(enemy.status, EnemyStatus.EXPLODING, '敵が爆発状態');
+        assert.equal(enemy.status, EntityStatus.EXPLODING, '敵が爆発状態');
     });
 
     QUnit.test('弾が削除可能の場合、弾が当たっても、弾と敵の状態は変化しない', (assert) => {
@@ -195,7 +194,8 @@ QUnit.module('ShootingGame', (hooks) => {
         // 敵と弾を初期化
         const bullet = new MyBullet(100, 100, 5);
         const enemy = new Enemy(100, 100, 10, 10); // 弾と重なる位置に敵を配置
-        enemy.remove(); // 敵を爆発状態にする
+        enemy.explode(); // 敵を爆発状態にする
+        enemy.remove(); // 敵を削除状態にする
 
         game.myBullets.push(bullet);
         game.enemies.push(enemy);
@@ -205,9 +205,9 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // 弾と敵の状態を確認
         assert.notOk(bullet.isHit, '弾が敵に当たっていない状態');
-        assert.ok(bullet.isActive, '弾がアクティブなまま');
+        assert.equal(bullet.status, EntityStatus.ACTIVE, '弾がアクティブなまま');
         assert.equal(game.score, initialScore, 'スコアが加算されない');
-        assert.equal(enemy.status, EnemyStatus.REMOVED, '敵が削除可能状態');
+        assert.equal(enemy.status, EntityStatus.REMOVED, '敵が削除可能状態');
     });
 
     QUnit.test('削除可能な敵が削除される', (assert) => {
@@ -220,7 +220,7 @@ QUnit.module('ShootingGame', (hooks) => {
         game.enemies.push(enemy2);
 
         // 1つの敵を削除対象に設定
-        enemy1.status = EnemyStatus.REMOVED;
+        enemy1.status = EntityStatus.REMOVED;
 
         // ゲームの更新を実行
         game.update();
@@ -240,7 +240,7 @@ QUnit.module('ShootingGame', (hooks) => {
         game.update();
 
         // 自機の状態を確認
-        assert.equal(game.myShip.status, MyShipStatus.EXPLODING, '自機が爆発状態になる');
+        assert.equal(game.myShip.status, EntityStatus.EXPLODING, '自機が爆発状態になる');
     });
 
     QUnit.test('自機が爆発中の敵に当たっても、自機は爆発しない', (assert) => {
@@ -253,13 +253,14 @@ QUnit.module('ShootingGame', (hooks) => {
         game.update();
 
         // 自機の状態を確認
-        assert.equal(game.myShip.status, MyShipStatus.ACTIVE, '自機はアクティブ状態のまま');
-        assert.equal(enemy.status, EnemyStatus.EXPLODING, '敵は爆発状態');
+        assert.equal(game.myShip.status, EntityStatus.ACTIVE, '自機はアクティブ状態のまま');
+        assert.equal(enemy.status, EntityStatus.EXPLODING, '敵は爆発状態');
     });
 
     QUnit.test('自機が削除対象の敵に当たっても、自機は爆発しない', (assert) => {
         // 自機と敵を初期化
-        const enemy = new Enemy(game.myShip.x, game.myShip.y, 50, 50); // 自機と同じ位置に敵を配置
+        const enemy = new Enemy(game.myShip.cx, game.myShip.cy, 50, 50); // 自機と同じ位置に敵を配置
+        enemy.explode(); // 敵を爆発状態にする
         enemy.remove(); // 敵を削除対象にする
         game.enemies.push(enemy);
 
@@ -267,8 +268,8 @@ QUnit.module('ShootingGame', (hooks) => {
         game.update();
 
         // 自機の状態を確認
-        assert.equal(game.myShip.status, MyShipStatus.ACTIVE, '自機はアクティブ状態のまま');
-        assert.equal(enemy.status, EnemyStatus.REMOVED, '敵は削除対象状態');
+        assert.equal(game.myShip.status, EntityStatus.ACTIVE, '自機はアクティブ状態のまま');
+        assert.equal(enemy.status, EntityStatus.REMOVED, '敵は削除対象状態');
     });
 
     QUnit.test('自機の爆発が終了した場合、ゲームオーバーになる', (assert) => {

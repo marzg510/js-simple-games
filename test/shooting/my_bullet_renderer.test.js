@@ -1,5 +1,6 @@
 import { MyBulletRenderer } from '../../shooting/my_bullet_renderer.js';
 import { MyBullet } from '../../shooting/my_bullet.js';
+import { EntityStatus } from '../../shooting/entity_status.js';
 import { createContextMock } from '../test_utils/context_mock.js';
 
 QUnit.module('MyBulletRenderer', (hooks) => {
@@ -43,7 +44,7 @@ QUnit.module('MyBulletRenderer', (hooks) => {
 
     QUnit.test('非アクティブな弾は描画されない', (assert) => {
         const bullet = new MyBullet(100, 200, 5); // 弾を初期化
-        bullet.isActive = false; // 非アクティブに設定
+        bullet.status = EntityStatus.INACTIVE; // 非アクティブに設定
 
         // 描画を実行
         bulletRenderer.render(bullet);
