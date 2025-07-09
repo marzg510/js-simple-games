@@ -1,44 +1,23 @@
-import { ExplosionRenderer } from "./explosion_renderer.js";
+import { EntityRenderer } from "./entity_renderer.js";
 import { MyShipStatus } from "./my_ship_status.js";
 
-export class MyShipRenderer {
+export class MyShipRenderer extends EntityRenderer {
     constructor(ctx, myShipImageSrc, width, height, explosionImageSrc) {
-        this.ctx = ctx;
-        this.image = new Image();
-        this.image.src = myShipImageSrc;
-        this.width = width;
-        this.height = height;
-        this.explosionRenderer = new ExplosionRenderer(ctx, explosionImageSrc, width, height, 5, 100);
+        super(ctx, myShipImageSrc, width, height, explosionImageSrc);
     }
 
     render(myShip) {
         if (myShip.status === MyShipStatus.EXPLODING) {
-            this.explosionRenderer.render(myShip.explosion);
+            this.drawExplosion(myShip.explosion);
             return;
         }
 
         if (myShip.status === MyShipStatus.ACTIVE) {
-            const myShipBounds = myShip.getBounds();
             // 自機を描画
-            this.ctx.drawImage(
-                this.image,
-                myShip.cx - this.width / 2,
-                myShip.cy - this.height / 2,
-                this.width,
-                this.height
-            );
+            this.drawImage(myShip);
 
             // コリジョンエリアを描画
-            this.ctx.save();
-            this.ctx.strokeStyle = "red";
-            this.ctx.lineWidth = 2;
-            this.ctx.strokeRect(
-                myShipBounds.left,
-                myShipBounds.top,
-                myShip.width,
-                myShip.height
-            );
-            this.ctx.restore();
+            this.drawCollisionArea(myShip);
         }
     }
 }

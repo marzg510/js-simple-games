@@ -22,13 +22,16 @@ QUnit.module('EnemyRenderer', (hooks) => {
 
     QUnit.test('アクティブ状態の敵を描画する', (assert) => {
         enemy.status = EnemyStatus.ACTIVE;
+        // 画像読み込み状態を設定
+        renderer.imageLoaded = true;
+        renderer.image.complete = true;
 
         renderer.render(enemy);
 
         assert.ok(ctx.drawImage.calledOnce, 'drawImage が1回呼び出される');
         assert.deepEqual(
           ctx.drawImage.firstCall.args,
-          [renderer.enemyImage, enemy.cx - 25, enemy.cy - 25, 50, 50],
+          [renderer.image, enemy.cx - 25, enemy.cy - 25, 50, 50],
           'drawImage が正しい引数で呼び出される'
         );
     });

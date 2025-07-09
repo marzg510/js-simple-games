@@ -20,6 +20,9 @@ QUnit.module('MyShipRenderer', (hooks) => {
 
     QUnit.test('自機が正しく描画される', (assert) => {
         const bounds = ship.getBounds();
+        // 画像読み込み状態を設定
+        renderer.imageLoaded = true;
+        renderer.image.complete = true;
         // 描画を実行
         renderer.render(ship);
 
