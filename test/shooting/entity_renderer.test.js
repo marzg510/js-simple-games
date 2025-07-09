@@ -92,6 +92,36 @@ QUnit.module('EntityRenderer', (hooks) => {
         assert.ok(ctx.restore.calledOnce, 'restore が1回呼び出される');
     });
 
+    QUnit.test('drawCollisionArea が不正なエンティティを処理する', (assert) => {
+        const originalConsoleWarn = console.warn;
+        const warnSpy = sinon.spy();
+        console.warn = warnSpy;
+        
+        // テストケース: null entity
+        renderer.drawCollisionArea(null);
+        assert.ok(warnSpy.calledOnce, 'null entity で警告が出力される');
+        assert.ok(ctx.strokeRect.notCalled, 'null entity では描画されない');
+        
+        // テストケース: プロパティが不足している entity
+        ctx.strokeRect.resetHistory();
+        warnSpy.resetHistory();
+        
+        renderer.drawCollisionArea({ cx: 100, cy: 200 }); // width, height が不足
+        assert.ok(warnSpy.calledOnce, 'プロパティ不足で警告が出力される');
+        assert.ok(ctx.strokeRect.notCalled, 'プロパティ不足では描画されない');
+        
+        // テストケース: 不正な型のプロパティ
+        ctx.strokeRect.resetHistory();
+        warnSpy.resetHistory();
+        
+        renderer.drawCollisionArea({ cx: '100', cy: 200, width: 30, height: 40 }); // cx が文字列
+        assert.ok(warnSpy.calledOnce, '不正な型で警告が出力される');
+        assert.ok(ctx.strokeRect.notCalled, '不正な型では描画されない');
+        
+        // console.warn を元に戻す
+        console.warn = originalConsoleWarn;
+    });
+
     QUnit.test('drawExplosion が爆発レンダラーに委譲される', (assert) => {
         const explosion = { cx: 100, cy: 200, elapsedTime: 0 };
         

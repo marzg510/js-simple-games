@@ -57,9 +57,16 @@ export class EntityRenderer {
 
     /**
      * エンティティのコリジョンエリアを描画する
-     * @param {Object} entity - 描画するエンティティ
+     * @param {Object} entity - 描画するエンティティ（cx, cy, width, heightプロパティが必須）
      */
     drawCollisionArea(entity) {
+        // 必須プロパティの存在を検証
+        if (!entity || typeof entity.cx !== 'number' || typeof entity.cy !== 'number' ||
+            typeof entity.width !== 'number' || typeof entity.height !== 'number') {
+            console.warn('drawCollisionArea: entity must have cx, cy, width, and height properties');
+            return;
+        }
+
         this.ctx.save();
         this.ctx.strokeStyle = "red";
         this.ctx.lineWidth = 2;
@@ -82,9 +89,9 @@ export class EntityRenderer {
 
     /**
      * エンティティを描画する（サブクラスでオーバーライドする）
-     * @param {Object} entity - 描画するエンティティ
+     * @param {Object} _entity - 描画するエンティティ（未使用、サブクラスで使用される）
      */
-    render(entity) {
+    render(_entity) {
         throw new Error("render method must be implemented by subclass");
     }
 }
