@@ -4,6 +4,8 @@ import { MyShipStatus } from './my_ship_status.js';
 import { EnemyStatus } from './enemy_status.js';
 import { ActionRange } from './action_range.js';
 
+export const MAX_BULLETS = 2; // 自機が同時に発射できる弾の最大数
+
 export class ShootingGame {
     constructor(canvasWidth, canvasHeight) {
         this.canvasWidth = canvasWidth;
@@ -38,7 +40,7 @@ export class ShootingGame {
 
     shoot() {
         if (this.myShip.status !== MyShipStatus.ACTIVE) return false; // 自機がアクティブでない場合は発射しない
-        if (this.myBullets.length >= 2) return false; // 弾が2つ以上ある場合は新しい弾を発射しない
+        if (this.myBullets.length >= MAX_BULLETS) return false; // 弾が最大数以上ある場合は新しい弾を発射しない
 
         // 弾を発射
         const bullet = new MyBullet(

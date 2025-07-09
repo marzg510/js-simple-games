@@ -1,4 +1,4 @@
-import { ShootingGame } from '../../shooting/game.js';
+import { ShootingGame, MAX_BULLETS } from '../../shooting/game.js';
 import { MyBullet } from '../../shooting/my_bullet.js';
 import { Enemy } from '../../shooting/enemy.js';
 import { EnemyStatus } from '../../shooting/enemy_status.js';
@@ -72,11 +72,11 @@ QUnit.module('ShootingGame', (hooks) => {
         assert.equal(game.myBullets.length, 0, '画面外に出た弾が削除される');
     });
 
-    QUnit.test('弾が2つ以上発射されない', (assert) => {
+    QUnit.test('弾が最大数以上発射されない', (assert) => {
         game.shoot();
         game.shoot();
-        game.shoot(); // 3回目の発射は無視される
-        assert.equal(game.myBullets.length, 2, '弾は2つまでしか発射されない');
+        game.shoot(); // 最大数を超える発射は無視される
+        assert.equal(game.myBullets.length, MAX_BULLETS, `弾は${MAX_BULLETS}つまでしか発射されない`);
     });
 
     QUnit.test('画面外に出た弾が削除された後、新しい弾を発射できる', (assert) => {
@@ -92,7 +92,7 @@ QUnit.module('ShootingGame', (hooks) => {
         assert.equal(game.myBullets.length, 1, '画面外の弾が削除される');
 
         game.shoot(); // 新しい弾を発射
-        assert.equal(game.myBullets.length, 2, '新しい弾を発射できる');
+        assert.equal(game.myBullets.length, MAX_BULLETS, '新しい弾を発射できる');
     });
 
     QUnit.test('敵が画面外に出たら削除される', (assert) => {
@@ -315,10 +315,10 @@ QUnit.module('ShootingGame', (hooks) => {
     });
 
     QUnit.test('発射が阻害される場合、射撃要求が保持される', (assert) => {
-        // 弾を2つ追加して発射を阻害
+        // 弾を最大数追加して発射を阻害
         game.shoot();
         game.shoot();
-        assert.equal(game.myBullets.length, 2, '弾が2つ発射される');
+        assert.equal(game.myBullets.length, MAX_BULLETS, `弾が${MAX_BULLETS}つ発射される`);
 
         // 射撃要求を設定
         game.handleShootRequest();
@@ -326,7 +326,7 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // 更新を実行（発射が阻害されるはず）
         game.update(100);
-        assert.equal(game.myBullets.length, 2, '弾は2つのまま（新しい弾は発射されない）');
+        assert.equal(game.myBullets.length, MAX_BULLETS, `弾は${MAX_BULLETS}つのまま（新しい弾は発射されない）`);
         assert.equal(game.isShootRequested, true, '射撃要求が保持される');
 
         // 弾を1つ削除して発射可能にする
@@ -335,7 +335,7 @@ QUnit.module('ShootingGame', (hooks) => {
 
         // 更新を実行（今度は発射されるはず）
         game.update(100);
-        assert.equal(game.myBullets.length, 2, '新しい弾が発射される');
+        assert.equal(game.myBullets.length, MAX_BULLETS, '新しい弾が発射される');
         assert.equal(game.isShootRequested, false, '射撃要求がリセットされる');
     });
 });
