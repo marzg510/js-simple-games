@@ -2,7 +2,7 @@ import { EntityRenderer } from "./entity_renderer.js";
 
 export class MyBulletRenderer extends EntityRenderer {
     constructor(ctx) {
-        // MyBulletは画像を使用しないため、ダミーの値を渡す
+        // MyBulletは画像を使用しないため、imageSrcをnullにする
         super(ctx, null, 0, 0, null);
     }
 

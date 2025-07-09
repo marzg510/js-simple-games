@@ -5,7 +5,7 @@ import { ExplosionRenderer } from "./explosion_renderer.js";
  * 共通のレンダリング機能を提供する
  */
 export class EntityRenderer {
-    constructor(ctx, imageSrc, width, height, explosionImageSrc) {
+    constructor(ctx, imageSrc = null, width = 0, height = 0, explosionImageSrc = null) {
         this.ctx = ctx;
         this.width = width;
         this.height = height;
