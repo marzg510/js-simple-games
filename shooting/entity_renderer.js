@@ -5,11 +5,12 @@ import { ExplosionRenderer } from "./explosion_renderer.js";
  * 共通のレンダリング機能を提供する
  */
 export class EntityRenderer {
-    constructor(ctx, imageSrc = null, width = 0, height = 0, explosionImageSrc = null) {
+    constructor(ctx, imageSrc = null, width = 0, height = 0, explosionImageSrc = null, showCollisionArea = true) {
         this.ctx = ctx;
         this.width = width;
         this.height = height;
         this.imageLoaded = false; // 画像の読み込み状態を管理
+        this.showCollisionArea = showCollisionArea; // コリジョンエリアの表示フラグ
         
         // エンティティのメイン画像を読み込み
         if (imageSrc) {
@@ -60,6 +61,8 @@ export class EntityRenderer {
      * @param {Object} entity - 描画するエンティティ（cx, cy, width, heightプロパティが必須）
      */
     drawCollisionArea(entity) {
+        // コリジョンエリアの表示が無効な場合は何もしない
+        if (!this.showCollisionArea) return;
         // 必須プロパティの存在を検証
         if (!entity || typeof entity.cx !== 'number' || typeof entity.cy !== 'number' ||
             typeof entity.width !== 'number' || typeof entity.height !== 'number') {
