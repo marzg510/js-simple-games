@@ -1,20 +1,13 @@
-import * as sinon from 'sinon';
 import { MyBulletRenderer } from '../../shooting/my_bullet_renderer.js';
 import { MyBullet } from '../../shooting/my_bullet.js';
+import { createContextMock } from '../test_utils/context_mock.js';
 
 QUnit.module('MyBulletRenderer', (hooks) => {
     let ctx, bulletRenderer;
 
     hooks.beforeEach(() => {
         // ctx のモックを作成
-        ctx = {
-            fillRect: sinon.spy(),
-            fillStyle: null,
-            strokeRect: sinon.spy(),
-            strokeStyle: null,
-            save: sinon.spy(),
-            restore: sinon.spy(),
-        };
+        ctx = createContextMock();
 
         // BulletRenderer を初期化
         bulletRenderer = new MyBulletRenderer(ctx);

@@ -1,24 +1,17 @@
-import * as sinon from 'sinon';
 import { EnemyRenderer } from '../../shooting/enemy_renderer.js';
 import { Enemy } from '../../shooting/enemy.js';
 import { EnemyStatus } from '../../shooting/enemy_status.js';
+import { createContextMock, createImageMock } from '../test_utils/context_mock.js';
 
 QUnit.module('EnemyRenderer', (hooks) => {
     let ctx, renderer, enemy;
 
     hooks.beforeEach(() => {
         // Image のモックを作成
-        global.Image = class {
-            constructor() {
-                this.src = '';
-                this.height = 10;
-            }
-        };
+        global.Image = createImageMock();
+        
         // CanvasRenderingContext2D のモックを作成
-        ctx = {
-            drawImage: sinon.spy(), // drawImage をモック化
-            strokeRect: sinon.spy(),
-        };
+        ctx = createContextMock();
 
         // EnemyRenderer を初期化
         renderer = new EnemyRenderer(ctx, './enemy.png', 50, 50, './explosion.png',);
